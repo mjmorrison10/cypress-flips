@@ -138,9 +138,25 @@ newyear
 valentines
 stpatricks
 easter
+premium
+blackout
+catholic
+lakers
+pacific
+rosewood
 auto
 ```
 
 `auto` uses America/Los_Angeles dates and switches for major holidays.
 
 When Firebase admin features are enabled, admins/moderators can also change the site-wide theme from the Profile → Admin panel.
+
+
+Specialty manual themes:
+
+- `premium`: gold, black, and platinum luxury look
+- `blackout`: full blacked-out high-contrast theme
+- `catholic`: reverent Catholic-inspired palette with subtle cross / ΙΧΘΥΣ symbolism
+- `lakers`: purple and gold
+- `pacific`: calm Southern California ocean palette
+- `rosewood`: warm boutique rose/wood/cream palette

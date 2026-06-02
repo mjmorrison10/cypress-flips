@@ -259,6 +259,12 @@ function profilePanelHTML() {
                                     <option value="valentines">Valentine's Day</option>
                                     <option value="stpatricks">St. Patrick's Day</option>
                                     <option value="easter">Easter</option>
+                                    <option value="premium">Premium Luxury</option>
+                                    <option value="blackout">Blackout</option>
+                                    <option value="catholic">Catholic</option>
+                                    <option value="lakers">Lakers</option>
+                                    <option value="pacific">Pacific</option>
+                                    <option value="rosewood">Rosewood</option>
                                 </select>
                                 <button type="button" id="save-site-theme-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition">Save Theme</button>
                             </div>

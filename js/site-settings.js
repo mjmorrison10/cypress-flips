@@ -14,6 +14,12 @@
 // "valentines"  = red/pink/white
 // "stpatricks"  = green/gold/white
 // "easter"      = pastel spring palette
+// "premium"     = luxury gold/black/platinum
+// "blackout"    = fully blacked-out high-contrast theme
+// "catholic"    = reverent gold/blue/white Catholic-inspired theme
+// "lakers"      = purple and gold
+// "pacific"     = calm SoCal ocean blue/teal/sand
+// "rosewood"    = warm rose/wood/cream boutique palette
 //
 // Example manual override:
 // colorScheme: "patriot"
@@ -36,7 +42,13 @@ window.CF_SITE_SETTINGS = {
         "newyear",
         "valentines",
         "stpatricks",
-        "easter"
+        "easter",
+        "premium",
+        "blackout",
+        "catholic",
+        "lakers",
+        "pacific",
+        "rosewood"
     ];
 
     function getCaliforniaDateParts(date = new Date()) {
