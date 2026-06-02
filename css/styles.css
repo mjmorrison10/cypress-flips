@@ -648,3 +648,130 @@ body.dark-mode .about-card {
     background: #1e293b !important;
     border-color: #334155 !important;
 }
+
+/* Conversion-focused revamp: location, trust, and mobile action bar */
+.location-pill {
+    align-items: center;
+    border: 1px solid rgba(249, 115, 22, 0.22);
+    background: rgba(249, 115, 22, 0.08);
+    color: var(--brand-orange-dark);
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.hero-trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.65rem;
+}
+
+.hero-trust-row span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.88);
+    border-radius: 999px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    backdrop-filter: blur(12px);
+}
+
+.trust-card {
+    transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.trust-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(249, 115, 22, 0.35) !important;
+    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-sticky-cta {
+    position: fixed;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 70;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    padding: 0.5rem;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(16px);
+}
+
+.mobile-sticky-cta a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.65rem;
+    border-radius: 0.95rem;
+    color: #0f172a;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.mobile-sticky-cta a:first-child {
+    color: white;
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-orange-dark));
+}
+
+@media (max-width: 767px) {
+    body {
+        padding-bottom: 5rem;
+    }
+
+    .back-to-top {
+        bottom: 5.4rem;
+    }
+
+    .hero-section {
+        padding-top: 7rem !important;
+        padding-bottom: 4rem !important;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2.3rem, 12vw, 4rem);
+    }
+
+    .hero-trust-row {
+        gap: 0.45rem;
+    }
+
+    .hero-trust-row span {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+body.dark-mode .location-pill {
+    background: rgba(249, 115, 22, 0.14);
+    border-color: rgba(249, 115, 22, 0.28);
+    color: #fdba74;
+}
+
+body.dark-mode .trust-card,
+body.dark-mode .mobile-sticky-cta {
+    background: rgba(30, 41, 59, 0.94) !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode .mobile-sticky-cta a {
+    color: #e5e7eb;
+}
+
+body.dark-mode .mobile-sticky-cta a:first-child {
+    color: white;
+}

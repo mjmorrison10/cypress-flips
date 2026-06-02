@@ -336,40 +336,40 @@ function scrollToSection(sectionId) {
 function getRandomHeroMessage() {
     const messages = [
         {
-            title: 'Inventory Sitting Idle? <span class="text-blue-400">Turn It Into Cash.</span>',
-            subtitle: 'Have collectibles, games, cards, electronics, or bulk inventory taking up space? Cypress Flips buys local lots and handles the resale work for you.',
+            title: 'Need Inventory Gone? <span class="text-blue-400">Cypress, CA Buys.</span>',
+            subtitle: 'Turn slow-moving collectibles, games, cards, electronics, toys, or gear into cash without listing, messaging, shipping, or waiting on flaky buyers.',
             primaryText: 'Sell Inventory',
             primarySection: 'suppliers',
-            secondaryText: 'Browse Current Deals',
+            secondaryText: 'See What I Buy',
             secondarySection: 'inventory'
         },
         {
-            title: 'Welcome to <span class="text-blue-400">Cypress Flips.</span>',
-            subtitle: 'A local resale shop built for collectors, gamers, gift hunters, and anyone who loves finding something good before it disappears.',
-            primaryText: 'Shop Inventory',
+            title: 'Welcome to <span class="text-blue-400">Cypress, CA Flips.</span>',
+            subtitle: 'A local resale shop for parents, collectors, gamers, riders, and gift hunters who want inspected goods, honest condition notes, and fair deals.',
+            primaryText: 'Shop Local Finds',
             primarySection: 'inventory',
-            secondaryText: 'Contact Me',
-            secondarySection: 'contact'
+            secondaryText: 'Why Trust Me?',
+            secondaryView: 'about'
         },
         {
-            title: 'Fresh Finds. <span class="text-blue-400">Fair Prices.</span>',
-            subtitle: 'Inventory moves quickly here — from nostalgic consoles to anime figures and collectibles. If you see something you like, it may not last long.',
-            primaryText: 'View Premium Picks',
+            title: 'For Parents, Collectors & Deal Hunters. <span class="text-blue-400">No Guesswork.</span>',
+            subtitle: 'Find kid-friendly consoles, nostalgic games, Disney plush, anime figures, and collectibles with flaws disclosed before you waste time or gas.',
+            primaryText: 'Browse Inventory',
             primarySection: 'inventory',
             secondaryText: 'Ask a Question',
             secondarySection: 'contact'
         },
         {
             title: 'TCG Cards. Collectibles. <span class="text-blue-400">Video Games.</span>',
-            subtitle: 'Cypress Flips focuses on trading cards, collectibles, video games, and the occasional unusual find — maybe even motorcycle-related gear when the right deal appears.',
-            primaryText: 'Explore Inventory',
+            subtitle: 'Cypress Flips focuses on handheld consoles, games, Pokémon cards, collectibles, plush, figures, motorcycle accessories, and occasional hard-to-source finds.',
+            primaryText: 'Explore Categories',
             primarySection: 'inventory',
             secondaryText: 'Sell a Collection',
             secondarySection: 'suppliers'
         },
         {
-            title: 'Quality Finds. <span class="text-blue-400">Local Value.</span>',
-            subtitle: 'Based in Cypress, CA. Providing the best flipped goods to the LA and OC communities. From rare finds to everyday essentials.',
+            title: 'Quality Finds. <span class="text-blue-400">Cypress, CA Value.</span>',
+            subtitle: 'Based in Cypress, CA and serving Orange County and the LA area with inspected resale goods, honest listings, and no-pressure local deals.',
             primaryText: 'Browse Inventory',
             primarySection: 'inventory',
             secondaryText: 'Become a Supplier',
@@ -397,8 +397,15 @@ function setupHeroMessage() {
     }
     if (secondary) {
         secondary.textContent = message.secondaryText;
-        secondary.href = `#${message.secondarySection}`;
-        secondary.dataset.navSection = message.secondarySection;
+        if (message.secondaryView) {
+            secondary.href = `#${message.secondaryView}`;
+            secondary.dataset.navView = message.secondaryView;
+            delete secondary.dataset.navSection;
+        } else {
+            secondary.href = `#${message.secondarySection}`;
+            secondary.dataset.navSection = message.secondarySection;
+            delete secondary.dataset.navView;
+        }
     }
 
     if (stats) {
