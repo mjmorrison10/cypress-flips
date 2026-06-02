@@ -293,8 +293,11 @@ function refreshInventoryViews(options = {}) {
     window.CF_INVENTORY = inventory;
     if (!preservePremiumPicks) selectedPremiumPicks = null;
     populateCategoryFilter();
+    populateListingsCategoryFilter();
     renderPremiumInventory();
     renderInventory();
+    renderListingsPage();
+    renderCategoriesPage();
 }
 
 function setInventoryItems(items, options = {}) {
@@ -310,15 +313,23 @@ function showView(viewId) {
     const homeView = document.getElementById('view-home');
     const productView = document.getElementById('view-product');
     const aboutView = document.getElementById('view-about');
+    const listingsView = document.getElementById('view-listings');
+    const categoriesView = document.getElementById('view-categories');
 
     homeView?.classList.add('hidden-view');
     productView?.classList.add('hidden-view');
     aboutView?.classList.add('hidden-view');
+    listingsView?.classList.add('hidden-view');
+    categoriesView?.classList.add('hidden-view');
 
     if (viewId === 'product') {
         productView?.classList.remove('hidden-view');
     } else if (viewId === 'about') {
         aboutView?.classList.remove('hidden-view');
+    } else if (viewId === 'listings') {
+        listingsView?.classList.remove('hidden-view');
+    } else if (viewId === 'categories') {
+        categoriesView?.classList.remove('hidden-view');
     } else {
         homeView?.classList.remove('hidden-view');
     }
@@ -412,11 +423,30 @@ function setupHeroMessage() {
         const categories = new Set(inventory.map(item => item.category)).size;
         const premiumCount = inventory.filter(item => item.isPremium).length;
         stats.innerHTML = `
-            <div class="hero-stat-card"><span>${inventory.length}</span><small>Current Listings</small></div>
-            <div class="hero-stat-card"><span>${premiumCount}</span><small>Premium Picks</small></div>
-            <div class="hero-stat-card"><span>${categories}</span><small>Categories</small></div>
+            <button type="button" class="hero-stat-card" data-stat-action="listings"><span>${inventory.length}</span><small>Current Listings</small></button>
+            <button type="button" class="hero-stat-card" data-stat-action="premium"><span>${premiumCount}</span><small>Premium Picks</small></button>
+            <button type="button" class="hero-stat-card" data-stat-action="categories"><span>${categories}</span><small>Categories</small></button>
         `;
+        setupHeroStatListeners();
     }
+}
+
+
+function setupHeroStatListeners() {
+    document.querySelectorAll('[data-stat-action]').forEach(button => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', () => {
+            const action = button.dataset.statAction;
+            if (action === 'premium') {
+                openListingsPage({ mode: 'premium' });
+            } else if (action === 'categories') {
+                openCategoriesPage();
+            } else {
+                openListingsPage({ mode: 'all' });
+            }
+        });
+    });
 }
 
 let revealObserver = null;
@@ -533,6 +563,16 @@ function setupStaticNavigationListeners() {
     const aboutBackHome = document.getElementById('about-back-home');
     if (aboutBackHome) {
         aboutBackHome.addEventListener('click', () => showView('home'));
+    }
+
+    const listingsBackHome = document.getElementById('listings-back-home');
+    if (listingsBackHome) {
+        listingsBackHome.addEventListener('click', () => showView('home'));
+    }
+
+    const categoriesBackHome = document.getElementById('categories-back-home');
+    if (categoriesBackHome) {
+        categoriesBackHome.addEventListener('click', () => showView('home'));
     }
 
     const backButton = document.getElementById('back-to-inventory');
@@ -799,6 +839,238 @@ function getFilteredInventory() {
     return { items, state };
 }
 
+
+let listingsMode = 'all';
+let selectedCategoryPageCategory = null;
+
+function sortInventoryItems(items, sort = 'featured') {
+    const sorted = [...items];
+    switch (sort) {
+        case 'price-asc':
+            sorted.sort((a, b) => a.price - b.price || a.title.localeCompare(b.title));
+            break;
+        case 'price-desc':
+            sorted.sort((a, b) => b.price - a.price || a.title.localeCompare(b.title));
+            break;
+        case 'title-asc':
+            sorted.sort((a, b) => a.title.localeCompare(b.title));
+            break;
+        case 'title-desc':
+            sorted.sort((a, b) => b.title.localeCompare(a.title));
+            break;
+        case 'category-asc':
+            sorted.sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
+            break;
+        case 'premium-first':
+        case 'featured':
+        default:
+            sorted.sort((a, b) => Number(b.isPremium) - Number(a.isPremium) || (a.originalIndex ?? 0) - (b.originalIndex ?? 0));
+            break;
+    }
+    return sorted;
+}
+
+function itemMatchesQuery(item, query) {
+    if (!query) return true;
+    const searchableText = [
+        item.title,
+        item.category,
+        item.shortDesc,
+        stripHTML(item.fullDesc),
+        `$${item.price.toFixed(2)}`
+    ].join(' ').toLowerCase();
+    return searchableText.includes(query.toLowerCase());
+}
+
+function populateListingsCategoryFilter() {
+    const categoryFilter = document.getElementById('listings-category-filter');
+    if (!categoryFilter) return;
+
+    const currentValue = categoryFilter.value || 'all';
+    const categories = [...new Set(inventory.map(item => item.category))].sort();
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+    categoryFilter.value = categories.includes(currentValue) ? currentValue : 'all';
+}
+
+function getListingsFilterState() {
+    return {
+        query: (document.getElementById('listings-search')?.value || '').trim().toLowerCase(),
+        category: document.getElementById('listings-category-filter')?.value || 'all',
+        price: document.getElementById('listings-price-filter')?.value || 'all',
+        sort: document.getElementById('listings-sort-filter')?.value || 'featured'
+    };
+}
+
+function getListingsItems() {
+    const state = getListingsFilterState();
+    let items = inventory
+        .map((item, index) => ({ ...item, originalIndex: index }))
+        .filter(item => listingsMode !== 'premium' || item.isPremium)
+        .filter(item => itemMatchesQuery(item, state.query))
+        .filter(item => state.category === 'all' || item.category === state.category)
+        .filter(item => matchesPriceRange(item, state.price));
+
+    return { items: sortInventoryItems(items, state.sort), state };
+}
+
+function openListingsPage(options = {}) {
+    listingsMode = options.mode || 'all';
+    populateListingsCategoryFilter();
+
+    const categoryFilter = document.getElementById('listings-category-filter');
+    const search = document.getElementById('listings-search');
+    const price = document.getElementById('listings-price-filter');
+    const sort = document.getElementById('listings-sort-filter');
+
+    if (search) search.value = '';
+    if (price) price.value = 'all';
+    if (sort) sort.value = listingsMode === 'premium' ? 'price-desc' : 'featured';
+    if (categoryFilter) categoryFilter.value = options.category || 'all';
+
+    renderListingsPage();
+    showView('listings');
+}
+
+function clearListingsFilters() {
+    const search = document.getElementById('listings-search');
+    const category = document.getElementById('listings-category-filter');
+    const price = document.getElementById('listings-price-filter');
+    const sort = document.getElementById('listings-sort-filter');
+
+    if (search) search.value = '';
+    if (category) category.value = 'all';
+    if (price) price.value = 'all';
+    if (sort) sort.value = listingsMode === 'premium' ? 'price-desc' : 'featured';
+    renderListingsPage();
+}
+
+function renderListingsPage() {
+    const grid = document.getElementById('listings-grid');
+    if (!grid) return;
+
+    const title = document.getElementById('listings-title');
+    const subtitle = document.getElementById('listings-subtitle');
+    const kicker = document.getElementById('listings-kicker');
+    const results = document.getElementById('listings-results');
+    const { items, state } = getListingsItems();
+
+    if (listingsMode === 'premium') {
+        if (kicker) kicker.textContent = 'Premium Cypress, CA Offers';
+        if (title) title.textContent = 'Premium Picks';
+        if (subtitle) subtitle.textContent = 'All premium listings in one place, with sorting and filters so you can compare the best current offers.';
+    } else {
+        if (kicker) kicker.textContent = 'Cypress, CA Inventory';
+        if (title) title.textContent = state.category !== 'all' ? `${state.category} Listings` : 'Current Listings';
+        if (subtitle) subtitle.textContent = 'Browse every inspected item currently available from Cypress Flips.';
+    }
+
+    grid.innerHTML = '';
+    if (results) {
+        const productWord = items.length === 1 ? 'product' : 'products';
+        results.textContent = `Showing ${items.length} ${productWord}`;
+    }
+
+    if (!items.length) {
+        grid.innerHTML = `
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center col-span-full">
+                <i class="fa-solid fa-magnifying-glass text-gray-400 text-4xl mb-4"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">No listings found</h3>
+                <p class="text-gray-500 mb-4">Try clearing filters or checking another category.</p>
+                <button onclick="clearListingsFilters()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition">Clear Filters</button>
+            </div>
+        `;
+        return;
+    }
+
+    items.forEach(item => grid.appendChild(createProductCard(item)));
+    observeRevealElements(grid);
+}
+
+function getCategoryStats() {
+    return [...new Set(inventory.map(item => item.category))]
+        .sort()
+        .map(category => {
+            const items = inventory.filter(item => item.category === category);
+            return {
+                category,
+                count: items.length,
+                premiumCount: items.filter(item => item.isPremium).length,
+                minPrice: Math.min(...items.map(item => item.price)),
+                image: items[0]?.images?.[0] || ''
+            };
+        });
+}
+
+function openCategoriesPage() {
+    selectedCategoryPageCategory = null;
+    renderCategoriesPage();
+    showView('categories');
+}
+
+function showCategoryProducts(category) {
+    selectedCategoryPageCategory = category;
+    renderCategoryProducts();
+    document.getElementById('category-products-section')?.classList.remove('hidden');
+    document.getElementById('category-products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCategoriesPage() {
+    const grid = document.getElementById('categories-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    getCategoryStats().forEach(stat => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'category-card reveal bg-white border border-gray-200 rounded-2xl p-5 text-left shadow-sm transition';
+        card.innerHTML = `
+            <div class="aspect-[4/3] rounded-xl bg-gray-100 overflow-hidden mb-4">
+                <img src="${stat.image}" alt="${stat.category}" loading="lazy" decoding="async" class="w-full h-full object-cover">
+            </div>
+            <div class="text-blue-600 font-bold uppercase text-xs tracking-wider mb-1">${stat.count} ${stat.count === 1 ? 'item' : 'items'}</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">${stat.category}</h3>
+            <p class="text-gray-500 text-sm">Starting around $${stat.minPrice.toFixed(2)}${stat.premiumCount ? ` • ${stat.premiumCount} premium` : ''}</p>
+        `;
+        card.addEventListener('click', () => showCategoryProducts(stat.category));
+        grid.appendChild(card);
+    });
+    observeRevealElements(grid);
+
+    if (!selectedCategoryPageCategory) {
+        document.getElementById('category-products-section')?.classList.add('hidden');
+    } else {
+        renderCategoryProducts();
+    }
+}
+
+function renderCategoryProducts() {
+    const grid = document.getElementById('category-products-grid');
+    if (!grid || !selectedCategoryPageCategory) return;
+
+    const sort = document.getElementById('category-products-sort')?.value || 'featured';
+    const items = sortInventoryItems(
+        inventory
+            .map((item, index) => ({ ...item, originalIndex: index }))
+            .filter(item => item.category === selectedCategoryPageCategory),
+        sort
+    );
+
+    const title = document.getElementById('category-products-title');
+    const count = document.getElementById('category-products-count');
+    if (title) title.textContent = selectedCategoryPageCategory;
+    if (count) count.textContent = `${items.length} ${items.length === 1 ? 'product' : 'products'} available`;
+
+    grid.innerHTML = '';
+    items.forEach(item => grid.appendChild(createProductCard(item)));
+    observeRevealElements(grid);
+}
+
 function renderInventory() {
     const grid = document.getElementById('inventory-grid');
     const resultsLabel = document.getElementById('inventory-results');
@@ -915,6 +1187,7 @@ function clearInventoryFilters() {
 
 function setupInventoryControls() {
     populateCategoryFilter();
+    populateListingsCategoryFilter();
 
     ['inventory-search', 'category-filter', 'price-filter', 'sort-filter', 'show-all-toggle'].forEach(id => {
         const element = document.getElementById(id);
@@ -922,8 +1195,27 @@ function setupInventoryControls() {
         if (element) element.addEventListener('change', renderInventory);
     });
 
+    ['listings-search', 'listings-category-filter', 'listings-price-filter', 'listings-sort-filter'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.addEventListener('input', renderListingsPage);
+        if (element) element.addEventListener('change', renderListingsPage);
+    });
+
     const clearButton = document.getElementById('clear-filters');
     if (clearButton) clearButton.addEventListener('click', clearInventoryFilters);
+
+    const listingsClearButton = document.getElementById('listings-clear-filters');
+    if (listingsClearButton) listingsClearButton.addEventListener('click', clearListingsFilters);
+
+    const categorySort = document.getElementById('category-products-sort');
+    if (categorySort) categorySort.addEventListener('change', renderCategoryProducts);
+
+    const categoryClear = document.getElementById('category-products-clear');
+    if (categoryClear) categoryClear.addEventListener('click', () => {
+        selectedCategoryPageCategory = null;
+        document.getElementById('category-products-section')?.classList.add('hidden');
+        document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 }
 
 // --- PRODUCT DETAIL LOGIC ---
@@ -1234,3 +1526,5 @@ setupHourlyScripture();
 setupScrollReveal();
 renderPremiumInventory();
 renderInventory();
+renderListingsPage();
+renderCategoriesPage();

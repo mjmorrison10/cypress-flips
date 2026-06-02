@@ -424,6 +424,108 @@
     </div>
 
 
+    <!-- LISTINGS VIEW -->
+    <div id="view-listings" class="hidden-view pt-24 pb-20">
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button id="listings-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
+                </button>
+                <div class="reveal text-center mb-10">
+                    <div id="listings-kicker" class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Cypress, CA Inventory</div>
+                    <h1 id="listings-title" class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Current Listings</h1>
+                    <p id="listings-subtitle" class="text-gray-600 max-w-3xl mx-auto text-lg">Browse every inspected item currently available from Cypress Flips.</p>
+                </div>
+
+                <div class="reveal bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+                        <div class="xl:col-span-2">
+                            <label for="listings-search" class="block text-sm font-semibold text-gray-700 mb-2">Search listings</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input id="listings-search" type="search" placeholder="Search by product, category, description..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="listings-category-filter" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <select id="listings-category-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="listings-price-filter" class="block text-sm font-semibold text-gray-700 mb-2">Price</label>
+                            <select id="listings-price-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="all">Any Price</option>
+                                <option value="0-25">$25 and under</option>
+                                <option value="25-50">$25 - $50</option>
+                                <option value="50-100">$50 - $100</option>
+                                <option value="100-200">$100 - $200</option>
+                                <option value="200-plus">$200+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="listings-sort-filter" class="block text-sm font-semibold text-gray-700 mb-2">Sort by</label>
+                            <select id="listings-sort-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="featured">Featured / Premium First</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="title-asc">Name: A-Z</option>
+                                <option value="title-desc">Name: Z-A</option>
+                                <option value="category-asc">Category: A-Z</option>
+                                <option value="premium-first">Premium First</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <p id="listings-results" class="text-sm text-gray-500">Loading listings...</p>
+                        <button id="listings-clear-filters" type="button" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition self-start sm:self-auto">Clear filters</button>
+                    </div>
+                </div>
+
+                <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CATEGORIES VIEW -->
+    <div id="view-categories" class="hidden-view pt-24 pb-20">
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button id="categories-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
+                </button>
+                <div class="reveal text-center mb-10">
+                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Shop by Category</div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Browse Cypress, CA Categories</h1>
+                    <p class="text-gray-600 max-w-3xl mx-auto text-lg">Choose a category to see matching products, then sort by price, name, or featured status.</p>
+                </div>
+                <div id="categories-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12"></div>
+
+                <div id="category-products-section" class="hidden">
+                    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+                        <div>
+                            <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Selected Category</div>
+                            <h2 id="category-products-title" class="text-3xl font-bold text-slate-900">Category Products</h2>
+                            <p id="category-products-count" class="text-gray-500 mt-1"></p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <select id="category-products-sort" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                                <option value="featured">Featured / Premium First</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="title-asc">Name: A-Z</option>
+                                <option value="title-desc">Name: Z-A</option>
+                            </select>
+                            <button id="category-products-clear" type="button" class="px-4 py-2 border border-gray-300 hover:border-blue-600 rounded-lg font-bold transition">Choose Another</button>
+                        </div>
+                    </div>
+                    <div id="category-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
     <!-- PRODUCT DETAIL VIEW -->
     <div id="view-product" class="hidden-view pt-24 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

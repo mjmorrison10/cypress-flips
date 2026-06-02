@@ -1065,3 +1065,45 @@ body.dark-mode .mobile-sticky-cta a:first-child {
 body.dark-mode .hourly-scripture {
     color: rgba(148, 163, 184, 0.82);
 }
+
+/* Clickable stat cards and dedicated browsing pages */
+.hero-stat-card {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 220ms ease, border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+
+.hero-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.18);
+}
+
+.hero-stat-card:active {
+    transform: translateY(-1px);
+}
+
+.category-card {
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(249, 115, 22, 0.35) !important;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+}
+
+.category-card img {
+    transition: transform 420ms ease, filter 420ms ease;
+}
+
+.category-card:hover img {
+    transform: scale(1.06);
+    filter: saturate(1.08) contrast(1.04);
+}
+
+body.dark-mode .category-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
