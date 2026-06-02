@@ -47,6 +47,21 @@ let inventory = [
         isPremium: false
     },
     {
+        id: 'wwe-knuckle-crunchers-cody-rhodes',
+        title: 'WWE Knuckle Crunchers - “The American Nightmare” Cody Rhodes Figure',
+        category: 'Action Figure',
+        price: 15.00,
+        shortDesc: "Unopened Mattel WWE Knuckle Crunchers Cody Rhodes figure with barbell and weight belt accessories. Great display/play piece with packaging wear.",
+        fullDesc: "Bring home \"The American Nightmare\" with this Mattel WWE Knuckle Crunchers Cody Rhodes figure. This compact 3.5-inch style figure is built for quick, over-the-top WWE play action and comes packaged with the themed barbell and weight belt accessories shown on the box. The packaging has strong shelf presence with bold Cody Rhodes artwork, WWE branding, and colorful Knuckle Crunchers graphics that make it a fun pickup for WWE fans, young collectors, or anyone building out a wrestling figure display. <br><br><strong>Condition:</strong> New in package / unopened from Walmart clearance stock, but not mint-card condition. Compared with a collector-grade mint example, the packaging shows visible retail shelf wear, edge/corner wear, creasing/bending on the cardboard, and a large Walmart clearance sticker on the front/right side panel. The plastic window appears intact from the photos, and the figure/accessories appear sealed inside. Because of the visible clearance sticker and packaging wear, this is priced as a display/play-value piece rather than a pristine sealed collector item. <br><br>Retail availability appears limited, and this specific Knuckle Crunchers Cody Rhodes figure is harder to find casually on shelves now. If you want an affordable Cody Rhodes WWE figure with accessories and do not need perfect packaging, this is a strong value pickup at a fair local price.",
+        images: [
+            'images/action figure/Cody-front.jpg',
+            'images/action figure/Cody-1.jpg',
+            'images/action figure/Cody-2.jpg',
+            'images/action figure/Cody-back.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'megumi-fushiguro-statue',
         title: 'Banpresto - Jujutsu Kaisen - Megumi Fushiguro Statue',
         category: 'Action Figure',
