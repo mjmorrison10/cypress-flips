@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cypress Flips | Premium Resale & Liquidation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div id="brand-home" class="flex items-center cursor-pointer">
+                    <span class="text-2xl font-bold text-blue-600">CYPRESS<span class="text-slate-800">FLIPS</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 font-medium">
+                    <a href="#inventory" data-nav-section="inventory" class="text-gray-600 hover:text-blue-600 transition">Inventory</a>
+                    <a href="#suppliers" data-nav-section="suppliers" class="text-gray-600 hover:text-blue-600 transition">Sell to Us</a>
+                    <a href="#contact" data-nav-section="contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="account-button" type="button" class="account-button border border-gray-200 bg-white text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-user"></i><span class="hidden sm:inline">Sign In</span>
+                    </button>
+                    <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="border border-gray-200 bg-white text-gray-600 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon"></i>
+                        <span id="theme-toggle-text" class="hidden sm:inline">Theme</span>
+                    </button>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none" aria-label="Open mobile menu">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 py-4 space-y-4">
+            <a href="#inventory" data-nav-section="inventory" class="block text-gray-600 hover:text-blue-600">Inventory</a>
+            <a href="#suppliers" data-nav-section="suppliers" class="block text-gray-600 hover:text-blue-600">Sell to Us</a>
+            <a href="#contact" data-nav-section="contact" class="block text-gray-600 hover:text-blue-600">Contact</a>
+        </div>
+    </nav>
+
+    <!-- HOME VIEW -->
+    <div id="view-home">
+        <!-- Hero Section -->
+        <section class="hero-section pt-32 pb-20 gradient-bg text-white">
+            <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="reveal text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                    Quality Finds. <span class="text-blue-400">Local Value.</span>
+                </h1>
+                <p class="reveal text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                    Based in Cypress, CA. Providing the best flipped goods to the LA and OC communities. From rare finds to everyday essentials.
+                </p>
+                <div class="reveal flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#inventory" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
+                        Browse Inventory
+                    </a>
+                    <a href="#suppliers" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full font-semibold transition backdrop-blur-sm transform hover:scale-105">
+                        Become a Supplier
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory" class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="reveal text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Current Inventory</h2>
+                    <p class="text-gray-600 max-w-xl mx-auto">Our stock rotates quickly. Grab these deals before they're gone!</p>
+                </div>
+
+                <div class="reveal mb-12">
+                    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+                        <div>
+                            <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Featured first</div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-slate-900">Premium Picks</h3>
+                            <p class="text-gray-600 mt-2">Three curated premium picks are shown first: a low-price find, a mid-tier option, and the highest-tier listing.</p>
+                        </div>
+                    </div>
+                    <div id="premium-grid" class="premium-picks-layout">
+                        <!-- Premium items injected here -->
+                    </div>
+                    <p class="premium-mobile-hint">
+                        Swipe sideways to compare all 3 premium picks →
+                    </p>
+                </div>
+
+                <div class="reveal bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-8">
+                    <div class="mb-5">
+                        <h3 class="text-xl font-bold text-slate-900">Search Inventory</h3>
+                        <p class="text-gray-500 text-sm mt-1">Search, filter, sort, or turn on the full inventory view below.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+                        <div class="xl:col-span-2">
+                            <label for="inventory-search" class="block text-sm font-semibold text-gray-700 mb-2">Search products</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input id="inventory-search" type="search" placeholder="Search by name, category, description..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="category-filter" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <select id="category-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="price-filter" class="block text-sm font-semibold text-gray-700 mb-2">Price</label>
+                            <select id="price-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="all">Any Price</option>
+                                <option value="0-25">$25 and under</option>
+                                <option value="25-50">$25 - $50</option>
+                                <option value="50-100">$50 - $100</option>
+                                <option value="100-200">$100 - $200</option>
+                                <option value="200-plus">$200+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sort-filter" class="block text-sm font-semibold text-gray-700 mb-2">Sort by</label>
+                            <select id="sort-filter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                <option value="featured">Featured / Premium First</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="title-asc">Name: A-Z</option>
+                                <option value="title-desc">Name: Z-A</option>
+                                <option value="category-asc">Category: A-Z</option>
+                                <option value="premium-first">Premium First</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <p id="inventory-results" class="text-sm text-gray-500">Premium picks are displayed above</p>
+                            <button id="clear-filters" type="button" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition self-start sm:self-auto">
+                                Clear filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- JS will inject items here -->
+                </div>
+
+                <div class="mt-16 text-center">
+                    <p class="text-gray-500 italic">More items being added daily. Check back soon!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Supplier Section -->
+        <section id="suppliers" class="py-20 bg-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="reveal bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+                    <div class="lg:w-1/2 gradient-bg text-white p-10 lg:p-16 flex flex-col justify-center">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6">Turn Your Excess Inventory Into <span class="text-blue-400">Instant Cash</span></h2>
+                        <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                            Do you have stock that's taking up space? Items that would sell great on eBay, but you don't have the time or desire to manage the listings, shipping, and customer service?
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-500/20 p-2 rounded-lg">
+                                    <i class="fa-solid fa-bolt text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Quick Liquidation</h4>
+                                    <p class="text-gray-400 text-sm">Clear out your warehouse or garage in one go. No more waiting for single items to sell.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-500/20 p-2 rounded-lg">
+                                    <i class="fa-solid fa-hand-holding-dollar text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Mutual Benefit</h4>
+                                    <p class="text-gray-400 text-sm">You get immediate capital; I handle the labor of flipping. A win-win arrangement.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-500/20 p-2 rounded-lg">
+                                    <i class="fa-solid fa-truck-fast text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Local Pickup</h4>
+                                    <p class="text-gray-400 text-sm">Based in Cypress, CA. I can quickly coordinate pickup in the LA/OC area.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:w-1/2 p-10 lg:p-16">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-900">Contact Me to Sell</h3>
+                        <form id="supplier-form" action="https://formsubmit.co/mjmorrisonusa@gmail.com" method="POST" class="space-y-4">
+                            <input type="hidden" name="_subject" value="New Cypress Flips supplier/contact message">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" id="form-next-url" name="_next" value="">
+                            <div>
+                                <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input id="contact-name" name="name" type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input id="contact-email" name="email" type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">Inventory Description</label>
+                                <textarea id="contact-message" name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Tell me what you have (e.g., electronics, vintage toys, etc.)"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition transform active:scale-95">
+                                Submit Offer
+                            </button>
+                            <p class="text-xs text-gray-500 text-center">This form sends directly to mjmorrisonusa@gmail.com.</p>
+                        </form>
+                        <div id="form-success" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-center font-medium">
+                            Message sent successfully! I'll be in touch soon.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact" class="reveal bg-slate-900 text-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="text-2xl font-bold text-blue-400 mb-4">CYPRESS<span class="text-white">FLIPS</span></div>
+                <p class="text-gray-400 mb-8">Serving the heart of Southern California</p>
+                <div class="flex justify-center space-x-6 mb-8 text-2xl">
+                    <a href="https://www.instagram.com/mjmorrisonusa/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/mjmorrisonusa" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.ebay.com/usr/mjmorrisonusa" target="_blank" rel="noopener noreferrer" aria-label="eBay" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-ebay"></i></a>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    &copy; 2026 Cypress Flips. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PRODUCT DETAIL VIEW -->
+    <div id="view-product" class="hidden-view pt-24 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Back Button -->
+            <button id="back-to-inventory" class="mb-8 flex items-center text-blue-600 hover:text-blue-800 font-medium transition">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back to Inventory
+            </button>
+
+            <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Gallery Section -->
+                <div class="lg:w-1/2">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden aspect-square relative">
+                        <img id="main-product-image" src="" alt="Product Image" class="w-full h-full object-cover transition duration-300">
+                    </div>
+                    <div id="thumbnail-grid" class="grid grid-cols-4 gap-4 mt-4">
+                        <!-- Thumbnails injected here -->
+                    </div>
+                </div>
+
+                <!-- Details Section -->
+                <div class="lg:w-1/2">
+                    <div id="product-category" class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Category</div>
+                    <h1 id="product-title" class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Product Title</h1>
+                    <div id="product-price" class="text-3xl font-bold text-blue-600 mb-6">$0.00</div>
+                    
+                    <div class="border-t border-gray-200 pt-6">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">Description</h3>
+                        <p id="product-description" class="text-gray-600 leading-relaxed text-lg">
+                            Loading description...
+                        </p>
+                    </div>
+
+                    <div class="mt-10">
+                        <button id="show-product-inquiry" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-12 py-4 rounded-xl font-bold text-lg transition transform active:scale-95 shadow-lg">
+                            Inquire Now
+                        </button>
+                        <p class="text-gray-500 text-sm mt-4 flex items-center justify-center sm:justify-start">
+                            <i class="fa-solid fa-truck-fast mr-2"></i> Local pickup available in Cypress, CA
+                        </p>
+
+                        <div id="product-inquiry-panel" class="hidden mt-6 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Ask about this item</h3>
+                            <p class="text-gray-500 text-sm mb-5">Your message will automatically include the product title, category, and price.</p>
+                            <form id="product-inquiry-form" action="https://formsubmit.co/ajax/mjmorrisonusa@gmail.com" method="POST" class="space-y-4">
+                                <input type="hidden" id="product-inquiry-subject" name="_subject" value="New Cypress Flips product inquiry">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_captcha" value="false">
+                                <input type="hidden" id="product-inquiry-next-url" name="_next" value="">
+                                <input type="hidden" id="inquiry-product-title" name="product_title" value="">
+                                <input type="hidden" id="inquiry-product-id" name="product_id" value="">
+                                <input type="hidden" id="inquiry-product-category" name="product_category" value="">
+                                <input type="hidden" id="inquiry-product-price" name="product_price" value="">
+                                <div>
+                                    <label for="inquiry-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input id="inquiry-name" name="name" type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                </div>
+                                <div>
+                                    <label for="inquiry-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input id="inquiry-email" name="email" type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                </div>
+                                <div>
+                                    <label for="inquiry-message" class="block text-sm font-medium text-gray-700 mb-1">Question / Message</label>
+                                    <textarea id="inquiry-message" name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Ask about availability, condition, pickup, bundle options, etc."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition transform active:scale-95">
+                                    Send Product Inquiry
+                                </button>
+                            </form>
+                            <div id="product-inquiry-status" class="hidden mt-4 rounded-xl p-4 text-sm font-medium"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script type="module" src="js/community.js"></script>
+</body>
+</html>

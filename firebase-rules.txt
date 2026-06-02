@@ -1,0 +1,84 @@
+# Recommended Firebase setup for Cypress Flips community features
+# Use these as a starting point in Firebase Console.
+# IMPORTANT: Review before publishing. This is production-oriented, but you should test thoroughly.
+
+------------------------------------------------------------
+FIRESTORE RULES
+------------------------------------------------------------
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && get(/databases/$(database)/documents/profiles/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /profiles/{uid} {
+      allow read: if true;
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /favorites/{favoriteId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'visible' || isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow update: if isAdmin()
+        || (signedIn() && resource.data.uid == request.auth.uid)
+        || (signedIn() && request.resource.data.diff(resource.data).changedKeys().hasOnly(['reportCount', 'reportedAt']));
+      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+  }
+}
+
+------------------------------------------------------------
+STORAGE RULES
+------------------------------------------------------------
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /profile-pictures/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
+
+------------------------------------------------------------
+FIREBASE CONSOLE CHECKLIST
+------------------------------------------------------------
+1. Create a Firebase project.
+2. Add a Web App and copy the config into js/firebase-config.js.
+3. Enable Authentication providers:
+   - Email/password
+   - Google
+   - Facebook, if you want Facebook login. Facebook requires app credentials from Meta.
+4. Create Firestore Database.
+5. Create Firebase Storage.
+6. Paste the Firestore and Storage rules above.
+7. To make yourself an admin, create/update your profile document:
+   profiles/{your_uid}
+   role: "admin"
+

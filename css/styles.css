@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+.gradient-bg { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+.hidden-view { display: none; }
+.theme-transition, .theme-transition * { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+body.dark-mode { background: #0f172a; color: #e5e7eb; color-scheme: dark; }
+body.dark-mode nav { background: rgba(15, 23, 42, 0.88) !important; border-color: #334155 !important; }
+body.dark-mode #mobile-menu { background: #0f172a !important; border-color: #334155 !important; }
+body.dark-mode .bg-white { background-color: #1e293b !important; }
+body.dark-mode .bg-white\/80 { background-color: rgba(15, 23, 42, 0.88) !important; }
+body.dark-mode .bg-slate-100 { background-color: #111827 !important; }
+body.dark-mode .bg-gray-50 { background-color: #0f172a !important; }
+body.dark-mode .bg-gray-100, body.dark-mode .bg-gray-200 { background-color: #334155 !important; }
+body.dark-mode .bg-gray-300 { background-color: #475569 !important; }
+body.dark-mode .text-slate-900, body.dark-mode .text-slate-800, body.dark-mode .text-gray-900, body.dark-mode .text-gray-700 { color: #f8fafc !important; }
+body.dark-mode .text-gray-600 { color: #cbd5e1 !important; }
+body.dark-mode .text-gray-500, body.dark-mode .text-gray-400 { color: #94a3b8 !important; }
+body.dark-mode .border-gray-100, body.dark-mode .border-gray-200, body.dark-mode .border-gray-300 { border-color: #334155 !important; }
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+body.dark-mode input::placeholder, body.dark-mode textarea::placeholder { color: #64748b !important; }
+body.dark-mode .shadow-sm, body.dark-mode .shadow-xl, body.dark-mode .shadow-2xl { box-shadow: 0 18px 40px rgba(0,0,0,.35) !important; }
+body.dark-mode #theme-toggle { background: #1e293b; color: #e5e7eb; border-color: #475569; }
+body.dark-mode #theme-toggle:hover { background: #334155; }
+
+/* Premium Picks layout: low / mid / high */
+.premium-picks-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.12fr) minmax(0, 0.95fr);
+    gap: 1.5rem;
+    align-items: center;
+    overflow: visible;
+    padding: 0.75rem 0.25rem 1rem;
+}
+
+.premium-pick-card {
+    height: 100%;
+    position: relative;
+}
+
+.premium-pick-card--mid {
+    transform: scale(1.055);
+    z-index: 2;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 24px 50px rgba(37, 99, 235, 0.20) !important;
+}
+
+.premium-pick-card--mid::after {
+    content: "Best Balance";
+    position: absolute;
+    left: 50%;
+    top: -0.75rem;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.28);
+    white-space: nowrap;
+}
+
+.premium-mobile-hint {
+    display: none;
+}
+
+body.dark-mode .premium-pick-card--mid {
+    box-shadow: 0 24px 50px rgba(59, 130, 246, 0.30) !important;
+}
+
+@media (max-width: 1024px) and (min-width: 640px) {
+    .premium-picks-layout {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+        padding-top: 1rem;
+    }
+
+    .premium-pick-card--mid {
+        transform: scale(1.025);
+    }
+
+    .premium-picks-layout .p-5 {
+        padding: 1rem;
+    }
+
+    .premium-picks-layout h3 {
+        font-size: 1rem;
+        line-height: 1.25;
+    }
+
+    .premium-picks-layout p {
+        font-size: 0.8rem;
+        line-height: 1.35;
+    }
+
+    .premium-picks-layout button {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+@media (max-width: 639px) {
+    .premium-picks-layout {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        overflow-y: visible;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding: 1.25rem 1rem 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+    }
+
+    .premium-picks-layout::-webkit-scrollbar {
+        height: 0.45rem;
+    }
+
+    .premium-picks-layout::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 999px;
+    }
+
+    .premium-picks-layout::-webkit-scrollbar-thumb {
+        background: #3b82f6;
+        border-radius: 999px;
+    }
+
+    .premium-pick-card {
+        flex: 0 0 82vw;
+        scroll-snap-align: center;
+    }
+
+    .premium-pick-card--mid {
+        flex-basis: 88vw;
+        transform: none;
+        border-width: 2px;
+    }
+
+    .premium-pick-card--mid::after {
+        top: -0.65rem;
+    }
+
+    .premium-mobile-hint {
+        display: block;
+        margin-top: 0.75rem;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    body.dark-mode .premium-picks-layout::-webkit-scrollbar-track {
+        background: #334155;
+    }
+}
+
+/* Dynamic polish: soft Apple-inspired reveals, hero motion, and interactive cards */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.hero-section::before,
+.hero-section::after {
+    content: "";
+    position: absolute;
+    width: 28rem;
+    height: 28rem;
+    border-radius: 999px;
+    filter: blur(70px);
+    opacity: 0.36;
+    z-index: -1;
+    animation: heroFloat 9s ease-in-out infinite alternate;
+}
+
+.hero-section::before {
+    background: #2563eb;
+    top: -10rem;
+    left: -8rem;
+}
+
+.hero-section::after {
+    background: #60a5fa;
+    right: -10rem;
+    bottom: -12rem;
+    animation-delay: -3s;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content::after {
+    content: "";
+    position: absolute;
+    inset: -2rem;
+    background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.10), transparent 42%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes heroFloat {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(2rem, 1.5rem, 0) scale(1.12); }
+}
+
+.reveal {
+    opacity: 0;
+    translate: 0 28px;
+    filter: blur(6px);
+    transition: opacity 700ms ease, translate 700ms cubic-bezier(.2,.7,.2,1), filter 700ms ease;
+    will-change: opacity, translate, filter;
+}
+
+.reveal.reveal-visible {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+}
+
+.hero-content .reveal:nth-child(1) { transition-delay: 80ms; }
+.hero-content .reveal:nth-child(2) { transition-delay: 180ms; }
+.hero-content .reveal:nth-child(3) { transition-delay: 280ms; }
+
+.product-card {
+    --card-scale: 1;
+    position: relative;
+    transform: translateY(0) scale(var(--card-scale));
+    transition: opacity 700ms ease, translate 700ms cubic-bezier(.2,.7,.2,1), filter 700ms ease, transform 280ms ease, box-shadow 280ms ease, border-color 280ms ease;
+    will-change: opacity, translate, filter, transform;
+}
+
+.product-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.16) 42%, rgba(255,255,255,0.32) 50%, transparent 58%);
+    transform: translateX(-130%);
+    transition: transform 700ms ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.product-card:hover {
+    transform: translateY(-7px) scale(var(--card-scale));
+    border-color: rgba(59, 130, 246, 0.55) !important;
+}
+
+.product-card:hover::before {
+    transform: translateX(130%);
+}
+
+.product-card img {
+    transition: transform 450ms ease, filter 450ms ease;
+}
+
+.product-card:hover img {
+    filter: saturate(1.08) contrast(1.04);
+}
+
+.premium-pick-card--mid {
+    --card-scale: 1.055;
+}
+
+@media (max-width: 1024px) and (min-width: 640px) {
+    .premium-pick-card--mid { --card-scale: 1.025; }
+}
+
+@media (max-width: 639px) {
+    .premium-pick-card--mid { --card-scale: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        translate: 0 0;
+        filter: none;
+    }
+}
+
+nav {
+    transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+nav.nav-scrolled {
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+}
+
+body.dark-mode nav.nav-scrolled {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+#product-inquiry-panel:not(.hidden) {
+    animation: panelReveal 360ms ease both;
+}
+
+@keyframes panelReveal {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Professional orange + blue brand refresh */
+:root {
+    --brand-orange: #f97316;
+    --brand-orange-dark: #ea580c;
+    --brand-orange-soft: #fed7aa;
+    --brand-blue: #2563eb;
+    --brand-blue-dark: #1e3a8a;
+    --brand-navy: #0f172a;
+    --brand-ink: #1f2937;
+    --brand-surface: #ffffff;
+    --brand-page: #f8fafc;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 28rem),
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 30rem),
+        var(--brand-page);
+}
+
+.gradient-bg {
+    background:
+        radial-gradient(circle at 18% 20%, rgba(249, 115, 22, 0.30), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(37, 99, 235, 0.32), transparent 32%),
+        linear-gradient(135deg, #111827 0%, #0f172a 48%, #1e3a8a 100%);
+}
+
+/* Re-map Tailwind's blue utility classes into the new orange/blue system. */
+.text-blue-600 { color: var(--brand-orange) !important; }
+.text-blue-500 { color: var(--brand-blue) !important; }
+.text-blue-400 { color: #fb923c !important; }
+.hover\:text-blue-600:hover { color: var(--brand-orange) !important; }
+.hover\:text-blue-800:hover { color: var(--brand-orange-dark) !important; }
+
+.bg-blue-600 { background-color: var(--brand-orange) !important; }
+.bg-blue-500\/20 { background-color: rgba(249, 115, 22, 0.16) !important; }
+.hover\:bg-blue-700:hover { background-color: var(--brand-orange-dark) !important; }
+.border-blue-600 { border-color: var(--brand-orange) !important; }
+.focus\:ring-blue-500:focus { --tw-ring-color: rgba(249, 115, 22, 0.45) !important; }
+
+/* Keep the secondary brand blue present in subtle accents. */
+#inventory .text-blue-500,
+#product-category {
+    color: var(--brand-blue) !important;
+}
+
+.product-card:hover {
+    border-color: rgba(249, 115, 22, 0.55) !important;
+}
+
+.premium-pick-card--mid {
+    border-color: var(--brand-orange) !important;
+    box-shadow: 0 24px 50px rgba(249, 115, 22, 0.20) !important;
+}
+
+.premium-pick-card--mid::after {
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-orange-dark));
+    box-shadow: 0 10px 22px rgba(249, 115, 22, 0.28);
+}
+
+.hero-section::before {
+    background: var(--brand-orange);
+}
+
+.hero-section::after {
+    background: var(--brand-blue);
+}
+
+.premium-mobile-hint {
+    color: var(--brand-orange);
+}
+
+.premium-picks-layout::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue));
+}
+
+nav.nav-scrolled {
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10), 0 1px 0 rgba(249, 115, 22, 0.10);
+}
+
+button,
+.button-like {
+    letter-spacing: -0.01em;
+}
+
+body.dark-mode {
+    background:
+        radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 28rem),
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.13), transparent 30rem),
+        #0f172a;
+}
+
+body.dark-mode .premium-pick-card--mid {
+    box-shadow: 0 24px 50px rgba(249, 115, 22, 0.30) !important;
+}
+
+/* Keep the Premium Picks "Best Balance" badge fully visible above the card */
+.premium-pick-card--mid {
+    overflow: visible !important;
+}
+
+.premium-pick-card--mid::after {
+    z-index: 30;
+}
+
+/* Customer account / community experience */
+.community-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(10px);
+}
+
+.community-overlay.hidden {
+    display: none;
+}
+
+.community-modal {
+    width: min(100%, 42rem);
+    max-height: 90vh;
+    overflow: auto;
+    animation: panelReveal 320ms ease both;
+}
+
+.account-button {
+    min-height: 2.5rem;
+}
+
+.account-avatar-mini,
+.account-avatar-small,
+.account-avatar-large {
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-blue));
+    color: white;
+    font-weight: 800;
+}
+
+.account-avatar-mini {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.7rem;
+}
+
+.account-avatar-small {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+}
+
+.account-avatar-large {
+    width: 4rem;
+    height: 4rem;
+    flex: 0 0 auto;
+    font-size: 1.2rem;
+}
+
+.favorite-button.favorite-active {
+    color: var(--brand-orange) !important;
+    border-color: var(--brand-orange) !important;
+    background: rgba(249, 115, 22, 0.08) !important;
+}
+
+.review-card {
+    transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.review-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(249, 115, 22, 0.35) !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode .community-overlay {
+    background: rgba(2, 6, 23, 0.72);
+}
+
+body.dark-mode .community-modal,
+body.dark-mode #product-community-section,
+body.dark-mode #product-inquiry-panel {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode .bg-blue-50 {
+    background-color: rgba(37, 99, 235, 0.13) !important;
+}
+
+body.dark-mode .bg-green-50 {
+    background-color: rgba(34, 197, 94, 0.12) !important;
+}
+
+body.dark-mode .bg-orange-50 {
+    background-color: rgba(249, 115, 22, 0.12) !important;
+}
