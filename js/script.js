@@ -309,16 +309,21 @@ window.CF_REFRESH_INVENTORY = refreshInventoryViews;
 function showView(viewId) {
     const homeView = document.getElementById('view-home');
     const productView = document.getElementById('view-product');
-    
-    if (viewId === 'home') {
-        homeView.classList.remove('hidden-view');
-        productView.classList.add('hidden-view');
-        window.scrollTo(0, 0);
+    const aboutView = document.getElementById('view-about');
+
+    homeView?.classList.add('hidden-view');
+    productView?.classList.add('hidden-view');
+    aboutView?.classList.add('hidden-view');
+
+    if (viewId === 'product') {
+        productView?.classList.remove('hidden-view');
+    } else if (viewId === 'about') {
+        aboutView?.classList.remove('hidden-view');
     } else {
-        homeView.classList.add('hidden-view');
-        productView.classList.remove('hidden-view');
-        window.scrollTo(0, 0);
+        homeView?.classList.remove('hidden-view');
     }
+
+    window.scrollTo(0, 0);
 }
 
 function scrollToSection(sectionId) {
@@ -509,6 +514,19 @@ function setupStaticNavigationListeners() {
             if (typeof mobileMenu !== 'undefined') mobileMenu?.classList.add('hidden');
         });
     });
+
+    document.querySelectorAll('[data-nav-view]').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            showView(link.dataset.navView);
+            if (typeof mobileMenu !== 'undefined') mobileMenu?.classList.add('hidden');
+        });
+    });
+
+    const aboutBackHome = document.getElementById('about-back-home');
+    if (aboutBackHome) {
+        aboutBackHome.addEventListener('click', () => showView('home'));
+    }
 
     const backButton = document.getElementById('back-to-inventory');
     if (backButton) {

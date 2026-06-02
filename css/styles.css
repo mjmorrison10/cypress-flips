@@ -619,3 +619,32 @@ body.dark-mode .admin-product-row {
     background: #1e293b !important;
     border-color: #334155 !important;
 }
+
+/* About page */
+.about-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card {
+    transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.about-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(249, 115, 22, 0.30) !important;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.about-cta {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.28), transparent 30%),
+        radial-gradient(circle at 80% 10%, rgba(37, 99, 235, 0.28), transparent 34%),
+        linear-gradient(135deg, #0f172a, #1e3a8a 62%, #ea580c);
+    box-shadow: 0 24px 55px rgba(15, 23, 42, 0.18);
+}
+
+body.dark-mode .about-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
