@@ -1,0 +1,23 @@
+[
+  {
+    "origin": [
+      "https://cypressflips.netlify.app",
+      "http://localhost:8000",
+      "http://localhost:5000",
+      "http://127.0.0.1:8000",
+      "http://127.0.0.1:5000"
+    ],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Authorization",
+      "x-goog-resumable",
+      "x-goog-upload-command",
+      "x-goog-upload-header-content-length",
+      "x-goog-upload-header-content-type",
+      "x-goog-upload-protocol",
+      "x-firebase-storage-version"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

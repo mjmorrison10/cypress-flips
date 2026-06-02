@@ -26,8 +26,16 @@ service cloud.firestore {
         && profile().role == role;
     }
 
+    // Owner fallback: lets the site owner manage listings when signed in with Google.
+    // Still recommended: set profiles/{your_uid}.role = "admin" in Firestore.
+    function isOwnerEmail() {
+      return signedIn()
+        && request.auth.token.email == 'mjmorrisonusa@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
     function isAdmin() {
-      return hasRole('admin');
+      return hasRole('admin') || isOwnerEmail();
     }
 
     function isModerator() {
@@ -94,8 +102,14 @@ service firebase.storage {
         && firestore.get(/databases/(default)/documents/profiles/$(request.auth.uid)).data.role == role;
     }
 
+    function isOwnerEmail() {
+      return signedIn()
+        && request.auth.token.email == 'mjmorrisonusa@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
     function canManageListings() {
-      return hasRole('admin') || hasRole('moderator');
+      return hasRole('admin') || hasRole('moderator') || isOwnerEmail();
     }
 
     match /profile-pictures/{uid}/{fileName} {
@@ -128,12 +142,13 @@ FIREBASE CONSOLE CHECKLIST
 4. Create Firestore Database.
 5. Create Firebase Storage.
 6. Paste the Firestore and Storage rules above.
-7. To make yourself an admin, create/update your profile document:
+7. Set bucket CORS using cors.json if browser uploads fail from Netlify.
+8. To make yourself an admin, create/update your profile document:
    profiles/{your_uid}
    role: "admin"
 
-8. To make someone a moderator, set:
+9. To make someone a moderator, set:
    profiles/{their_uid}
    role: "moderator"
 
-9. Admins and moderators can add/edit/delete listings from the profile panel after logging in.
+10. Admins and moderators can add/edit/delete listings from the profile panel after logging in.
