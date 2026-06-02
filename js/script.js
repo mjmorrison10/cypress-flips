@@ -89,12 +89,25 @@ let inventory = [
         isPremium: false
     },
     {
+        id: 'lion-king-ii-kovu-cub-bean-bag-plush',
+        title: "Vintage Disney The Lion King II: Simba's Pride Kovu Cub Bean Bag Plush w/ Tag",
+        category: 'Plushie',
+        price: 20.00,
+        shortDesc: "Vintage Kovu cub bean bag plush from The Lion King II: Simba's Pride with tag attached. A nostalgic Disney pickup at a fair price.",
+        fullDesc: "Bring home a piece of late-90s Disney nostalgia with this Kovu cub bean bag plush from The Lion King II: Simba's Pride. Kovu is one of the standout characters from the 1998 sequel, and this small plush captures him as a cub with embroidered eyes, soft brown body, tan paws, a fuzzy mane, and the Simba's Pride tag still attached. It is a great display piece for Lion King fans, Disney plush collectors, or anyone who remembers the sequel era. <br><br><strong>Condition:</strong> Good vintage pre-owned/display condition with tag attached. Compared with a mint-condition plush, this piece shows normal age and handling wear. The plush fibers and fuzzy mane/tail look slightly tousled from storage/display, and the attached paper tag has visible bending/creasing/waviness. The embroidered eyes and facial details appear intact, and no major tears, missing pieces, or heavy stains are visible in the provided photos. Please note that only two angles are shown, so underside/backside condition is not fully documented. <br><br>Market value for tagged Kovu plushes varies depending on size, tag condition, and exact release, with comparable listings commonly appearing around the mid-teens to $25 range and some higher. At $20, this is priced as a fair, collectible, and giftable Disney plush with strong nostalgic appeal.",
+        images: [
+            'images/plushie/kovu_1.jpg',
+            'images/plushie/kovu_2.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'disney-store-figaro-mini-bean-bag-plush',
         title: 'Vintage Disney Store Figaro Mini Bean Bag Plush - Pinocchio / Minnie Mouse Cat',
         category: 'Plushie',
-        price: 10.00,
+        price: 20.00,
         shortDesc: "Vintage Disney Store Figaro mini bean bag plush with tag. Cute Pinocchio/Minnie collectible priced to move.",
-        fullDesc: "Add a charming Disney classic to your collection with this vintage Disney Store Figaro Mini Bean Bag plush. Figaro first appeared as Geppetto's kitten in Disney's 1940 animated film Pinocchio and later became known as Minnie Mouse's pet cat, making this a fun crossover character for Disney collectors. This small black-and-white plush has bright embroidered yellow eyes, whiskers, a soft bean bag body, and the original Disney Store tag still attached. <br><br><strong>Condition:</strong> Good vintage pre-owned/display condition with tag. Compared with a mint-condition plush, this Figaro shows normal age/display handling. There is visible lint/fiber pickup on the black and white plush areas, and small dark marks are visible on at least one white paw in the photos. The eyes, facial stitching, ears, tail, and attached Disney Store tag appear intact. No major tears, missing limbs, or heavy staining are visible from the provided photos. <br><br>Vintage Disney Store mini bean bag plushes can vary in price depending on character, tag condition, and cleanliness. Similar Figaro/Disney Store bean bag plush listings commonly appear above this price point, but this one is intentionally priced at $10 for an easy, affordable pickup. A great little add-on item for Disney fans, Pinocchio collectors, Minnie Mouse collectors, or anyone who loves Figaro's classic mischievous-cat charm.",
+        fullDesc: "Add a charming Disney classic to your collection with this vintage Disney Store Figaro Mini Bean Bag plush. Figaro first appeared as Geppetto's kitten in Disney's 1940 animated film Pinocchio and later became known as Minnie Mouse's pet cat, making this a fun crossover character for Disney collectors. This small black-and-white plush has bright embroidered yellow eyes, whiskers, a soft bean bag body, and the original Disney Store tag still attached. <br><br><strong>Condition:</strong> Good vintage pre-owned/display condition with tag. Compared with a mint-condition plush, this Figaro shows normal age/display handling. There is visible lint/fiber pickup on the black and white plush areas, and small dark marks are visible on at least one white paw in the photos. The eyes, facial stitching, ears, tail, and attached Disney Store tag appear intact. No major tears, missing limbs, or heavy staining are visible from the provided photos. <br><br>Vintage Disney Store mini bean bag plushes can vary in price depending on character, tag condition, and cleanliness. Similar Figaro/Disney Store bean bag plush listings commonly appear in the mid-teens to higher range depending on tag condition and character demand, so $20 is a fair collectible price while still staying approachable. A great little add-on item for Disney fans, Pinocchio collectors, Minnie Mouse collectors, or anyone who loves Figaro's classic mischievous-cat charm.",
         images: [
             'images/plushie/figaro_1.jpg',
             'images/plushie/figaro_2.jpg',
