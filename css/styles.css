@@ -775,3 +775,122 @@ body.dark-mode .mobile-sticky-cta a {
 body.dark-mode .mobile-sticky-cta a:first-child {
     color: white;
 }
+
+/* Seasonal color schemes
+   Change js/site-settings.js → colorScheme to manually switch, or leave it on "auto". */
+:root {
+    --scheme-primary: #f97316;
+    --scheme-primary-dark: #ea580c;
+    --scheme-primary-soft: #fed7aa;
+    --scheme-secondary: #2563eb;
+    --scheme-secondary-dark: #1e3a8a;
+    --scheme-hero-bg: radial-gradient(circle at 18% 20%, rgba(249, 115, 22, 0.30), transparent 28%), radial-gradient(circle at 82% 18%, rgba(37, 99, 235, 0.32), transparent 32%), linear-gradient(135deg, #111827 0%, #0f172a 48%, #1e3a8a 100%);
+    --scheme-page-bg: #f8fafc;
+    --scheme-label: "Cypress Flips";
+}
+
+:root[data-color-scheme="default"] {
+    --brand-orange: #f97316;
+    --brand-orange-dark: #ea580c;
+    --brand-orange-soft: #fed7aa;
+    --brand-blue: #2563eb;
+    --brand-blue-dark: #1e3a8a;
+    --scheme-hero-bg: radial-gradient(circle at 18% 20%, rgba(249, 115, 22, 0.30), transparent 28%), radial-gradient(circle at 82% 18%, rgba(37, 99, 235, 0.32), transparent 32%), linear-gradient(135deg, #111827 0%, #0f172a 48%, #1e3a8a 100%);
+}
+
+:root[data-color-scheme="patriot"] {
+    --brand-orange: #dc2626;
+    --brand-orange-dark: #991b1b;
+    --brand-orange-soft: #fee2e2;
+    --brand-blue: #2563eb;
+    --brand-blue-dark: #1e3a8a;
+    --scheme-hero-bg: radial-gradient(circle at 18% 18%, rgba(220, 38, 38, 0.38), transparent 30%), radial-gradient(circle at 82% 18%, rgba(37, 99, 235, 0.40), transparent 32%), linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #7f1d1d 100%);
+}
+
+:root[data-color-scheme="christmas"] {
+    --brand-orange: #dc2626;
+    --brand-orange-dark: #991b1b;
+    --brand-orange-soft: #fee2e2;
+    --brand-blue: #16a34a;
+    --brand-blue-dark: #166534;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(220, 38, 38, 0.36), transparent 30%), radial-gradient(circle at 80% 20%, rgba(22, 163, 74, 0.38), transparent 34%), linear-gradient(135deg, #064e3b 0%, #0f172a 48%, #7f1d1d 100%);
+}
+
+:root[data-color-scheme="halloween"] {
+    --brand-orange: #f97316;
+    --brand-orange-dark: #c2410c;
+    --brand-orange-soft: #ffedd5;
+    --brand-blue: #7c3aed;
+    --brand-blue-dark: #4c1d95;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.42), transparent 30%), radial-gradient(circle at 78% 18%, rgba(124, 58, 237, 0.35), transparent 34%), linear-gradient(135deg, #020617 0%, #111827 54%, #431407 100%);
+}
+
+:root[data-color-scheme="thanksgiving"] {
+    --brand-orange: #d97706;
+    --brand-orange-dark: #92400e;
+    --brand-orange-soft: #fef3c7;
+    --brand-blue: #b45309;
+    --brand-blue-dark: #78350f;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(217, 119, 6, 0.42), transparent 30%), radial-gradient(circle at 82% 18%, rgba(180, 83, 9, 0.34), transparent 34%), linear-gradient(135deg, #1c1917 0%, #451a03 55%, #78350f 100%);
+}
+
+:root[data-color-scheme="newyear"] {
+    --brand-orange: #d4af37;
+    --brand-orange-dark: #a16207;
+    --brand-orange-soft: #fef3c7;
+    --brand-blue: #94a3b8;
+    --brand-blue-dark: #334155;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.38), transparent 30%), radial-gradient(circle at 82% 18%, rgba(148, 163, 184, 0.28), transparent 34%), linear-gradient(135deg, #020617 0%, #0f172a 55%, #171717 100%);
+}
+
+:root[data-color-scheme="valentines"] {
+    --brand-orange: #e11d48;
+    --brand-orange-dark: #be123c;
+    --brand-orange-soft: #ffe4e6;
+    --brand-blue: #ec4899;
+    --brand-blue-dark: #be185d;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(225, 29, 72, 0.40), transparent 30%), radial-gradient(circle at 82% 18%, rgba(236, 72, 153, 0.34), transparent 34%), linear-gradient(135deg, #4c0519 0%, #0f172a 52%, #831843 100%);
+}
+
+:root[data-color-scheme="stpatricks"] {
+    --brand-orange: #16a34a;
+    --brand-orange-dark: #166534;
+    --brand-orange-soft: #dcfce7;
+    --brand-blue: #ca8a04;
+    --brand-blue-dark: #854d0e;
+    --scheme-hero-bg: radial-gradient(circle at 20% 20%, rgba(22, 163, 74, 0.40), transparent 30%), radial-gradient(circle at 82% 18%, rgba(202, 138, 4, 0.32), transparent 34%), linear-gradient(135deg, #052e16 0%, #0f172a 52%, #14532d 100%);
+}
+
+:root[data-color-scheme="easter"] {
+    --brand-orange: #a855f7;
+    --brand-orange-dark: #7e22ce;
+    --brand-orange-soft: #f3e8ff;
+    --brand-blue: #06b6d4;
+    --brand-blue-dark: #0e7490;
+    --scheme-hero-bg: radial-gradient(circle at 18% 20%, rgba(168, 85, 247, 0.34), transparent 28%), radial-gradient(circle at 82% 18%, rgba(6, 182, 212, 0.34), transparent 32%), linear-gradient(135deg, #312e81 0%, #0f172a 50%, #155e75 100%);
+}
+
+.gradient-bg,
+.about-cta {
+    background: var(--scheme-hero-bg) !important;
+}
+
+.hero-section::before {
+    background: var(--brand-orange) !important;
+}
+
+.hero-section::after {
+    background: var(--brand-blue) !important;
+}
+
+.mobile-sticky-cta a:first-child,
+.back-to-top,
+.account-avatar-mini,
+.account-avatar-small,
+.account-avatar-large {
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-blue)) !important;
+}
+
+.premium-picks-layout::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue)) !important;
+}

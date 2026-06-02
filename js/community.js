@@ -87,6 +87,7 @@ let unsubscribeTestimonials = null;
 let unsubscribeFavorite = null;
 let unsubscribeProducts = null;
 let unsubscribeInventorySettings = null;
+let unsubscribeSiteSettings = null;
 let remoteProductDocs = [];
 let useFirestoreInventory = false;
 let isCurrentProductFavorite = false;
@@ -240,6 +241,30 @@ function profilePanelHTML() {
                     <div id="favorites-list" class="space-y-3"></div>
                 </div>
                 <div id="admin-panel" class="hidden mt-8 p-4 rounded-2xl border border-orange-200 bg-orange-50">
+                    <div class="bg-white border border-orange-100 rounded-2xl p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-1">Site Appearance</h3>
+                                <p class="text-sm text-gray-600">Change the storefront color scheme for everyone. Use Auto for holiday switching.</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                                <select id="site-color-scheme-select" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                    <option value="auto">Auto Holiday Theme</option>
+                                    <option value="default">Default Cypress Flips</option>
+                                    <option value="patriot">Patriot / Red White Blue</option>
+                                    <option value="christmas">Christmas</option>
+                                    <option value="halloween">Halloween</option>
+                                    <option value="thanksgiving">Thanksgiving</option>
+                                    <option value="newyear">New Year</option>
+                                    <option value="valentines">Valentine's Day</option>
+                                    <option value="stpatricks">St. Patrick's Day</option>
+                                    <option value="easter">Easter</option>
+                                </select>
+                                <button type="button" id="save-site-theme-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition">Save Theme</button>
+                            </div>
+                        </div>
+                        <div id="site-theme-status" class="hidden mt-4 p-3 rounded-xl text-sm font-medium"></div>
+                    </div>
                     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
                         <div>
                             <h3 class="text-xl font-bold text-slate-900 mb-1">Admin Listing Manager</h3>
@@ -422,6 +447,7 @@ function bindProfileEvents() {
     document.getElementById('admin-listing-form')?.addEventListener('submit', saveListing);
     document.getElementById('reset-listing-form')?.addEventListener('click', resetListingForm);
     document.getElementById('sync-inventory-button')?.addEventListener('click', syncDefaultInventoryToFirestore);
+    document.getElementById('save-site-theme-button')?.addEventListener('click', saveSiteColorScheme);
     document.getElementById('logout-button')?.addEventListener('click', async () => {
         if (auth) await signOut(auth);
         closeProfilePanel();
@@ -590,6 +616,8 @@ function hydrateProfileForm() {
     }
 
     document.getElementById('admin-panel')?.classList.toggle('hidden', !canManageListings());
+    const schemeSelect = document.getElementById('site-color-scheme-select');
+    if (schemeSelect) schemeSelect.value = window.CF_COLOR_SCHEME_MODE || 'auto';
     if (canManageListings()) renderAdminProductsList();
 }
 
@@ -908,6 +936,44 @@ function applyRemoteInventory() {
     renderAdminProductsList();
 }
 
+function setSiteThemeStatus(type, message) {
+    const status = document.getElementById('site-theme-status');
+    if (!status) return;
+    status.className = `mt-4 p-3 rounded-xl text-sm font-medium ${type === 'error' ? 'bg-orange-50 text-orange-800 border border-orange-200' : 'bg-green-50 text-green-700 border border-green-200'}`;
+    status.textContent = message;
+    status.classList.remove('hidden');
+}
+
+async function saveSiteColorScheme() {
+    if (!canManageListings()) return setSiteThemeStatus('error', 'You do not have permission to change the site theme.');
+    const select = document.getElementById('site-color-scheme-select');
+    const colorScheme = select?.value || 'auto';
+
+    try {
+        await setDoc(doc(db, 'settings', 'site'), {
+            colorScheme,
+            updatedBy: currentUser.uid,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+        window.CF_APPLY_COLOR_SCHEME?.(colorScheme);
+        setSiteThemeStatus('success', `Site theme saved: ${colorScheme}`);
+    } catch (error) {
+        setSiteThemeStatus('error', error.message);
+    }
+}
+
+function listenToSiteSettings() {
+    if (unsubscribeSiteSettings) unsubscribeSiteSettings();
+    unsubscribeSiteSettings = onSnapshot(doc(db, 'settings', 'site'), snap => {
+        const remoteScheme = snap.exists() ? snap.data()?.colorScheme : null;
+        if (remoteScheme && window.CF_APPLY_COLOR_SCHEME) {
+            window.CF_APPLY_COLOR_SCHEME(remoteScheme);
+            const select = document.getElementById('site-color-scheme-select');
+            if (select) select.value = remoteScheme;
+        }
+    });
+}
+
 function listenToProductListings() {
     if (unsubscribeProducts) unsubscribeProducts();
     if (unsubscribeInventorySettings) unsubscribeInventorySettings();
@@ -1163,6 +1229,7 @@ async function initializeFirebaseCommunity() {
     });
 
     listenToTestimonials();
+    listenToSiteSettings();
     listenToProductListings();
 }
 

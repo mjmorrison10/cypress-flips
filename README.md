@@ -109,3 +109,38 @@ For GitHub Pages, deploy the root of the repository.
 - Firebase API keys in a client-side app are not server secrets, but your Firestore/Storage rules must be secure.
 - Do not commit Firebase Admin SDK service account JSON files.
 - Keep product images inside the `images/` folder using the existing category structure.
+
+## Seasonal color schemes
+
+The site supports manual and automatic color schemes.
+
+To manually change the color scheme in source code, edit:
+
+```text
+js/site-settings.js
+```
+
+Change:
+
+```js
+colorScheme: "auto"
+```
+
+to one of:
+
+```text
+default
+patriot
+christmas
+halloween
+thanksgiving
+newyear
+valentines
+stpatricks
+easter
+auto
+```
+
+`auto` uses America/Los_Angeles dates and switches for major holidays.
+
+When Firebase admin features are enabled, admins/moderators can also change the site-wide theme from the Profile → Admin panel.
