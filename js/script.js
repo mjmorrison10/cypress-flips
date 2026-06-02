@@ -94,6 +94,19 @@ let inventory = [
         isPremium: false
     },
     {
+        id: 'coby-cx-cd109-personal-cd-player',
+        title: 'Coby CX-CD109 Personal CD Player - Complete in Box',
+        category: 'Vintage Electronics',
+        price: 50.00,
+        shortDesc: "New old stock Coby personal CD player in original packaging with headphones/manual. Great Y2K-era display or nostalgia piece.",
+        fullDesc: "Bring back the portable CD era with this Coby CX-CD109 Personal CD Player, complete in its original retail packaging. This is a great nostalgia piece for anyone who remembers carrying CDs, headphones, and a portable player everywhere — and it has the right early-2000s look with the silver compact player, LCD display callout, included stereo headphones, and original Coby blister packaging. <br><br><strong>Condition:</strong> New old stock / complete in package, but not mint packaging. Compared with a pristine sealed example, the outer plastic blister shows visible age, shelf wear, scuffing, cloudiness/yellowing, small marks, and dust/debris around the edges. The cardboard insert also shows age discoloration and handling wear. The player, headphones, and manual appear to be present inside the original packaging, and the unit appears unused from the photos. <br><br><strong>Important note:</strong> Because this is vintage sealed/packaged electronics, it has not been opened or tested. The packaging states it requires 2 AA batteries, which are not included. This is best for a collector, nostalgic display, prop setup, or buyer comfortable with vintage electronics. A clean, complete-in-box throwback piece with strong shelf presence.",
+        images: [
+            'images/vintage electronics/cd-front.jpg',
+            'images/vintage electronics/cd-back.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'nintendo-switch-oem-accessory-bundle',
         title: 'Nintendo Switch Console Bundle - Neon Blue/Red Joy-Con with OEM Dock & Accessories',
         category: 'Video Games',
