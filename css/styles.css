@@ -1248,3 +1248,48 @@ body.dark-mode .pagination-page.active {
     color: white !important;
     border-color: transparent !important;
 }
+
+/* Review/comment quality helper */
+.review-quality-helper {
+    transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.review-quality-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    font-weight: 700;
+    padding: 0.45rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.10);
+}
+
+.review-quality-chip i {
+    font-size: 0.65rem;
+}
+
+.review-quality-chip.matched {
+    color: #166534;
+    background: rgba(34, 197, 94, 0.14);
+}
+
+.testimonial-card {
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(249, 115, 22, 0.35) !important;
+    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode .review-quality-chip {
+    background: rgba(148, 163, 184, 0.12);
+    color: #cbd5e1;
+}
+
+body.dark-mode .review-quality-chip.matched {
+    background: rgba(34, 197, 94, 0.16);
+    color: #86efac;
+}

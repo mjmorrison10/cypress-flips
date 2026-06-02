@@ -371,9 +371,24 @@ function ensureProductCommunityContainers() {
                 </div>
                 <form id="review-form" class="hidden space-y-4 mb-6">
                     <input type="hidden" id="editing-review-id" value="">
-                    <div>
+                    <div class="p-4 rounded-2xl bg-gray-50 border border-gray-200">
+                        <p class="font-bold text-slate-900 mb-1">Comment or review?</p>
+                        <p class="text-sm text-gray-500 mb-3">By default this posts as a public comment/question. Add a star rating only if you want to leave an actual review.</p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+                                <input id="review-add-rating" type="checkbox" class="accent-blue-600">
+                                Add star rating / make this a review
+                            </label>
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+                                <input id="review-testimonial" type="checkbox" class="accent-blue-600">
+                                Allow this review to appear as a testimonial
+                            </label>
+                        </div>
+                    </div>
+                    <div id="review-rating-wrapper" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1" for="review-rating">Rating</label>
                         <select id="review-rating" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="">Select a rating</option>
                             <option value="5">★★★★★ 5 stars</option>
                             <option value="4">★★★★☆ 4 stars</option>
                             <option value="3">★★★☆☆ 3 stars</option>
@@ -382,14 +397,15 @@ function ensureProductCommunityContainers() {
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1" for="review-comment">Comment / review</label>
-                        <textarea id="review-comment" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Share your thoughts or ask a public question about this product."></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="review-comment">Comment / question</label>
+                        <textarea id="review-comment" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ask a question, or write a real review if you add a rating."></textarea>
                     </div>
-                    <label class="inline-flex items-center gap-2 text-sm text-gray-600">
-                        <input id="review-testimonial" type="checkbox" class="accent-blue-600">
-                        Allow this review to appear as a testimonial
-                    </label>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Post Review</button>
+                    <div id="review-quality-helper" class="hidden review-quality-helper p-4 rounded-2xl border border-gray-200 bg-gray-50 text-sm">
+                        <p class="font-bold text-slate-900 mb-2">For rated reviews, please include enough detail to help another buyer.</p>
+                        <p class="text-gray-500 mb-3">Mention at least two of these naturally in your review:</p>
+                        <div id="review-quality-checks" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Post Comment</button>
                 </form>
                 <div id="review-status" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
                 <div id="reviews-list" class="space-y-4"></div>
@@ -418,6 +434,11 @@ function ensureProductCommunityContainers() {
     if (reviewForm && !reviewForm.dataset.bound) {
         reviewForm.dataset.bound = 'true';
         reviewForm.addEventListener('submit', submitReview);
+        document.getElementById('review-add-rating')?.addEventListener('change', updateReviewMode);
+        document.getElementById('review-testimonial')?.addEventListener('change', updateReviewMode);
+        document.getElementById('review-rating')?.addEventListener('change', updateReviewMode);
+        document.getElementById('review-comment')?.addEventListener('input', updateReviewMode);
+        updateReviewMode();
     }
 }
 
@@ -431,7 +452,7 @@ function ensureTestimonialsSection() {
                 <div class="reveal text-center mb-12">
                     <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Community Proof</div>
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Customer Testimonials</h2>
-                    <p class="text-gray-600 max-w-xl mx-auto">Real comments and product reviews from Cypress Flips customers.</p>
+                    <p class="text-gray-600 max-w-xl mx-auto">Every approved review marked as a testimonial appears here, giving future buyers real community feedback.</p>
                 </div>
                 <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </div>
@@ -745,19 +766,103 @@ async function renderFavoritesList() {
     });
 }
 
+const REVIEW_QUALITY_ASPECTS = [
+    { key: 'condition', label: 'Condition / accuracy', keywords: ['condition', 'accurate', 'as described', 'description', 'flaw', 'scratch', 'tested', 'working', 'quality'] },
+    { key: 'value', label: 'Price / value', keywords: ['price', 'value', 'deal', 'fair', 'worth', 'affordable', 'cost'] },
+    { key: 'communication', label: 'Communication', keywords: ['communication', 'communicate', 'message', 'reply', 'responsive', 'honest', 'transparent', 'answered'] },
+    { key: 'pickup', label: 'Pickup / delivery', keywords: ['pickup', 'meetup', 'delivery', 'local', 'cypress', 'easy', 'smooth', 'fast'] },
+    { key: 'recommend', label: 'Recommendation', keywords: ['recommend', 'again', 'trust', 'would buy', 'come back', 'future'] },
+    { key: 'product', label: 'Product experience', keywords: ['product', 'item', 'console', 'game', 'plush', 'figure', 'accessory', 'gift', 'kid', 'collector'] }
+];
+
+function getReviewQualityMatches(comment = '') {
+    const lower = comment.toLowerCase();
+    return REVIEW_QUALITY_ASPECTS.map(aspect => ({
+        ...aspect,
+        matched: aspect.keywords.some(keyword => lower.includes(keyword))
+    }));
+}
+
+function isReviewMode() {
+    const addRating = document.getElementById('review-add-rating')?.checked || false;
+    const testimonial = document.getElementById('review-testimonial')?.checked || false;
+    const rating = document.getElementById('review-rating')?.value || '';
+    return addRating || testimonial || Boolean(rating);
+}
+
+function updateReviewMode() {
+    const addRating = document.getElementById('review-add-rating');
+    const testimonial = document.getElementById('review-testimonial');
+    const ratingWrapper = document.getElementById('review-rating-wrapper');
+    const rating = document.getElementById('review-rating');
+    const helper = document.getElementById('review-quality-helper');
+    const checks = document.getElementById('review-quality-checks');
+    const comment = document.getElementById('review-comment')?.value || '';
+    const submit = document.querySelector('#review-form button[type="submit"]');
+
+    if (testimonial?.checked && addRating) addRating.checked = true;
+
+    const reviewMode = isReviewMode();
+    ratingWrapper?.classList.toggle('hidden', !reviewMode);
+    helper?.classList.toggle('hidden', !reviewMode);
+    if (rating) rating.required = reviewMode;
+    if (submit) submit.textContent = reviewMode ? 'Post Review' : 'Post Comment';
+
+    if (checks) {
+        const matches = getReviewQualityMatches(comment);
+        checks.innerHTML = matches.map(aspect => `
+            <div class="review-quality-chip ${aspect.matched ? 'matched' : ''}">
+                <i class="fa-solid ${aspect.matched ? 'fa-check' : 'fa-circle'}"></i>
+                ${escapeHTML(aspect.label)}
+            </div>
+        `).join('');
+    }
+}
+
+function validateReviewContent(comment, rating, testimonial) {
+    const reviewMode = testimonial || Boolean(rating);
+    if (!comment || comment.length < 5) {
+        return 'Please write a quick comment or question before posting.';
+    }
+
+    if (!reviewMode) return '';
+
+    if (!rating) {
+        return 'Please select a star rating for reviews/testimonials.';
+    }
+
+    if (comment.length < 80) {
+        return 'Rated reviews should be a little more detailed — please write at least 80 characters.';
+    }
+
+    const matchedCount = getReviewQualityMatches(comment).filter(aspect => aspect.matched).length;
+    if (matchedCount < 2) {
+        return 'For a rated review, please mention at least two helpful details like condition, value, communication, pickup/delivery, product experience, or whether you would recommend it.';
+    }
+
+    return '';
+}
+
 async function submitReview(event) {
     event.preventDefault();
-    if (!requireLogin('Please sign in to leave a review.')) return;
+    if (!requireLogin('Please sign in to leave a comment or review.')) return;
     if (!currentProduct) return;
 
-    const rating = Number(document.getElementById('review-rating')?.value || 5);
+    const ratingValue = document.getElementById('review-rating')?.value || '';
+    const rating = ratingValue ? Number(ratingValue) : null;
     const comment = document.getElementById('review-comment')?.value.trim();
     const testimonial = document.getElementById('review-testimonial')?.checked || false;
     const editingId = document.getElementById('editing-review-id')?.value;
+    const validationError = validateReviewContent(comment, rating, testimonial);
 
-    if (!comment) return;
+    if (validationError) {
+        setReviewStatus('error', validationError);
+        updateReviewMode();
+        return;
+    }
 
     try {
+        const reviewMode = Boolean(rating);
         const payload = {
             productId: currentProduct.id,
             productTitle: currentProduct.title,
@@ -768,7 +873,8 @@ async function submitReview(event) {
             photoURL: currentProfile?.photoURL || currentUser.photoURL || '',
             rating,
             comment,
-            testimonial,
+            testimonial: testimonial && reviewMode,
+            reviewType: reviewMode ? 'review' : 'comment',
             status: 'visible',
             updatedAt: serverTimestamp()
         };
@@ -780,9 +886,12 @@ async function submitReview(event) {
             await addDoc(collection(db, 'reviews'), { ...payload, createdAt: serverTimestamp(), reportCount: 0 });
         }
 
-        document.getElementById('review-form')?.reset();
-        document.getElementById('review-form')?.classList.add('hidden');
-        setReviewStatus('success', 'Review posted successfully. Thank you!');
+        const form = document.getElementById('review-form');
+        form?.reset();
+        document.getElementById('review-rating').value = '';
+        updateReviewMode();
+        form?.classList.add('hidden');
+        setReviewStatus('success', reviewMode ? 'Review posted successfully. Thank you!' : 'Comment posted successfully. Thank you!');
     } catch (error) {
         setReviewStatus('error', error.message);
     }
@@ -817,7 +926,8 @@ function listenToProductReviews(product) {
 function renderReviewCard(id, review) {
     const card = document.createElement('div');
     const ownReview = currentUser && review.uid === currentUser.uid;
-    const stars = '★★★★★'.slice(0, review.rating) + '☆☆☆☆☆'.slice(review.rating);
+    const hasRating = Number.isFinite(Number(review.rating)) && Number(review.rating) >= 1;
+    const stars = hasRating ? ('★★★★★'.slice(0, review.rating) + '☆☆☆☆☆'.slice(review.rating)) : '';
     card.className = 'review-card p-4 rounded-2xl border border-gray-200 bg-gray-50';
     card.innerHTML = `
         <div class="flex items-start gap-3">
@@ -826,9 +936,10 @@ function renderReviewCard(id, review) {
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div>
                         <div class="font-bold text-slate-900">${escapeHTML(review.displayName || 'Customer')}</div>
-                        <div class="text-orange-500 text-sm tracking-wider">${stars}</div>
+                        ${hasRating ? `<div class="text-orange-500 text-sm tracking-wider">${stars}</div>` : '<div class="text-gray-500 text-xs font-bold uppercase tracking-wider">Comment / Question</div>'}
                     </div>
                     <div class="flex items-center gap-2 text-xs">
+                        ${review.testimonial ? '<span class="text-blue-600 font-bold">Testimonial</span>' : ''}
                         ${ownReview ? `<button data-edit-review="${id}" class="text-blue-600 font-bold">Edit</button><button data-delete-review="${id}" class="text-orange-700 font-bold">Delete</button>` : ''}
                         <button data-report-review="${id}" class="text-gray-500 font-bold">Report</button>
                     </div>
@@ -846,10 +957,13 @@ function renderReviewCard(id, review) {
 
 function editReview(id, review) {
     if (!requireLogin()) return;
+    const hasRating = Number.isFinite(Number(review.rating)) && Number(review.rating) >= 1;
     document.getElementById('editing-review-id').value = id;
-    document.getElementById('review-rating').value = review.rating;
+    document.getElementById('review-add-rating').checked = hasRating;
+    document.getElementById('review-rating').value = hasRating ? review.rating : '';
     document.getElementById('review-comment').value = review.comment;
     document.getElementById('review-testimonial').checked = Boolean(review.testimonial);
+    updateReviewMode();
     document.getElementById('review-form')?.classList.remove('hidden');
     document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -874,10 +988,10 @@ function listenToTestimonials() {
         collection(db, 'reviews'),
         where('testimonial', '==', true),
         where('status', '==', 'visible'),
-        orderBy('createdAt', 'desc'),
-        limit(3)
+        orderBy('createdAt', 'desc')
     );
 
+    if (unsubscribeTestimonials) unsubscribeTestimonials();
     unsubscribeTestimonials = onSnapshot(testimonialsQuery, snap => {
         if (snap.empty) {
             grid.innerHTML = `
@@ -891,11 +1005,12 @@ function listenToTestimonials() {
         grid.innerHTML = '';
         snap.forEach(docSnap => {
             const review = docSnap.data();
-            const stars = '★★★★★'.slice(0, review.rating) + '☆☆☆☆☆'.slice(review.rating);
+            const rating = Number(review.rating || 0);
+            const stars = rating ? ('★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(rating)) : '';
             const card = document.createElement('div');
-            card.className = 'reveal bg-white border border-gray-200 rounded-2xl p-6 shadow-sm';
+            card.className = 'reveal testimonial-card bg-white border border-gray-200 rounded-2xl p-6 shadow-sm';
             card.innerHTML = `
-                <div class="text-orange-500 mb-3">${stars}</div>
+                ${stars ? `<div class="text-orange-500 mb-3 tracking-wider">${stars}</div>` : ''}
                 <p class="text-gray-600 mb-4">“${escapeHTML(review.comment)}”</p>
                 <div class="font-bold text-slate-900">${escapeHTML(review.displayName || 'Customer')}</div>
                 <div class="text-sm text-gray-500">${escapeHTML(review.productTitle || '')}</div>

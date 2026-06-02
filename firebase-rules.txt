@@ -74,9 +74,14 @@ service cloud.firestore {
       allow read: if resource.data.status == 'visible' || isAdmin() || isModerator() || (signedIn() && resource.data.uid == request.auth.uid);
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.rating is int
-        && request.resource.data.rating >= 1
-        && request.resource.data.rating <= 5;
+        && (
+          request.resource.data.rating == null
+          || (
+            request.resource.data.rating is int
+            && request.resource.data.rating >= 1
+            && request.resource.data.rating <= 5
+          )
+        );
       allow update: if isAdmin()
         || isModerator()
         || (signedIn() && resource.data.uid == request.auth.uid)
