@@ -560,7 +560,6 @@ function renderInventory() {
         const prompt = document.createElement('div');
         prompt.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center col-span-full';
         prompt.innerHTML = `
-            <i class="fa-solid fa-toggle-off text-gray-400 text-4xl mb-4"></i>
             <h3 class="text-xl font-bold text-slate-900 mb-2">Full inventory is hidden</h3>
             <p class="text-gray-500 mb-4">Premium picks are shown first. Use search/filters above or turn on “Display entire inventory” to view the remaining listings without duplicates.</p>
             <button onclick="toggleEntireInventory(true)" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition">Display Entire Inventory</button>
@@ -642,11 +641,14 @@ function clearInventoryFilters() {
     const category = document.getElementById('category-filter');
     const price = document.getElementById('price-filter');
     const sort = document.getElementById('sort-filter');
+    const toggle = document.getElementById('show-all-toggle');
 
     if (search) search.value = '';
     if (category) category.value = 'all';
     if (price) price.value = 'all';
     if (sort) sort.value = 'featured';
+    showEntireInventory = false;
+    if (toggle) toggle.checked = false;
 
     renderInventory();
 }
