@@ -442,22 +442,114 @@ function ensureProductCommunityContainers() {
     }
 }
 
+const PLACEHOLDER_TESTIMONIALS = [
+    {
+        rating: 5,
+        comment: 'Placeholder example: “The listing made the condition clear before I drove out. That is exactly what I want when buying used electronics locally.”',
+        displayName: 'Placeholder Customer',
+        productTitle: 'Example inspected video game item'
+    },
+    {
+        rating: 5,
+        comment: 'Placeholder example: “Fair price, easy local meetup, and no pressure. I felt comfortable asking questions before buying.”',
+        displayName: 'Placeholder Parent Buyer',
+        productTitle: 'Example family console bundle'
+    },
+    {
+        rating: 5,
+        comment: 'Placeholder example: “The flaws were disclosed up front, which made the deal feel honest and straightforward.”',
+        displayName: 'Placeholder Collector',
+        productTitle: 'Example collectible figure'
+    },
+    {
+        rating: 5,
+        comment: 'Placeholder example: “I had inventory taking up space and wanted a simple cash offer. This is the kind of local liquidation option I needed.”',
+        displayName: 'Placeholder Vendor',
+        productTitle: 'Example bulk inventory lot'
+    },
+    {
+        rating: 5,
+        comment: 'Placeholder example: “Clear communication, accurate description, and a smooth Cypress-area meetup.”',
+        displayName: 'Placeholder Local Buyer',
+        productTitle: 'Example local pickup item'
+    }
+];
+
 function ensureTestimonialsSection() {
     const suppliers = document.getElementById('suppliers');
-    if (!suppliers || document.getElementById('testimonials')) return;
+    if (!suppliers) return;
 
-    suppliers.insertAdjacentHTML('beforebegin', `
-        <section id="testimonials" class="py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="reveal text-center mb-12">
-                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Community Proof</div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Customer Testimonials</h2>
-                    <p class="text-gray-600 max-w-xl mx-auto">Every approved review marked as a testimonial appears here, giving future buyers real community feedback.</p>
+    if (!document.getElementById('testimonials')) {
+        suppliers.insertAdjacentHTML('beforebegin', `
+            <section id="testimonials" class="py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="reveal text-center mb-12">
+                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Community Proof</div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Customer Testimonials</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Real approved testimonials will appear here. Until then, the cards below are clearly marked examples of the kind of feedback customers can leave.</p>
+                    </div>
+                    <div class="testimonial-carousel-shell">
+                        <button type="button" class="testimonial-nav testimonial-nav--prev" data-testimonial-scroll="prev" aria-label="Previous testimonials">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="testimonials-grid" class="testimonial-carousel" aria-label="Customer testimonials carousel"></div>
+                        <button type="button" class="testimonial-nav testimonial-nav--next" data-testimonial-scroll="next" aria-label="Next testimonials">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-            </div>
-        </section>
-    `);
+            </section>
+        `);
+    }
+
+    bindTestimonialCarouselControls();
+    renderPlaceholderTestimonials();
+}
+
+function bindTestimonialCarouselControls() {
+    document.querySelectorAll('[data-testimonial-scroll]').forEach(button => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', () => scrollTestimonialCarousel(button.dataset.testimonialScroll));
+    });
+}
+
+function scrollTestimonialCarousel(direction) {
+    const carousel = document.getElementById('testimonials-grid');
+    if (!carousel) return;
+
+    const distance = Math.max(280, carousel.clientWidth * 0.82);
+    carousel.scrollBy({
+        left: direction === 'prev' ? -distance : distance,
+        behavior: 'smooth'
+    });
+}
+
+function createTestimonialCard(review, options = {}) {
+    const { placeholder = false } = options;
+    const rating = Number(review.rating || 0);
+    const stars = rating ? ('★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(rating)) : '';
+    const card = document.createElement('article');
+    card.className = `reveal testimonial-card bg-white border border-gray-200 rounded-2xl p-6 shadow-sm ${placeholder ? 'testimonial-card--placeholder' : ''}`;
+    card.innerHTML = `
+        <div class="flex items-start justify-between gap-3 mb-3">
+            ${stars ? `<div class="text-orange-500 tracking-wider">${stars}</div>` : '<div></div>'}
+            ${placeholder ? '<span class="placeholder-badge">Placeholder Example</span>' : ''}
+        </div>
+        <p class="text-gray-600 mb-4">${escapeHTML(review.comment)}</p>
+        <div class="font-bold text-slate-900">${escapeHTML(review.displayName || 'Customer')}</div>
+        <div class="text-sm text-gray-500">${escapeHTML(review.productTitle || '')}</div>
+    `;
+    return card;
+}
+
+function renderPlaceholderTestimonials() {
+    const grid = document.getElementById('testimonials-grid');
+    if (!grid || grid.dataset.live === 'true') return;
+
+    grid.innerHTML = '';
+    PLACEHOLDER_TESTIMONIALS.forEach(item => grid.appendChild(createTestimonialCard(item, { placeholder: true })));
+    window.observeRevealElements?.(grid);
 }
 
 function bindAuthModalEvents() {
@@ -982,7 +1074,10 @@ async function reportReview(id) {
 
 function listenToTestimonials() {
     const grid = document.getElementById('testimonials-grid');
-    if (!grid || !isFirebaseConfigured()) return;
+    if (!grid || !isFirebaseConfigured()) {
+        renderPlaceholderTestimonials();
+        return;
+    }
 
     const testimonialsQuery = query(
         collection(db, 'reviews'),
@@ -994,30 +1089,25 @@ function listenToTestimonials() {
     if (unsubscribeTestimonials) unsubscribeTestimonials();
     unsubscribeTestimonials = onSnapshot(testimonialsQuery, snap => {
         if (snap.empty) {
-            grid.innerHTML = `
-                <div class="md:col-span-3 text-center bg-white border border-gray-200 rounded-2xl p-8 text-gray-500">
-                    Customer testimonials will appear here once reviews are submitted.
-                </div>
-            `;
+            grid.dataset.live = 'false';
+            renderPlaceholderTestimonials();
             return;
         }
 
+        grid.dataset.live = 'true';
         grid.innerHTML = '';
         snap.forEach(docSnap => {
-            const review = docSnap.data();
-            const rating = Number(review.rating || 0);
-            const stars = rating ? ('★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(rating)) : '';
-            const card = document.createElement('div');
-            card.className = 'reveal testimonial-card bg-white border border-gray-200 rounded-2xl p-6 shadow-sm';
-            card.innerHTML = `
-                ${stars ? `<div class="text-orange-500 mb-3 tracking-wider">${stars}</div>` : ''}
-                <p class="text-gray-600 mb-4">“${escapeHTML(review.comment)}”</p>
-                <div class="font-bold text-slate-900">${escapeHTML(review.displayName || 'Customer')}</div>
-                <div class="text-sm text-gray-500">${escapeHTML(review.productTitle || '')}</div>
-            `;
-            grid.appendChild(card);
+            grid.appendChild(createTestimonialCard(docSnap.data()));
         });
         window.observeRevealElements?.(grid);
+    }, error => {
+        grid.dataset.live = 'false';
+        grid.innerHTML = `
+            <div class="testimonial-card bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <div class="placeholder-badge mb-3">Testimonials temporarily unavailable</div>
+                <p class="text-gray-600">Unable to load live testimonials right now: ${escapeHTML(error.message)}</p>
+            </div>
+        `;
     });
 }
 
@@ -1303,9 +1393,28 @@ async function syncDefaultInventoryToFirestore() {
     }
 }
 
+function resetProductReviewUI() {
+    const form = document.getElementById('review-form');
+    const status = document.getElementById('review-status');
+    const editingId = document.getElementById('editing-review-id');
+    const rating = document.getElementById('review-rating');
+    const addRating = document.getElementById('review-add-rating');
+    const testimonial = document.getElementById('review-testimonial');
+
+    form?.reset();
+    form?.classList.add('hidden');
+    if (editingId) editingId.value = '';
+    if (rating) rating.value = '';
+    if (addRating) addRating.checked = false;
+    if (testimonial) testimonial.checked = false;
+    if (status) status.classList.add('hidden');
+    updateReviewMode();
+}
+
 function updateProductCommunity(product) {
     currentProduct = product;
     ensureProductCommunityContainers();
+    resetProductReviewUI();
     listenToFavorite(product);
     listenToProductReviews(product);
 }

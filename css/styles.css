@@ -1293,3 +1293,105 @@ body.dark-mode .review-quality-chip.matched {
     background: rgba(34, 197, 94, 0.16);
     color: #86efac;
 }
+
+/* Testimonials carousel */
+.testimonial-carousel-shell {
+    position: relative;
+}
+
+.testimonial-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 1rem;
+    padding: 0.5rem 0.25rem 1.25rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.testimonial-carousel::-webkit-scrollbar {
+    height: 0.45rem;
+}
+
+.testimonial-carousel::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 999px;
+}
+
+.testimonial-carousel::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue));
+    border-radius: 999px;
+}
+
+.testimonial-carousel .testimonial-card {
+    flex: 0 0 min(86vw, 24rem);
+    scroll-snap-align: start;
+    min-height: 15rem;
+}
+
+.testimonial-card--placeholder {
+    border-style: dashed !important;
+    opacity: 0.94;
+}
+
+.placeholder-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #92400e;
+    background: rgba(249, 115, 22, 0.12);
+    border: 1px solid rgba(249, 115, 22, 0.22);
+    white-space: nowrap;
+}
+
+.testimonial-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    color: white;
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-blue));
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+.testimonial-nav--prev {
+    left: -0.7rem;
+}
+
+.testimonial-nav--next {
+    right: -0.7rem;
+}
+
+@media (max-width: 767px) {
+    .testimonial-nav {
+        display: none;
+    }
+
+    .testimonial-carousel {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+body.dark-mode .testimonial-carousel::-webkit-scrollbar-track {
+    background: #334155;
+}
+
+body.dark-mode .placeholder-badge {
+    color: #fdba74;
+    background: rgba(249, 115, 22, 0.14);
+    border-color: rgba(249, 115, 22, 0.30);
+}
