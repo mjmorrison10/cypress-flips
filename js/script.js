@@ -842,6 +842,8 @@ function getFilteredInventory() {
 
 let listingsMode = 'all';
 let selectedCategoryPageCategory = null;
+let listingsPage = 1;
+let categoryPage = 1;
 
 function sortInventoryItems(items, sort = 'featured') {
     const sorted = [...items];
@@ -921,6 +923,7 @@ function getListingsItems() {
 
 function openListingsPage(options = {}) {
     listingsMode = options.mode || 'all';
+    listingsPage = 1;
     populateListingsCategoryFilter();
 
     const categoryFilter = document.getElementById('listings-category-filter');
@@ -933,8 +936,8 @@ function openListingsPage(options = {}) {
     if (sort) sort.value = listingsMode === 'premium' ? 'price-desc' : 'featured';
     if (categoryFilter) categoryFilter.value = options.category || 'all';
 
-    renderListingsPage();
     showView('listings');
+    renderListingsPage();
 }
 
 function clearListingsFilters() {
@@ -947,7 +950,87 @@ function clearListingsFilters() {
     if (category) category.value = 'all';
     if (price) price.value = 'all';
     if (sort) sort.value = listingsMode === 'premium' ? 'price-desc' : 'featured';
+    listingsPage = 1;
     renderListingsPage();
+}
+
+function applyGridPreference(grid, preference = 'comfortable') {
+    if (!grid) return;
+    grid.classList.remove('product-grid--compact', 'product-grid--spacious', 'product-grid--comfortable');
+    grid.classList.add(`product-grid--${preference || 'comfortable'}`);
+}
+
+function getGridColumnCount(grid) {
+    if (!grid) return window.innerWidth >= 1280 ? 4 : window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1;
+    const templateColumns = window.getComputedStyle(grid).gridTemplateColumns;
+    const columns = templateColumns.split(' ').filter(Boolean).length;
+    return columns || 1;
+}
+
+function getAutoPageSize(grid) {
+    const columns = getGridColumnCount(grid);
+    if (columns <= 1) return 10;
+    if (columns === 2) return 14;
+    if (columns === 3) return 15;
+    if (columns === 4) return 16;
+    return columns * 4;
+}
+
+function getSelectedPageSize(selectId, grid) {
+    const value = document.getElementById(selectId)?.value || 'auto';
+    if (value === 'auto') return getAutoPageSize(grid);
+    return Number(value) || getAutoPageSize(grid);
+}
+
+function renderPagination(containerId, totalItems, pageSize, currentPage, onPageChange) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const pageButtons = [];
+    const addPageButton = page => {
+        pageButtons.push(`<button type="button" class="pagination-page ${page === currentPage ? 'active' : ''}" data-page="${page}">${page}</button>`);
+    };
+
+    if (totalPages <= 7) {
+        for (let page = 1; page <= totalPages; page += 1) addPageButton(page);
+    } else {
+        addPageButton(1);
+        if (currentPage > 4) pageButtons.push('<span class="pagination-ellipsis">…</span>');
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+        for (let page = start; page <= end; page += 1) addPageButton(page);
+        if (currentPage < totalPages - 3) pageButtons.push('<span class="pagination-ellipsis">…</span>');
+        addPageButton(totalPages);
+    }
+
+    container.innerHTML = `
+        <button type="button" class="pagination-nav" data-page="${Math.max(1, currentPage - 1)}" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+        <div class="pagination-pages">${pageButtons.join('')}</div>
+        <button type="button" class="pagination-nav" data-page="${Math.min(totalPages, currentPage + 1)}" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+    `;
+
+    container.querySelectorAll('[data-page]').forEach(button => {
+        button.addEventListener('click', () => onPageChange(Number(button.dataset.page)));
+    });
+}
+
+function getPageItems(items, page, pageSize) {
+    const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+    const safePage = Math.min(Math.max(1, page), totalPages);
+    const start = (safePage - 1) * pageSize;
+    return {
+        pageItems: items.slice(start, start + pageSize),
+        safePage,
+        totalPages,
+        start,
+        end: Math.min(start + pageSize, items.length)
+    };
 }
 
 function renderListingsPage() {
@@ -958,7 +1041,13 @@ function renderListingsPage() {
     const subtitle = document.getElementById('listings-subtitle');
     const kicker = document.getElementById('listings-kicker');
     const results = document.getElementById('listings-results');
+    const gridSize = document.getElementById('listings-grid-size')?.value || 'comfortable';
+    applyGridPreference(grid, gridSize);
+
     const { items, state } = getListingsItems();
+    const pageSize = getSelectedPageSize('listings-page-size', grid);
+    const pageData = getPageItems(items, listingsPage, pageSize);
+    listingsPage = pageData.safePage;
 
     if (listingsMode === 'premium') {
         if (kicker) kicker.textContent = 'Premium Cypress, CA Offers';
@@ -973,10 +1062,13 @@ function renderListingsPage() {
     grid.innerHTML = '';
     if (results) {
         const productWord = items.length === 1 ? 'product' : 'products';
-        results.textContent = `Showing ${items.length} ${productWord}`;
+        results.textContent = items.length
+            ? `Showing ${pageData.start + 1}-${pageData.end} of ${items.length} ${productWord}`
+            : `Showing 0 ${productWord}`;
     }
 
     if (!items.length) {
+        document.getElementById('listings-pagination').innerHTML = '';
         grid.innerHTML = `
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center col-span-full">
                 <i class="fa-solid fa-magnifying-glass text-gray-400 text-4xl mb-4"></i>
@@ -988,7 +1080,12 @@ function renderListingsPage() {
         return;
     }
 
-    items.forEach(item => grid.appendChild(createProductCard(item)));
+    pageData.pageItems.forEach(item => grid.appendChild(createProductCard(item)));
+    renderPagination('listings-pagination', items.length, pageSize, listingsPage, page => {
+        listingsPage = page;
+        renderListingsPage();
+        document.getElementById('listings-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     observeRevealElements(grid);
 }
 
@@ -1009,14 +1106,15 @@ function getCategoryStats() {
 
 function openCategoriesPage() {
     selectedCategoryPageCategory = null;
-    renderCategoriesPage();
     showView('categories');
+    renderCategoriesPage();
 }
 
 function showCategoryProducts(category) {
     selectedCategoryPageCategory = category;
-    renderCategoryProducts();
+    categoryPage = 1;
     document.getElementById('category-products-section')?.classList.remove('hidden');
+    renderCategoryProducts();
     document.getElementById('category-products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -1054,6 +1152,9 @@ function renderCategoryProducts() {
     if (!grid || !selectedCategoryPageCategory) return;
 
     const sort = document.getElementById('category-products-sort')?.value || 'featured';
+    const gridSize = document.getElementById('category-grid-size')?.value || 'comfortable';
+    applyGridPreference(grid, gridSize);
+
     const items = sortInventoryItems(
         inventory
             .map((item, index) => ({ ...item, originalIndex: index }))
@@ -1061,13 +1162,26 @@ function renderCategoryProducts() {
         sort
     );
 
+    const pageSize = getSelectedPageSize('category-page-size', grid);
+    const pageData = getPageItems(items, categoryPage, pageSize);
+    categoryPage = pageData.safePage;
+
     const title = document.getElementById('category-products-title');
     const count = document.getElementById('category-products-count');
     if (title) title.textContent = selectedCategoryPageCategory;
-    if (count) count.textContent = `${items.length} ${items.length === 1 ? 'product' : 'products'} available`;
+    if (count) {
+        count.textContent = items.length
+            ? `Showing ${pageData.start + 1}-${pageData.end} of ${items.length} ${items.length === 1 ? 'product' : 'products'}`
+            : 'No products available';
+    }
 
     grid.innerHTML = '';
-    items.forEach(item => grid.appendChild(createProductCard(item)));
+    pageData.pageItems.forEach(item => grid.appendChild(createProductCard(item)));
+    renderPagination('category-products-pagination', items.length, pageSize, categoryPage, page => {
+        categoryPage = page;
+        renderCategoryProducts();
+        document.getElementById('category-products-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     observeRevealElements(grid);
 }
 
@@ -1195,10 +1309,14 @@ function setupInventoryControls() {
         if (element) element.addEventListener('change', renderInventory);
     });
 
-    ['listings-search', 'listings-category-filter', 'listings-price-filter', 'listings-sort-filter'].forEach(id => {
+    ['listings-search', 'listings-category-filter', 'listings-price-filter', 'listings-sort-filter', 'listings-grid-size', 'listings-page-size'].forEach(id => {
         const element = document.getElementById(id);
-        if (element) element.addEventListener('input', renderListingsPage);
-        if (element) element.addEventListener('change', renderListingsPage);
+        const handler = () => {
+            listingsPage = 1;
+            renderListingsPage();
+        };
+        if (element) element.addEventListener('input', handler);
+        if (element) element.addEventListener('change', handler);
     });
 
     const clearButton = document.getElementById('clear-filters');
@@ -1207,12 +1325,18 @@ function setupInventoryControls() {
     const listingsClearButton = document.getElementById('listings-clear-filters');
     if (listingsClearButton) listingsClearButton.addEventListener('click', clearListingsFilters);
 
-    const categorySort = document.getElementById('category-products-sort');
-    if (categorySort) categorySort.addEventListener('change', renderCategoryProducts);
+    ['category-products-sort', 'category-grid-size', 'category-page-size'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.addEventListener('change', () => {
+            categoryPage = 1;
+            renderCategoryProducts();
+        });
+    });
 
     const categoryClear = document.getElementById('category-products-clear');
     if (categoryClear) categoryClear.addEventListener('click', () => {
         selectedCategoryPageCategory = null;
+        categoryPage = 1;
         document.getElementById('category-products-section')?.classList.add('hidden');
         document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -1513,6 +1637,15 @@ function setupHourlyScripture() {
     updateVerse();
     setInterval(updateVerse, 60 * 1000);
 }
+
+let paginationResizeTimer = null;
+window.addEventListener('resize', () => {
+    clearTimeout(paginationResizeTimer);
+    paginationResizeTimer = setTimeout(() => {
+        renderListingsPage();
+        renderCategoryProducts();
+    }, 180);
+});
 
 // Initial Setup
 setupThemeToggle();

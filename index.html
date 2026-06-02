@@ -476,13 +476,34 @@
                             </select>
                         </div>
                     </div>
-                    <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="mt-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                         <p id="listings-results" class="text-sm text-gray-500">Loading listings...</p>
-                        <button id="listings-clear-filters" type="button" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition self-start sm:self-auto">Clear filters</button>
+                        <div class="subtle-display-controls flex flex-wrap items-center gap-3">
+                            <label class="inline-flex items-center gap-2 text-xs text-gray-500">
+                                Grid
+                                <select id="listings-grid-size" class="subtle-select">
+                                    <option value="comfortable">Comfortable</option>
+                                    <option value="compact">Compact</option>
+                                    <option value="spacious">Spacious</option>
+                                </select>
+                            </label>
+                            <label class="inline-flex items-center gap-2 text-xs text-gray-500">
+                                Per page
+                                <select id="listings-page-size" class="subtle-select">
+                                    <option value="auto">Auto</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
+                            <button id="listings-clear-filters" type="button" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition self-start sm:self-auto">Clear filters</button>
+                        </div>
                     </div>
                 </div>
 
-                <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+                <div id="listings-grid" class="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+                <div id="listings-pagination" class="pagination-controls mt-10"></div>
             </div>
         </section>
     </div>
@@ -516,10 +537,29 @@
                                 <option value="title-asc">Name: A-Z</option>
                                 <option value="title-desc">Name: Z-A</option>
                             </select>
+                            <label class="inline-flex items-center gap-2 text-xs text-gray-500">
+                                Grid
+                                <select id="category-grid-size" class="subtle-select">
+                                    <option value="comfortable">Comfortable</option>
+                                    <option value="compact">Compact</option>
+                                    <option value="spacious">Spacious</option>
+                                </select>
+                            </label>
+                            <label class="inline-flex items-center gap-2 text-xs text-gray-500">
+                                Per page
+                                <select id="category-page-size" class="subtle-select">
+                                    <option value="auto">Auto</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
                             <button id="category-products-clear" type="button" class="px-4 py-2 border border-gray-300 hover:border-blue-600 rounded-lg font-bold transition">Choose Another</button>
                         </div>
                     </div>
-                    <div id="category-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+                    <div id="category-products-grid" class="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+                    <div id="category-products-pagination" class="pagination-controls mt-10"></div>
                 </div>
             </div>
         </section>
