@@ -1166,6 +1166,62 @@ if (productInquiryForm && productInquiryNextUrl) {
     });
 }
 
+
+function getCaliforniaHourKey(date = new Date()) {
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        hourCycle: 'h23'
+    }).format(date);
+}
+
+function hashStringToIndex(value, length) {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+        hash = ((hash << 5) - hash) + value.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash) % length;
+}
+
+function setupHourlyScripture() {
+    const scripture = document.getElementById('hourly-scripture');
+    if (!scripture) return;
+
+    // Short Scripture-based reflections with references. Colossians 3:23 is weighted most heavily.
+    const verses = [
+        { ref: 'Colossians 3:23', text: 'Work with your whole heart, as service offered to the Lord.' },
+        { ref: 'Colossians 3:23', text: 'Whatever the task, give it honest effort before God.' },
+        { ref: 'Colossians 3:23', text: 'Do the work in front of you with diligence and integrity.' },
+        { ref: 'Colossians 3:23', text: 'Let every task be done wholeheartedly, not half-heartedly.' },
+        { ref: 'Proverbs 3:5-6', text: 'Trust the Lord, walk straight, and do not lean only on yourself.' },
+        { ref: 'Micah 6:8', text: 'Act justly, love mercy, and walk humbly with God.' },
+        { ref: 'Matthew 5:16', text: 'Let good work shine in a way that points beyond yourself.' },
+        { ref: 'Luke 6:31', text: 'Treat others the way you would want to be treated.' },
+        { ref: '1 Corinthians 16:14', text: 'Let everything be done with love.' },
+        { ref: 'Galatians 6:9', text: 'Do not grow tired of doing good.' },
+        { ref: 'James 1:5', text: 'Ask God for wisdom when the right path is unclear.' },
+        { ref: 'John 14:27', text: 'Peace is a gift; do not let your heart be troubled.' },
+        { ref: 'Romans 12:2', text: 'Be renewed in mind, not shaped by every passing trend.' },
+        { ref: 'Psalm 37:5', text: 'Commit your way to the Lord and keep moving faithfully.' },
+        { ref: 'Joshua 1:9', text: 'Be strong and courageous; the Lord is with you.' },
+        { ref: 'Philippians 4:13', text: 'Strength is found through Christ who sustains us.' }
+    ];
+
+    const updateVerse = () => {
+        const key = getCaliforniaHourKey();
+        const index = hashStringToIndex(`cypress-flips-${key}`, verses.length);
+        const verse = verses[index];
+        scripture.textContent = `${verse.ref} — ${verse.text}`;
+    };
+
+    updateVerse();
+    setInterval(updateVerse, 60 * 1000);
+}
+
 // Initial Setup
 setupThemeToggle();
 setupHeroMessage();
@@ -1174,6 +1230,7 @@ setupBackToTop();
 setupStaticNavigationListeners();
 setupInventoryControls();
 setupKeyboardShortcuts();
+setupHourlyScripture();
 setupScrollReveal();
 renderPremiumInventory();
 renderInventory();

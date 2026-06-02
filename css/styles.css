@@ -1049,3 +1049,19 @@ body.dark-mode .mobile-sticky-cta a:first-child {
 :root[data-color-scheme="rosewood"] .hero-trust-row span {
     border-color: rgba(255, 255, 255, 0.22);
 }
+
+.hourly-scripture {
+    margin-top: 0.65rem;
+    color: rgba(148, 163, 184, 0.72);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    font-style: italic;
+    letter-spacing: 0.01em;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.dark-mode .hourly-scripture {
+    color: rgba(148, 163, 184, 0.82);
+}
