@@ -49,20 +49,21 @@
         <!-- Hero Section -->
         <section class="hero-section pt-32 pb-20 gradient-bg text-white">
             <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="reveal text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                <h1 id="hero-title" class="reveal text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
                     Quality Finds. <span class="text-blue-400">Local Value.</span>
                 </h1>
-                <p class="reveal text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                <p id="hero-subtitle" class="reveal text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
                     Based in Cypress, CA. Providing the best flipped goods to the LA and OC communities. From rare finds to everyday essentials.
                 </p>
                 <div class="reveal flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#inventory" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
+                    <a id="hero-primary-cta" href="#inventory" data-nav-section="inventory" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
                         Browse Inventory
                     </a>
-                    <a href="#suppliers" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full font-semibold transition backdrop-blur-sm transform hover:scale-105">
+                    <a id="hero-secondary-cta" href="#suppliers" data-nav-section="suppliers" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full font-semibold transition backdrop-blur-sm transform hover:scale-105">
                         Become a Supplier
                     </a>
                 </div>
+                <div id="hero-stats" class="reveal hero-stats mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto"></div>
             </div>
         </section>
 
@@ -259,6 +260,7 @@
                     <div id="thumbnail-grid" class="grid grid-cols-4 gap-4 mt-4">
                         <!-- Thumbnails injected here -->
                     </div>
+                    <p id="product-image-counter" class="text-sm text-gray-500 mt-3 text-center"></p>
                 </div>
 
                 <!-- Details Section -->
@@ -317,6 +319,10 @@
             </div>
         </div>
     </div>
+
+    <button id="back-to-top" type="button" aria-label="Back to top" class="back-to-top hidden">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <script src="js/script.js"></script>
     <script type="module" src="js/community.js"></script>

@@ -516,3 +516,85 @@ body.dark-mode .bg-green-50 {
 body.dark-mode .bg-orange-50 {
     background-color: rgba(249, 115, 22, 0.12) !important;
 }
+
+/* Final quality-of-life polish */
+.hero-stats {
+    color: white;
+}
+
+.hero-stat-card {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(14px);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.14);
+}
+
+.hero-stat-card span {
+    display: block;
+    font-size: 1.85rem;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+}
+
+.hero-stat-card small {
+    display: block;
+    margin-top: 0.35rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.back-to-top {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 60;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    color: white;
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-blue));
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+}
+
+.back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.28);
+}
+
+.back-to-top.hidden {
+    display: none;
+}
+
+.product-card:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 3px solid rgba(249, 115, 22, 0.55);
+    outline-offset: 3px;
+}
+
+#product-image-counter {
+    letter-spacing: 0.01em;
+}
+
+@media (max-width: 639px) {
+    .hero-stat-card {
+        padding: 0.85rem;
+    }
+
+    .hero-stat-card span {
+        font-size: 1.55rem;
+    }
+}

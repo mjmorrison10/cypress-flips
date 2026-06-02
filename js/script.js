@@ -213,6 +213,85 @@ function scrollToSection(sectionId) {
     }, 100);
 }
 
+function getRandomHeroMessage() {
+    const messages = [
+        {
+            title: 'Inventory Sitting Idle? <span class="text-blue-400">Turn It Into Cash.</span>',
+            subtitle: 'Have collectibles, games, cards, electronics, or bulk inventory taking up space? Cypress Flips buys local lots and handles the resale work for you.',
+            primaryText: 'Sell Inventory',
+            primarySection: 'suppliers',
+            secondaryText: 'Browse Current Deals',
+            secondarySection: 'inventory'
+        },
+        {
+            title: 'Welcome to <span class="text-blue-400">Cypress Flips.</span>',
+            subtitle: 'A local resale shop built for collectors, gamers, gift hunters, and anyone who loves finding something good before it disappears.',
+            primaryText: 'Shop Inventory',
+            primarySection: 'inventory',
+            secondaryText: 'Contact Me',
+            secondarySection: 'contact'
+        },
+        {
+            title: 'Fresh Finds. <span class="text-blue-400">Fair Prices.</span>',
+            subtitle: 'Inventory moves quickly here — from nostalgic consoles to anime figures and collectibles. If you see something you like, it may not last long.',
+            primaryText: 'View Premium Picks',
+            primarySection: 'inventory',
+            secondaryText: 'Ask a Question',
+            secondarySection: 'contact'
+        },
+        {
+            title: 'TCG Cards. Collectibles. <span class="text-blue-400">Video Games.</span>',
+            subtitle: 'Cypress Flips focuses on trading cards, collectibles, video games, and the occasional unusual find — maybe even motorcycle-related gear when the right deal appears.',
+            primaryText: 'Explore Inventory',
+            primarySection: 'inventory',
+            secondaryText: 'Sell a Collection',
+            secondarySection: 'suppliers'
+        },
+        {
+            title: 'Quality Finds. <span class="text-blue-400">Local Value.</span>',
+            subtitle: 'Based in Cypress, CA. Providing the best flipped goods to the LA and OC communities. From rare finds to everyday essentials.',
+            primaryText: 'Browse Inventory',
+            primarySection: 'inventory',
+            secondaryText: 'Become a Supplier',
+            secondarySection: 'suppliers'
+        }
+    ];
+
+    return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function setupHeroMessage() {
+    const message = getRandomHeroMessage();
+    const title = document.getElementById('hero-title');
+    const subtitle = document.getElementById('hero-subtitle');
+    const primary = document.getElementById('hero-primary-cta');
+    const secondary = document.getElementById('hero-secondary-cta');
+    const stats = document.getElementById('hero-stats');
+
+    if (title) title.innerHTML = message.title;
+    if (subtitle) subtitle.textContent = message.subtitle;
+    if (primary) {
+        primary.textContent = message.primaryText;
+        primary.href = `#${message.primarySection}`;
+        primary.dataset.navSection = message.primarySection;
+    }
+    if (secondary) {
+        secondary.textContent = message.secondaryText;
+        secondary.href = `#${message.secondarySection}`;
+        secondary.dataset.navSection = message.secondarySection;
+    }
+
+    if (stats) {
+        const categories = new Set(inventory.map(item => item.category)).size;
+        const premiumCount = inventory.filter(item => item.isPremium).length;
+        stats.innerHTML = `
+            <div class="hero-stat-card"><span>${inventory.length}</span><small>Current Listings</small></div>
+            <div class="hero-stat-card"><span>${premiumCount}</span><small>Premium Picks</small></div>
+            <div class="hero-stat-card"><span>${categories}</span><small>Categories</small></div>
+        `;
+    }
+}
+
 let revealObserver = null;
 
 function setupScrollReveal() {
@@ -269,6 +348,38 @@ function setupHeaderEffects() {
     window.addEventListener('scroll', updateNav, { passive: true });
 }
 
+function setupBackToTop() {
+    const button = document.getElementById('back-to-top');
+    if (!button) return;
+
+    const updateVisibility = () => {
+        button.classList.toggle('hidden', window.scrollY < 650);
+    };
+
+    button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+}
+
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', event => {
+        const target = event.target;
+        const isTyping = target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+
+        if (event.key === '/' && !isTyping && !document.getElementById('view-home')?.classList.contains('hidden-view')) {
+            event.preventDefault();
+            scrollToSection('inventory');
+            setTimeout(() => document.getElementById('inventory-search')?.focus(), 250);
+        }
+
+        if (event.key === 'Escape') {
+            document.getElementById('auth-modal')?.classList.add('hidden');
+            document.getElementById('profile-panel')?.classList.add('hidden');
+            if (!document.getElementById('view-product')?.classList.contains('hidden-view')) showView('home');
+        }
+    });
+}
+
 function setupStaticNavigationListeners() {
     const brandHome = document.getElementById('brand-home');
     if (brandHome) {
@@ -320,10 +431,19 @@ function createProductCard(item, tierLabel = '') {
     const card = document.createElement('div');
     const tierBadge = tierLabel ? `<span class="absolute top-3 right-3 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded">${tierLabel}</span>` : '';
     card.className = 'product-card reveal bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `View details for ${item.title}`);
     card.onclick = () => openProduct(item.id);
+    card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openProduct(item.id);
+        }
+    });
     card.innerHTML = `
         <div class="aspect-square bg-gray-200 relative flex items-center justify-center overflow-hidden">
-            <img src="${item.images[0]}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=Product'">
+            <img src="${item.images[0]}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=Product'">
             ${item.isPremium ? '<span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">PREMIUM</span>' : ''}
             ${tierBadge}
         </div>
@@ -333,7 +453,7 @@ function createProductCard(item, tierLabel = '') {
             <p class="text-gray-500 text-sm mb-4">${item.shortDesc}</p>
             <div class="flex justify-between items-center gap-3">
                 <span class="text-xl font-bold text-blue-600">$${item.price.toFixed(2)}</span>
-                <button class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium group-hover:bg-slate-700 transition">View Details</button>
+                <button type="button" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium group-hover:bg-slate-700 transition">View Details</button>
             </div>
         </div>
     `;
@@ -712,16 +832,21 @@ function openProduct(id) {
     setProductInquiryDetails(item);
     
     const mainImg = document.getElementById('main-product-image');
+    const imageCounter = document.getElementById('product-image-counter');
     mainImg.src = item.images[0];
+    mainImg.alt = item.title;
+    if (imageCounter) imageCounter.textContent = `Image 1 of ${item.images.length}`;
 
     const thumbGrid = document.getElementById('thumbnail-grid');
     thumbGrid.innerHTML = '';
     item.images.forEach((imgSrc, index) => {
         const thumb = document.createElement('div');
         thumb.className = `aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer border-2 transition ${index === 0 ? 'border-blue-600' : 'border-transparent hover:border-gray-300'}`;
-        thumb.innerHTML = `<img src="${imgSrc}" class="w-full h-full object-cover">`;
+        thumb.innerHTML = `<img src="${imgSrc}" alt="${item.title} image ${index + 1}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
         thumb.onclick = () => {
             mainImg.src = imgSrc;
+            mainImg.alt = `${item.title} image ${index + 1}`;
+            if (imageCounter) imageCounter.textContent = `Image ${index + 1} of ${item.images.length}`;
             // Update active thumbnail border
             Array.from(thumbGrid.children).forEach(child => child.classList.replace('border-blue-600', 'border-transparent'));
             thumb.classList.replace('border-transparent', 'border-blue-600');
@@ -903,9 +1028,12 @@ if (productInquiryForm && productInquiryNextUrl) {
 
 // Initial Setup
 setupThemeToggle();
+setupHeroMessage();
 setupHeaderEffects();
+setupBackToTop();
 setupStaticNavigationListeners();
 setupInventoryControls();
+setupKeyboardShortcuts();
 setupScrollReveal();
 renderPremiumInventory();
 renderInventory();
