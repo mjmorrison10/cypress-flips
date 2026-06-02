@@ -598,3 +598,24 @@ select:focus-visible {
         font-size: 1.55rem;
     }
 }
+
+/* Admin listing manager */
+.admin-listing-form {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.admin-product-row {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.admin-product-row:hover {
+    transform: translateY(-1px);
+    border-color: rgba(249, 115, 22, 0.35) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode .admin-listing-form,
+body.dark-mode .admin-product-row {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}

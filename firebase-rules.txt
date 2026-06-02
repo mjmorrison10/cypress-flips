@@ -16,10 +16,26 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
-    function isAdmin() {
+    function profile() {
+      return get(/databases/$(database)/documents/profiles/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
       return signedIn()
         && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
-        && get(/databases/$(database)/documents/profiles/$(request.auth.uid)).data.role == 'admin';
+        && profile().role == role;
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isModerator() {
+      return hasRole('moderator');
+    }
+
+    function canManageListings() {
+      return isAdmin() || isModerator();
     }
 
     match /profiles/{uid} {
@@ -29,6 +45,17 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if canManageListings();
+    }
+
+    match /products/{productId} {
+      // Product listing data is public storefront content. Hidden products are filtered client-side.
+      allow read: if true;
+      allow create, update, delete: if canManageListings();
+    }
+
     match /favorites/{favoriteId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
       allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
@@ -36,16 +63,17 @@ service cloud.firestore {
     }
 
     match /reviews/{reviewId} {
-      allow read: if resource.data.status == 'visible' || isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow read: if resource.data.status == 'visible' || isAdmin() || isModerator() || (signedIn() && resource.data.uid == request.auth.uid);
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.rating is int
         && request.resource.data.rating >= 1
         && request.resource.data.rating <= 5;
       allow update: if isAdmin()
+        || isModerator()
         || (signedIn() && resource.data.uid == request.auth.uid)
         || (signedIn() && request.resource.data.diff(resource.data).changedKeys().hasOnly(['reportCount', 'reportedAt']));
-      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin() || isModerator() || (signedIn() && resource.data.uid == request.auth.uid);
     }
   }
 }
@@ -56,12 +84,34 @@ STORAGE RULES
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(role) {
+      return signedIn()
+        && firestore.exists(/databases/(default)/documents/profiles/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/profiles/$(request.auth.uid)).data.role == role;
+    }
+
+    function canManageListings() {
+      return hasRole('admin') || hasRole('moderator');
+    }
+
     match /profile-pictures/{uid}/{fileName} {
       allow read: if true;
-      allow write: if request.auth != null
+      allow write: if signedIn()
         && request.auth.uid == uid
         && request.resource.size < 5 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
+    }
+
+    match /product-images/{productId}/{fileName} {
+      allow read: if true;
+      allow write: if canManageListings()
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if canManageListings();
     }
   }
 }
@@ -82,3 +132,8 @@ FIREBASE CONSOLE CHECKLIST
    profiles/{your_uid}
    role: "admin"
 
+8. To make someone a moderator, set:
+   profiles/{their_uid}
+   role: "moderator"
+
+9. Admins and moderators can add/edit/delete listings from the profile panel after logging in.

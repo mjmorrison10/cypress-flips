@@ -13,6 +13,7 @@ let updateProfile;
 let getFirestore;
 let doc;
 let getDoc;
+let getDocs;
 let setDoc;
 let deleteDoc;
 let addDoc;
@@ -25,6 +26,7 @@ let limit;
 let onSnapshot;
 let serverTimestamp;
 let increment;
+let writeBatch;
 let getStorage;
 let ref;
 let uploadBytes;
@@ -54,6 +56,7 @@ async function loadFirebaseSDKs() {
         getFirestore,
         doc,
         getDoc,
+        getDocs,
         setDoc,
         deleteDoc,
         addDoc,
@@ -65,7 +68,8 @@ async function loadFirebaseSDKs() {
         limit,
         onSnapshot,
         serverTimestamp,
-        increment
+        increment,
+        writeBatch
     } = firestoreModule);
     ({ getStorage, ref, uploadBytes, getDownloadURL } = storageModule);
 }
@@ -81,6 +85,10 @@ let currentProduct = window.CF_CURRENT_PRODUCT || null;
 let unsubscribeProductReviews = null;
 let unsubscribeTestimonials = null;
 let unsubscribeFavorite = null;
+let unsubscribeProducts = null;
+let unsubscribeInventorySettings = null;
+let remoteProductDocs = [];
+let useFirestoreInventory = false;
 let isCurrentProductFavorite = false;
 
 function money(value) {
@@ -103,6 +111,10 @@ function getInitials(userOrProfile = {}) {
 
 function isAdmin() {
     return currentProfile?.role === 'admin' || currentProfile?.isAdmin === true;
+}
+
+function canManageListings() {
+    return isAdmin() || currentProfile?.role === 'moderator' || currentProfile?.isModerator === true;
 }
 
 function productIdSafe(product) {
@@ -228,8 +240,72 @@ function profilePanelHTML() {
                     <div id="favorites-list" class="space-y-3"></div>
                 </div>
                 <div id="admin-panel" class="hidden mt-8 p-4 rounded-2xl border border-orange-200 bg-orange-50">
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">Admin Moderation</h3>
-                    <p class="text-sm text-gray-600">Reviews with reports or hidden status can be moderated from Firestore. Admin-only UI hooks are included for future expansion.</p>
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Admin Listing Manager</h3>
+                            <p class="text-sm text-gray-600">Add, edit, customize, or delete inventory listings from Firebase.</p>
+                        </div>
+                        <button type="button" id="sync-inventory-button" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+                            Sync Current Inventory
+                        </button>
+                    </div>
+                    <div id="admin-listing-status" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
+                    <form id="admin-listing-form" class="admin-listing-form grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border border-orange-100 rounded-2xl p-4 mb-5">
+                        <input type="hidden" id="listing-doc-id" value="">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-title">Title</label>
+                            <input id="listing-title" required type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-category">Category</label>
+                            <input id="listing-category" required type="text" list="listing-category-options" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Video Games">
+                            <datalist id="listing-category-options">
+                                <option value="Action Figure"></option>
+                                <option value="Plushie"></option>
+                                <option value="Video Games"></option>
+                                <option value="TCG Cards"></option>
+                                <option value="Collectibles"></option>
+                                <option value="Motorcycles"></option>
+                            </datalist>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-price">Price</label>
+                            <input id="listing-price" required type="number" step="0.01" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-short-desc">Short description</label>
+                            <textarea id="listing-short-desc" required rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-full-desc">Full description</label>
+                            <textarea id="listing-full-desc" required rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="HTML like <br><br> is allowed."></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-image-urls">Image URLs / paths</label>
+                            <textarea id="listing-image-urls" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="One image path or URL per line. Example: images/video games/example.jpg"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="listing-image-files">Upload images</label>
+                            <input id="listing-image-files" type="file" accept="image/*" multiple class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            <p class="text-xs text-gray-500 mt-1">Uploaded image URLs will be added to the listing.</p>
+                        </div>
+                        <label class="inline-flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <input id="listing-premium" type="checkbox" class="accent-blue-600">
+                            Premium listing
+                        </label>
+                        <label class="inline-flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <input id="listing-visible" type="checkbox" class="accent-blue-600" checked>
+                            Visible on site
+                        </label>
+                        <div class="md:col-span-2 flex flex-col sm:flex-row gap-3">
+                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Save Listing</button>
+                            <button type="button" id="reset-listing-form" class="flex-1 border border-gray-300 hover:bg-gray-50 font-bold py-3 rounded-lg transition">Clear Form</button>
+                        </div>
+                    </form>
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-3">Manage Current Listings</h4>
+                        <div id="admin-products-list" class="space-y-3"></div>
+                    </div>
                 </div>
                 <button type="button" id="logout-button" class="mt-8 w-full border border-gray-300 hover:bg-gray-50 font-bold py-3 rounded-lg transition">Log Out</button>
             </div>
@@ -343,6 +419,9 @@ function bindAuthModalEvents() {
 function bindProfileEvents() {
     document.querySelectorAll('[data-close-profile]').forEach(button => button.addEventListener('click', closeProfilePanel));
     document.getElementById('profile-form')?.addEventListener('submit', saveProfile);
+    document.getElementById('admin-listing-form')?.addEventListener('submit', saveListing);
+    document.getElementById('reset-listing-form')?.addEventListener('click', resetListingForm);
+    document.getElementById('sync-inventory-button')?.addEventListener('click', syncDefaultInventoryToFirestore);
     document.getElementById('logout-button')?.addEventListener('click', async () => {
         if (auth) await signOut(auth);
         closeProfilePanel();
@@ -510,7 +589,8 @@ function hydrateProfileForm() {
         `;
     }
 
-    document.getElementById('admin-panel')?.classList.toggle('hidden', !isAdmin());
+    document.getElementById('admin-panel')?.classList.toggle('hidden', !canManageListings());
+    if (canManageListings()) renderAdminProductsList();
 }
 
 async function saveProfile(event) {
@@ -792,6 +872,250 @@ function listenToTestimonials() {
     });
 }
 
+function slugifyListingTitle(title) {
+    return String(title || 'listing')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80) || `listing-${Date.now()}`;
+}
+
+function normalizeProductDoc(id, data) {
+    return {
+        id: data.id || id,
+        title: data.title || 'Untitled Listing',
+        category: data.category || 'Uncategorized',
+        price: Number(data.price || 0),
+        shortDesc: data.shortDesc || '',
+        fullDesc: data.fullDesc || data.shortDesc || '',
+        images: Array.isArray(data.images) && data.images.length ? data.images : ['https://via.placeholder.com/600?text=Product'],
+        isPremium: Boolean(data.isPremium),
+        status: data.status || 'visible'
+    };
+}
+
+function applyRemoteInventory() {
+    if (useFirestoreInventory) {
+        const visibleProducts = remoteProductDocs
+            .filter(item => item.status !== 'hidden' && item.status !== 'archived')
+            .sort((a, b) => (Number(b.isPremium) - Number(a.isPremium)) || a.title.localeCompare(b.title));
+        window.CF_SET_INVENTORY?.(visibleProducts);
+    } else {
+        window.CF_SET_INVENTORY?.(window.CF_DEFAULT_INVENTORY || []);
+    }
+
+    renderAdminProductsList();
+}
+
+function listenToProductListings() {
+    if (unsubscribeProducts) unsubscribeProducts();
+    if (unsubscribeInventorySettings) unsubscribeInventorySettings();
+
+    unsubscribeInventorySettings = onSnapshot(doc(db, 'settings', 'inventory'), snap => {
+        useFirestoreInventory = snap.exists() && snap.data()?.useFirestoreInventory === true;
+        applyRemoteInventory();
+    });
+
+    unsubscribeProducts = onSnapshot(collection(db, 'products'), snap => {
+        remoteProductDocs = [];
+        snap.forEach(docSnap => remoteProductDocs.push(normalizeProductDoc(docSnap.id, docSnap.data())));
+        applyRemoteInventory();
+    });
+}
+
+function setAdminListingStatus(type, message) {
+    const status = document.getElementById('admin-listing-status');
+    if (!status) return;
+    status.className = `mb-4 p-3 rounded-xl text-sm font-medium ${type === 'error' ? 'bg-orange-50 text-orange-800 border border-orange-200' : 'bg-green-50 text-green-700 border border-green-200'}`;
+    status.textContent = message;
+    status.classList.remove('hidden');
+}
+
+function getAdminManageItems() {
+    return useFirestoreInventory ? remoteProductDocs : (window.CF_INVENTORY || []);
+}
+
+function renderAdminProductsList() {
+    const list = document.getElementById('admin-products-list');
+    if (!list) return;
+
+    if (!canManageListings()) {
+        list.innerHTML = '';
+        return;
+    }
+
+    const items = getAdminManageItems();
+    if (!useFirestoreInventory) {
+        list.innerHTML = `
+            <div class="p-4 rounded-xl border border-orange-200 bg-orange-50 text-sm text-orange-800">
+                Listings are currently coming from the static website inventory. Click <strong>Sync Current Inventory</strong> to copy them into Firebase, then admins/moderators can edit and delete them from this panel.
+            </div>
+        `;
+        return;
+    }
+
+    if (!items.length) {
+        list.innerHTML = '<p class="text-gray-500 text-sm">No Firebase listings yet. Add a listing or sync the current inventory.</p>';
+        return;
+    }
+
+    list.innerHTML = '';
+    items
+        .slice()
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'admin-product-row flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-white';
+            row.innerHTML = `
+                <img src="${escapeHTML(item.images?.[0] || '')}" class="w-16 h-16 rounded-lg object-cover bg-gray-100" alt="${escapeHTML(item.title)}">
+                <div class="flex-1 min-w-0">
+                    <div class="font-bold text-slate-900 truncate">${escapeHTML(item.title)}</div>
+                    <div class="text-sm text-gray-500">${escapeHTML(item.category)} • ${money(item.price)} • ${item.isPremium ? 'Premium' : 'Standard'} • ${escapeHTML(item.status || 'visible')}</div>
+                </div>
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button type="button" data-edit-listing="${escapeHTML(item.id)}" class="px-3 py-2 rounded-lg border border-gray-300 hover:border-blue-600 text-sm font-bold transition">Edit</button>
+                    <button type="button" data-delete-listing="${escapeHTML(item.id)}" class="px-3 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold transition">Delete</button>
+                </div>
+            `;
+            row.querySelector('[data-edit-listing]')?.addEventListener('click', () => editListing(item.id));
+            row.querySelector('[data-delete-listing]')?.addEventListener('click', () => deleteListing(item.id));
+            list.appendChild(row);
+        });
+}
+
+function resetListingForm() {
+    const form = document.getElementById('admin-listing-form');
+    form?.reset();
+    document.getElementById('listing-doc-id').value = '';
+    document.getElementById('listing-visible').checked = true;
+}
+
+function editListing(id) {
+    if (!canManageListings()) return;
+    const item = remoteProductDocs.find(product => product.id === id) || (window.CF_INVENTORY || []).find(product => product.id === id);
+    if (!item) return;
+
+    document.getElementById('listing-doc-id').value = item.id;
+    document.getElementById('listing-title').value = item.title || '';
+    document.getElementById('listing-category').value = item.category || '';
+    document.getElementById('listing-price').value = Number(item.price || 0).toFixed(2);
+    document.getElementById('listing-short-desc').value = item.shortDesc || '';
+    document.getElementById('listing-full-desc').value = item.fullDesc || '';
+    document.getElementById('listing-image-urls').value = (item.images || []).join('\n');
+    document.getElementById('listing-premium').checked = Boolean(item.isPremium);
+    document.getElementById('listing-visible').checked = item.status !== 'hidden' && item.status !== 'archived';
+    document.getElementById('admin-listing-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function uploadListingImages(id) {
+    const fileInput = document.getElementById('listing-image-files');
+    const files = Array.from(fileInput?.files || []);
+    const uploaded = [];
+
+    for (const file of files) {
+        const imageRef = ref(storage, `product-images/${id}/${Date.now()}-${file.name}`);
+        await uploadBytes(imageRef, file);
+        uploaded.push(await getDownloadURL(imageRef));
+    }
+
+    return uploaded;
+}
+
+function getListingFormData() {
+    const existingId = document.getElementById('listing-doc-id')?.value.trim();
+    const title = document.getElementById('listing-title')?.value.trim();
+    const id = existingId || slugifyListingTitle(title);
+    const imageUrls = (document.getElementById('listing-image-urls')?.value || '')
+        .split('\n')
+        .map(value => value.trim())
+        .filter(Boolean);
+
+    return {
+        id,
+        title,
+        category: document.getElementById('listing-category')?.value.trim(),
+        price: Number(document.getElementById('listing-price')?.value || 0),
+        shortDesc: document.getElementById('listing-short-desc')?.value.trim(),
+        fullDesc: document.getElementById('listing-full-desc')?.value.trim(),
+        images: imageUrls,
+        isPremium: document.getElementById('listing-premium')?.checked || false,
+        status: document.getElementById('listing-visible')?.checked ? 'visible' : 'hidden'
+    };
+}
+
+async function saveListing(event) {
+    event.preventDefault();
+    if (!canManageListings()) return setAdminListingStatus('error', 'You do not have permission to manage listings.');
+
+    try {
+        const data = getListingFormData();
+        if (!data.title || !data.category || !data.shortDesc || !data.fullDesc) {
+            return setAdminListingStatus('error', 'Please complete the title, category, short description, and full description.');
+        }
+
+        const uploadedImages = await uploadListingImages(data.id);
+        const images = [...data.images, ...uploadedImages];
+        if (!images.length) {
+            return setAdminListingStatus('error', 'Please add at least one image URL/path or upload an image.');
+        }
+
+        await setDoc(doc(db, 'products', data.id), {
+            ...data,
+            images,
+            updatedBy: currentUser.uid,
+            updatedAt: serverTimestamp(),
+            createdAt: serverTimestamp()
+        }, { merge: true });
+        await setDoc(doc(db, 'settings', 'inventory'), { useFirestoreInventory: true, updatedAt: serverTimestamp() }, { merge: true });
+        useFirestoreInventory = true;
+        resetListingForm();
+        setAdminListingStatus('success', 'Listing saved successfully.');
+    } catch (error) {
+        setAdminListingStatus('error', error.message);
+    }
+}
+
+async function deleteListing(id) {
+    if (!canManageListings()) return setAdminListingStatus('error', 'You do not have permission to delete listings.');
+    if (!confirm('Delete this listing from Firebase inventory?')) return;
+
+    try {
+        await deleteDoc(doc(db, 'products', id));
+        await setDoc(doc(db, 'settings', 'inventory'), { useFirestoreInventory: true, updatedAt: serverTimestamp() }, { merge: true });
+        setAdminListingStatus('success', 'Listing deleted.');
+    } catch (error) {
+        setAdminListingStatus('error', error.message);
+    }
+}
+
+async function syncDefaultInventoryToFirestore() {
+    if (!canManageListings()) return setAdminListingStatus('error', 'You do not have permission to sync inventory.');
+    if (!confirm('Copy the current website inventory into Firebase? Existing Firebase product documents with the same IDs will be updated.')) return;
+
+    try {
+        const batch = writeBatch(db);
+        const source = window.CF_DEFAULT_INVENTORY || window.CF_INVENTORY || [];
+        source.forEach(item => {
+            const id = item.id || slugifyListingTitle(item.title);
+            batch.set(doc(db, 'products', id), {
+                ...item,
+                id,
+                status: item.status || 'visible',
+                updatedBy: currentUser.uid,
+                updatedAt: serverTimestamp(),
+                createdAt: serverTimestamp()
+            }, { merge: true });
+        });
+        batch.set(doc(db, 'settings', 'inventory'), { useFirestoreInventory: true, updatedAt: serverTimestamp() }, { merge: true });
+        await batch.commit();
+        useFirestoreInventory = true;
+        setAdminListingStatus('success', 'Current inventory synced to Firebase. You can now edit/delete listings here.');
+    } catch (error) {
+        setAdminListingStatus('error', error.message);
+    }
+}
+
 function updateProductCommunity(product) {
     currentProduct = product;
     ensureProductCommunityContainers();
@@ -839,6 +1163,7 @@ async function initializeFirebaseCommunity() {
     });
 
     listenToTestimonials();
+    listenToProductListings();
 }
 
 window.addEventListener('cf:product-open', event => updateProductCommunity(event.detail));

@@ -1,5 +1,5 @@
 // --- INVENTORY DATABASE ---
-const inventory = [
+let inventory = [
     {
         id: 'zoro-king-of-artist',
         title: 'Roronoa Zoro - King of Artist (Wano Kuni)',
@@ -188,7 +188,26 @@ const inventory = [
     },
     // Add more items here in the future
 ];
+const defaultInventory = inventory.map(item => ({ ...item, images: [...item.images] }));
+window.CF_DEFAULT_INVENTORY = defaultInventory;
 window.CF_INVENTORY = inventory;
+
+function refreshInventoryViews(options = {}) {
+    const { preservePremiumPicks = false } = options;
+    window.CF_INVENTORY = inventory;
+    if (!preservePremiumPicks) selectedPremiumPicks = null;
+    populateCategoryFilter();
+    renderPremiumInventory();
+    renderInventory();
+}
+
+function setInventoryItems(items, options = {}) {
+    inventory = Array.isArray(items) ? items : defaultInventory.map(item => ({ ...item, images: [...item.images] }));
+    refreshInventoryViews(options);
+}
+
+window.CF_SET_INVENTORY = setInventoryItems;
+window.CF_REFRESH_INVENTORY = refreshInventoryViews;
 
 // --- VIEW NAVIGATION ---
 function showView(viewId) {
