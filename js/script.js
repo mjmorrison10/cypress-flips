@@ -89,6 +89,20 @@ let inventory = [
         isPremium: false
     },
     {
+        id: 'disney-store-figaro-mini-bean-bag-plush',
+        title: 'Vintage Disney Store Figaro Mini Bean Bag Plush - Pinocchio / Minnie Mouse Cat',
+        category: 'Plushie',
+        price: 10.00,
+        shortDesc: "Vintage Disney Store Figaro mini bean bag plush with tag. Cute Pinocchio/Minnie collectible priced to move.",
+        fullDesc: "Add a charming Disney classic to your collection with this vintage Disney Store Figaro Mini Bean Bag plush. Figaro first appeared as Geppetto's kitten in Disney's 1940 animated film Pinocchio and later became known as Minnie Mouse's pet cat, making this a fun crossover character for Disney collectors. This small black-and-white plush has bright embroidered yellow eyes, whiskers, a soft bean bag body, and the original Disney Store tag still attached. <br><br><strong>Condition:</strong> Good vintage pre-owned/display condition with tag. Compared with a mint-condition plush, this Figaro shows normal age/display handling. There is visible lint/fiber pickup on the black and white plush areas, and small dark marks are visible on at least one white paw in the photos. The eyes, facial stitching, ears, tail, and attached Disney Store tag appear intact. No major tears, missing limbs, or heavy staining are visible from the provided photos. <br><br>Vintage Disney Store mini bean bag plushes can vary in price depending on character, tag condition, and cleanliness. Similar Figaro/Disney Store bean bag plush listings commonly appear above this price point, but this one is intentionally priced at $10 for an easy, affordable pickup. A great little add-on item for Disney fans, Pinocchio collectors, Minnie Mouse collectors, or anyone who loves Figaro's classic mischievous-cat charm.",
+        images: [
+            'images/plushie/figaro_1.jpg',
+            'images/plushie/figaro_2.jpg',
+            'images/plushie/figaro_3.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'grogu-cuddleez-plush',
         title: 'Disney Cuddleez Grogu Plush - Large (23")',
         category: 'Plushie',
