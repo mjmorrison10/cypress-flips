@@ -26,7 +26,15 @@ window.CF_SET_INVENTORY = setInventoryItems;
 window.CF_REFRESH_INVENTORY = refreshInventoryViews;
 
 // --- VIEW NAVIGATION ---
-function showView(viewId) {
+let lastProductReturn = { view: 'home', scrollY: 0 };
+
+function getCurrentVisibleView() {
+    const viewIds = ['home', 'listings', 'categories', 'about', 'contact', 'policies', 'product'];
+    return viewIds.find(id => !document.getElementById(`view-${id}`)?.classList.contains('hidden-view')) || 'home';
+}
+
+function showView(viewId, options = {}) {
+    const { scrollToTop = true } = options;
     const homeView = document.getElementById('view-home');
     const productView = document.getElementById('view-product');
     const aboutView = document.getElementById('view-about');
@@ -59,7 +67,19 @@ function showView(viewId) {
         homeView?.classList.remove('hidden-view');
     }
 
-    window.scrollTo(0, 0);
+    if (scrollToTop) window.scrollTo(0, 0);
+}
+
+function returnToPreviousInventoryContext() {
+    if (!lastProductReturn || lastProductReturn.view === 'product') {
+        openListingsPage({ mode: 'all' });
+        return;
+    }
+
+    showView(lastProductReturn.view || 'home', { scrollToTop: false });
+    requestAnimationFrame(() => {
+        window.scrollTo({ top: lastProductReturn.scrollY || 0, behavior: 'smooth' });
+    });
 }
 
 function scrollToSection(sectionId) {
@@ -325,7 +345,7 @@ function setupStaticNavigationListeners() {
 
     const backButton = document.getElementById('back-to-inventory');
     if (backButton) {
-        backButton.addEventListener('click', () => showView('home'));
+        backButton.addEventListener('click', returnToPreviousInventoryContext);
     }
 
     const reserveProductButton = document.getElementById('reserve-product-button');
@@ -485,7 +505,7 @@ function createProductCard(item, tierLabel = '') {
             <img src="${item.images[0]}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=Product'">
             ${item.isPremium ? '<span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">PREMIUM</span>' : ''}
             ${tierBadge}
-            <span class="absolute bottom-3 left-3 bg-white/90 text-slate-900 text-xs font-extrabold px-2 py-1 rounded-full shadow-sm">${status.label}</span>
+            <span class="status-badge absolute bottom-3 left-3 bg-white/90 text-slate-900 text-xs font-extrabold px-2 py-1 rounded-full shadow-sm">${status.label}</span>
         </div>
         <div class="p-5">
             <div class="text-xs font-bold text-blue-500 uppercase mb-1">${item.category}</div>
@@ -1262,6 +1282,12 @@ function showProductInquiryForm(intent = 'question') {
 function openProduct(id) {
     const item = inventory.find(i => i.id === id);
     if (!item) return;
+
+    const previousView = getCurrentVisibleView();
+    if (previousView !== 'product') {
+        lastProductReturn = { view: previousView, scrollY: window.scrollY };
+    }
+
     currentProduct = item;
     window.CF_CURRENT_PRODUCT = item;
 
