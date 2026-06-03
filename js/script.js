@@ -291,7 +291,7 @@ function setupStaticNavigationListeners() {
     document.querySelectorAll('[data-nav-section]').forEach(link => {
         link.addEventListener('click', event => {
             event.preventDefault();
-            showView('home');
+            showView('home', { scrollToTop: false });
             scrollToSection(link.dataset.navSection);
             if (typeof mobileMenu !== 'undefined') mobileMenu?.classList.add('hidden');
         });
@@ -333,7 +333,7 @@ function setupStaticNavigationListeners() {
     const contactSellToUs = document.getElementById('contact-sell-to-us');
     if (contactSellToUs) {
         contactSellToUs.addEventListener('click', () => {
-            showView('home');
+            showView('home', { scrollToTop: false });
             scrollToSection('suppliers');
         });
     }
