@@ -111,6 +111,51 @@
             </div>
         </section>
 
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-16 bg-gray-50 border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="reveal text-center mb-12">
+                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Simple, local, transparent</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">How Cypress Flips works</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Whether you are buying one item or clearing out inventory, the process is built to reduce uncertainty.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="process-card reveal bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">For buyers</div>
+                        <ol class="space-y-5">
+                            <li><span>1</span><div><strong>Browse inspected listings</strong><p>Review photos, condition notes, included accessories, and known flaws before messaging.</p></div></li>
+                            <li><span>2</span><div><strong>Reserve or ask questions</strong><p>Use the product page to ask about availability, pickup, condition, or whether it fits your needs.</p></div></li>
+                            <li><span>3</span><div><strong>Meet safely and inspect</strong><p>Meet around Cypress, CA / OC / LA in a public place, inspect the item, and buy with confidence.</p></div></li>
+                        </ol>
+                    </div>
+                    <div class="process-card reveal bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">For vendors</div>
+                        <ol class="space-y-5">
+                            <li><span>1</span><div><strong>Send photos or a list</strong><p>Share what you want to liquidate, whether it is one item, a box, or a larger batch.</p></div></li>
+                            <li><span>2</span><div><strong>I review resale potential</strong><p>I check condition, demand, completeness, and realistic resale value before making an offer.</p></div></li>
+                            <li><span>3</span><div><strong>Get space and cash back</strong><p>If the deal works for both sides, we arrange pickup, meetup, delivery, or transport.</p></div></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recently Added Section -->
+        <section id="recently-added" class="py-16 bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+                    <div>
+                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Fresh drops</div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Recently Added</h2>
+                        <p class="text-gray-600 mt-2 max-w-2xl">New finds are added often. Follow or create an account to keep an eye on what changes.</p>
+                    </div>
+                    <button type="button" id="recent-view-all" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl font-bold transition">View All Listings</button>
+                </div>
+                <div id="recently-added-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+
+
         <!-- Inventory Section -->
         <section id="inventory" class="py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -284,6 +329,11 @@
                     &copy; 2026 Cypress Flips. All rights reserved.
                 </div>
                 <p id="hourly-scripture" class="hourly-scripture" aria-live="polite"></p>
+                <div class="footer-policy-links mt-4">
+                    <a href="#policies" data-nav-view="policies">Refunds & Pickup</a>
+                    <a href="#policies" data-nav-view="policies">Privacy</a>
+                    <a href="#contact" data-nav-view="contact">Customer Contact</a>
+                </div>
             </div>
         </footer>
     </div>
@@ -566,6 +616,45 @@
     </div>
 
 
+    <!-- POLICIES VIEW -->
+    <div id="view-policies" class="hidden-view pt-24 pb-20">
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button id="policies-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
+                </button>
+                <div class="reveal text-center mb-12">
+                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Policies</div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Refunds, pickup, privacy, and trust</h1>
+                    <p class="text-gray-600 max-w-3xl mx-auto text-lg">Plain-English policies for buying used goods from Cypress Flips.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Refund / return policy</h2>
+                        <p class="text-gray-600 leading-relaxed mb-4">Refunds are handled case by case. If I missed a material condition issue that should have been disclosed, I will work with you to make it right.</p>
+                        <p class="text-gray-600 leading-relaxed">Used items may have normal wear. Please inspect locally before purchase when possible, and ask questions before meeting if something is important to you.</p>
+                    </div>
+                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Pickup / delivery policy</h2>
+                        <p class="text-gray-600 leading-relaxed mb-4">Cypress, CA is home base. Public meetups around Cypress, Orange County, and the LA area are preferred for safety.</p>
+                        <p class="text-gray-600 leading-relaxed">Delivery may be available when the deal supports it. Delivery fees are negotiated before travel.</p>
+                    </div>
+                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Privacy policy</h2>
+                        <p class="text-gray-600 leading-relaxed mb-4">Contact forms collect the information you submit so I can reply. Account features may use Firebase for login, favorites, reviews, and profile details.</p>
+                        <p class="text-gray-600 leading-relaxed">I do not sell your personal information. Avoid sending sensitive financial information through forms.</p>
+                    </div>
+                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Used goods disclosure</h2>
+                        <p class="text-gray-600 leading-relaxed mb-4">I inspect and describe products as accurately as possible, including flaws, missing accessories, tested status, and untested conditions when applicable.</p>
+                        <p class="text-gray-600 leading-relaxed">If an item is untested, the listing should say so. If it is listed as working, it has been tested to the best of my ability.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
     <!-- CONTACT VIEW -->
     <div id="view-contact" class="hidden-view pt-24 pb-20">
         <section class="py-12 bg-gray-50">
@@ -679,7 +768,9 @@
                 <div class="lg:w-1/2">
                     <div id="product-category" class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Category</div>
                     <h1 id="product-title" class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Product Title</h1>
-                    <div id="product-price" class="text-3xl font-bold text-blue-600 mb-6">$0.00</div>
+                    <div id="product-price" class="text-3xl font-bold text-blue-600 mb-4">$0.00</div>
+                    <div id="product-meta-badges" class="product-meta-badges mb-5"></div>
+                    <div id="product-best-for" class="product-best-for hidden mb-6"></div>
                     
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-bold text-slate-900 mb-3">Description</h3>
@@ -688,22 +779,28 @@
                         </p>
                     </div>
 
-                    <div class="mt-10">
-                        <button id="show-product-inquiry" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-12 py-4 rounded-xl font-bold text-lg transition transform active:scale-95 shadow-lg">
-                            Inquire Now
-                        </button>
+                    <div class="mt-10 product-cta-block">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button id="reserve-product-button" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold text-lg transition transform active:scale-95 shadow-lg">
+                                Reserve / Ask to Buy
+                            </button>
+                            <button id="show-product-inquiry" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 rounded-xl font-bold text-lg transition transform active:scale-95 shadow-lg">
+                                Ask a Question
+                            </button>
+                        </div>
                         <p class="text-gray-500 text-sm mt-4 flex items-center justify-center sm:justify-start">
                             <i class="fa-solid fa-truck-fast mr-2"></i> Local pickup available in Cypress, CA
                         </p>
 
                         <div id="product-inquiry-panel" class="hidden mt-6 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-                            <h3 class="text-xl font-bold text-slate-900 mb-2">Ask about this item</h3>
+                            <h3 id="product-inquiry-heading" class="text-xl font-bold text-slate-900 mb-2">Ask about this item</h3>
                             <p class="text-gray-500 text-sm mb-5">Your message will automatically include the product title, category, and price.</p>
                             <form id="product-inquiry-form" action="https://formsubmit.co/ajax/mjmorrisonusa@gmail.com" method="POST" class="space-y-4">
                                 <input type="hidden" id="product-inquiry-subject" name="_subject" value="New Cypress Flips product inquiry">
                                 <input type="hidden" name="_template" value="table">
                                 <input type="hidden" name="_captcha" value="false">
                                 <input type="hidden" id="product-inquiry-next-url" name="_next" value="">
+                                <input type="hidden" id="product-inquiry-intent" name="inquiry_intent" value="Question">
                                 <input type="hidden" id="inquiry-product-title" name="product_title" value="">
                                 <input type="hidden" id="inquiry-product-id" name="product_id" value="">
                                 <input type="hidden" id="inquiry-product-category" name="product_category" value="">
@@ -742,6 +839,7 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
+    <script src="js/inventory.js"></script>
     <script src="js/script.js"></script>
     <script type="module" src="js/community.js"></script>
 </body>

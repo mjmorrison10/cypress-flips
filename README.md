@@ -160,3 +160,23 @@ Specialty manual themes:
 - `lakers`: purple and gold
 - `pacific`: calm Southern California ocean palette
 - `rosewood`: warm boutique rose/wood/cream palette
+
+## Inventory maintenance
+
+Static inventory now lives in:
+
+```text
+js/inventory.js
+```
+
+The main UI and behavior live in:
+
+```text
+js/script.js
+```
+
+Until Firebase inventory management is enabled, add/edit products in `js/inventory.js` and store images in the relevant `images/` category folder.
+
+## Performance note
+
+See `IMAGE-OPTIMIZATION.md` for the recommended next step for faster mobile loading: WebP image conversion and thumbnails.
