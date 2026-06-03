@@ -1556,3 +1556,43 @@ body.dark-mode .product-cta-block {
         position: static;
     }
 }
+
+/* Product mobile readability: keep actions inline and move community content to page bottom */
+.product-community-bottom {
+    scroll-margin-top: 6rem;
+}
+
+@media (max-width: 767px) {
+    .product-cta-block,
+    .product-cta-block.inquiry-open {
+        position: static !important;
+        bottom: auto !important;
+        z-index: auto !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    #product-community-actions {
+        margin-top: 0.75rem !important;
+        margin-bottom: 1.25rem !important;
+        opacity: 0.84;
+    }
+
+    #product-community-actions:hover,
+    #product-community-actions:focus-within {
+        opacity: 1;
+    }
+
+    #product-community-actions button {
+        padding: 0.65rem 0.85rem !important;
+        font-size: 0.85rem;
+    }
+
+    .product-community-bottom {
+        margin-top: 1.5rem;
+    }
+}

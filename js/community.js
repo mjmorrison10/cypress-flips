@@ -359,14 +359,14 @@ function ensureProductCommunityContainers() {
         `);
     }
 
-    const inquiryPanel = document.getElementById('product-inquiry-panel');
-    if (inquiryPanel && !document.getElementById('product-community-section')) {
-        inquiryPanel.insertAdjacentHTML('afterend', `
-            <div id="product-community-section" class="mt-8 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+    const communityAnchor = document.getElementById('product-community-anchor');
+    if (communityAnchor && !document.getElementById('product-community-section')) {
+        communityAnchor.insertAdjacentHTML('beforeend', `
+            <div id="product-community-section" class="product-community-bottom bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
                 <div class="flex items-start justify-between gap-4 mb-5">
                     <div>
                         <h3 class="text-xl font-bold text-slate-900">Customer Reviews & Comments</h3>
-                        <p class="text-gray-500 text-sm">Ask public questions, leave a rating, or help future buyers.</p>
+                        <p class="text-gray-500 text-sm">Questions, comments, and real customer reviews live here at the bottom of the product page.</p>
                     </div>
                 </div>
                 <form id="review-form" class="hidden space-y-4 mb-6">
