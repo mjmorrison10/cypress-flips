@@ -1,0 +1,14 @@
+{
+  "name": "cypress-flips",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cypress Flips static storefront and Firebase inventory tooling.",
+  "scripts": {
+    "import:products:dry": "node scripts/import-products-to-firestore.mjs --dry-run",
+    "import:products": "node scripts/import-products-to-firestore.mjs",
+    "import:products:no-enable": "node scripts/import-products-to-firestore.mjs --no-enable"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

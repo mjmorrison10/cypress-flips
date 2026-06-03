@@ -307,3 +307,78 @@ reserved → sold
 available → hidden
 ```
 
+
+---
+
+## Fast import option: Node.js import script
+
+I added a script that can import `firebase-products-seed.json` into Firestore automatically.
+
+Files:
+
+```text
+package.json
+scripts/import-products-to-firestore.mjs
+```
+
+### Step 1: Install dependencies
+
+From the project root:
+
+```bash
+npm install
+```
+
+### Step 2: Get a Firebase service account key
+
+Firebase Console:
+
+```text
+Project Settings → Service accounts → Generate new private key
+```
+
+Download the JSON file and save it in the project root as:
+
+```text
+service-account.json
+```
+
+This file is ignored by `.gitignore`. Do not commit it.
+
+Alternative:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+```
+
+### Step 3: Dry run first
+
+```bash
+npm run import:products:dry
+```
+
+This prints what would be imported without writing anything.
+
+### Step 4: Import products and enable Firebase inventory
+
+```bash
+npm run import:products
+```
+
+This writes:
+
+```text
+products/{productId}
+settings/inventory.useFirestoreInventory = true
+```
+
+After that, refresh the website and it should pull inventory from Firestore.
+
+### Optional: import products without enabling Firebase inventory
+
+```bash
+npm run import:products:no-enable
+```
+
+This imports product documents but does not switch the website from static inventory to Firestore inventory.
+
