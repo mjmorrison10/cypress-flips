@@ -1634,3 +1634,31 @@ body.dark-mode .status-badge {
     color: #000 !important;
     border-color: #a3a3a3;
 }
+
+/* Global footer scripture should stay subtle and readable on every page/theme */
+#contact .hourly-scripture {
+    color: rgba(148, 163, 184, 0.70) !important;
+}
+
+#contact .footer-policy-links a {
+    color: rgba(148, 163, 184, 0.70) !important;
+}
+
+#contact .footer-policy-links a:hover {
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+:root[data-color-scheme="blackout"] #contact {
+    background: #000 !important;
+    border-top: 1px solid #1f1f1f;
+}
+
+:root[data-color-scheme="premium"] #contact,
+:root[data-color-scheme="newyear"] #contact {
+    background: linear-gradient(135deg, #050505, #111111) !important;
+    border-top: 1px solid rgba(212, 175, 55, 0.16);
+}
+
+:root[data-color-scheme="catholic"] #contact {
+    border-top: 1px solid rgba(212, 175, 55, 0.18);
+}
