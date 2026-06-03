@@ -24,7 +24,7 @@
                     <a href="#inventory" data-nav-section="inventory" class="text-gray-600 hover:text-blue-600 transition">Inventory</a>
                     <a href="#about" data-nav-view="about" class="text-gray-600 hover:text-blue-600 transition">About</a>
                     <a href="#suppliers" data-nav-section="suppliers" class="text-gray-600 hover:text-blue-600 transition">Sell to Us</a>
-                    <a href="#contact" data-nav-section="contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
+                    <a href="#contact" data-nav-view="contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
                 </div>
                 <div class="flex items-center gap-3">
                     <button id="account-button" type="button" class="account-button border border-gray-200 bg-white text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
@@ -45,7 +45,7 @@
             <a href="#inventory" data-nav-section="inventory" class="block text-gray-600 hover:text-blue-600">Inventory</a>
             <a href="#about" data-nav-view="about" class="block text-gray-600 hover:text-blue-600">About</a>
             <a href="#suppliers" data-nav-section="suppliers" class="block text-gray-600 hover:text-blue-600">Sell to Us</a>
-            <a href="#contact" data-nav-section="contact" class="block text-gray-600 hover:text-blue-600">Contact</a>
+            <a href="#contact" data-nav-view="contact" class="block text-gray-600 hover:text-blue-600">Contact</a>
         </div>
     </nav>
 
@@ -566,6 +566,95 @@
     </div>
 
 
+    <!-- CONTACT VIEW -->
+    <div id="view-contact" class="hidden-view pt-24 pb-20">
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button id="contact-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
+                </button>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                    <div class="reveal">
+                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">Contact Cypress Flips</div>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-5">Questions, sourcing requests, pickup details, or product help.</h1>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                            Use this page if you are a customer with a question, need help choosing the right item, want more photos, or want me to source something specific. If you are trying to sell inventory to me, use the Sell to Us section instead.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                                <i class="fa-solid fa-location-dot text-blue-600 text-2xl mb-3"></i>
+                                <h3 class="font-bold text-slate-900 mb-1">Cypress, CA based</h3>
+                                <p class="text-sm text-gray-600">Serving Cypress, Orange County, and the LA area with safe local meetup options.</p>
+                            </div>
+                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                                <i class="fa-solid fa-magnifying-glass text-blue-600 text-2xl mb-3"></i>
+                                <h3 class="font-bold text-slate-900 mb-1">Looking for something?</h3>
+                                <p class="text-sm text-gray-600">Ask about video games, collectibles, TCG cards, plush, motorcycle gear, or hard-to-find items.</p>
+                            </div>
+                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                                <i class="fa-solid fa-circle-question text-blue-600 text-2xl mb-3"></i>
+                                <h3 class="font-bold text-slate-900 mb-1">Need clarity?</h3>
+                                <p class="text-sm text-gray-600">Ask about condition, missing pieces, tested status, included accessories, or pickup logistics.</p>
+                            </div>
+                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                                <i class="fa-solid fa-handshake text-blue-600 text-2xl mb-3"></i>
+                                <h3 class="font-bold text-slate-900 mb-1">No pressure</h3>
+                                <p class="text-sm text-gray-600">If something is not the right fit, I would rather tell you before you waste time or gas.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                            <h3 class="font-bold text-slate-900 mb-2">Trying to sell inventory?</h3>
+                            <p class="text-gray-600 text-sm mb-4">Vendor and liquidation messages should go through the Sell to Us section so I get the right details.</p>
+                            <button type="button" id="contact-sell-to-us" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl font-bold transition">Go to Sell to Us</button>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-white border border-gray-200 rounded-3xl shadow-sm p-6 md:p-8">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Send a customer message</h2>
+                        <p class="text-gray-500 text-sm mb-6">This form is for customer questions, sourcing requests, pickup questions, and product help.</p>
+
+                        <form id="general-contact-form" action="https://formsubmit.co/ajax/mjmorrisonusa@gmail.com" method="POST" class="space-y-4">
+                            <input type="hidden" name="_subject" value="New Cypress Flips customer contact message">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_captcha" value="false">
+                            <div>
+                                <label for="general-contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input id="general-contact-name" name="name" type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label for="general-contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input id="general-contact-email" name="email" type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label for="general-contact-topic" class="block text-sm font-medium text-gray-700 mb-1">What is this about?</label>
+                                <select id="general-contact-topic" name="topic" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    <option value="Product question">Product question</option>
+                                    <option value="Sourcing request">Sourcing request</option>
+                                    <option value="Pickup or delivery">Pickup or delivery</option>
+                                    <option value="Condition / more photos">Condition / more photos</option>
+                                    <option value="Website account help">Website account help</option>
+                                    <option value="Other customer question">Other customer question</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="general-contact-message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                <textarea id="general-contact-message" name="message" rows="6" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Tell me what you need help with. If it is about a product, include the product name if possible."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition transform active:scale-95">
+                                Send Message
+                            </button>
+                        </form>
+                        <div id="general-contact-status" class="hidden mt-4 rounded-xl p-4 text-sm font-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
     <!-- PRODUCT DETAIL VIEW -->
     <div id="view-product" class="hidden-view pt-24 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -645,7 +734,7 @@
 
     <div class="mobile-sticky-cta md:hidden">
         <a href="#inventory" data-nav-section="inventory"><i class="fa-solid fa-bag-shopping mr-1"></i>Shop</a>
-        <a href="#contact" data-nav-section="contact"><i class="fa-solid fa-message mr-1"></i>Ask</a>
+        <a href="#contact" data-nav-view="contact"><i class="fa-solid fa-message mr-1"></i>Ask</a>
         <a href="#about" data-nav-view="about"><i class="fa-solid fa-circle-info mr-1"></i>About</a>
     </div>
 

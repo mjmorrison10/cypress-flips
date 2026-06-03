@@ -315,12 +315,14 @@ function showView(viewId) {
     const aboutView = document.getElementById('view-about');
     const listingsView = document.getElementById('view-listings');
     const categoriesView = document.getElementById('view-categories');
+    const contactView = document.getElementById('view-contact');
 
     homeView?.classList.add('hidden-view');
     productView?.classList.add('hidden-view');
     aboutView?.classList.add('hidden-view');
     listingsView?.classList.add('hidden-view');
     categoriesView?.classList.add('hidden-view');
+    contactView?.classList.add('hidden-view');
 
     if (viewId === 'product') {
         productView?.classList.remove('hidden-view');
@@ -330,6 +332,8 @@ function showView(viewId) {
         listingsView?.classList.remove('hidden-view');
     } else if (viewId === 'categories') {
         categoriesView?.classList.remove('hidden-view');
+    } else if (viewId === 'contact') {
+        contactView?.classList.remove('hidden-view');
     } else {
         homeView?.classList.remove('hidden-view');
     }
@@ -368,7 +372,7 @@ function getRandomHeroMessage() {
             primaryText: 'Browse Inventory',
             primarySection: 'inventory',
             secondaryText: 'Ask a Question',
-            secondarySection: 'contact'
+            secondaryView: 'contact'
         },
         {
             title: 'TCG Cards. Collectibles. <span class="text-blue-400">Video Games.</span>',
@@ -573,6 +577,19 @@ function setupStaticNavigationListeners() {
     const categoriesBackHome = document.getElementById('categories-back-home');
     if (categoriesBackHome) {
         categoriesBackHome.addEventListener('click', () => showView('home'));
+    }
+
+    const contactBackHome = document.getElementById('contact-back-home');
+    if (contactBackHome) {
+        contactBackHome.addEventListener('click', () => showView('home'));
+    }
+
+    const contactSellToUs = document.getElementById('contact-sell-to-us');
+    if (contactSellToUs) {
+        contactSellToUs.addEventListener('click', () => {
+            showView('home');
+            scrollToSection('suppliers');
+        });
     }
 
     const backButton = document.getElementById('back-to-inventory');
@@ -1647,12 +1664,69 @@ window.addEventListener('resize', () => {
     }, 180);
 });
 
+function showGeneralContactStatus(type, messageHTML) {
+    const status = document.getElementById('general-contact-status');
+    if (!status) return;
+    const styles = {
+        sending: 'bg-blue-50 text-blue-700 border border-blue-200',
+        success: 'bg-green-50 text-green-700 border border-green-200',
+        error: 'bg-orange-50 text-orange-800 border border-orange-200'
+    };
+    status.className = `mt-4 rounded-xl p-4 text-sm font-medium ${styles[type] || styles.sending}`;
+    status.innerHTML = messageHTML;
+    status.classList.remove('hidden');
+}
+
+function setupGeneralContactForm() {
+    const form = document.getElementById('general-contact-form');
+    if (!form || form.dataset.bound) return;
+    form.dataset.bound = 'true';
+
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton?.textContent || 'Send Message';
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+            submitButton.classList.add('opacity-75', 'cursor-wait');
+        }
+        showGeneralContactStatus('sending', '<i class="fa-solid fa-paper-plane mr-2"></i>Sending your message...');
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            });
+            let result = {};
+            try { result = await response.json(); } catch (_) { result = {}; }
+            if (!response.ok || result.success === false || result.success === 'false') {
+                throw new Error(result.message || `Form service returned status ${response.status}`);
+            }
+            form.reset();
+            showGeneralContactStatus('success', '<i class="fa-solid fa-circle-check mr-2"></i>Message received — thank you. I’ll reply as soon as possible.');
+        } catch (error) {
+            const subject = encodeURIComponent('Cypress Flips customer contact form error');
+            const body = encodeURIComponent(`Hi, I tried to contact Cypress Flips but the website form failed.\n\nError: ${error?.message || 'Unknown error'}\n\nMy message:\n`);
+            showGeneralContactStatus('error', `<i class="fa-solid fa-triangle-exclamation mr-2"></i>Your message could not be sent. Please try again, or <a class="underline font-bold" href="mailto:mjmorrisonusa@gmail.com?subject=${subject}&body=${body}">email me directly</a>.`);
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText.trim() || 'Send Message';
+                submitButton.classList.remove('opacity-75', 'cursor-wait');
+            }
+        }
+    });
+}
+
 // Initial Setup
 setupThemeToggle();
 setupHeroMessage();
 setupHeaderEffects();
 setupBackToTop();
 setupStaticNavigationListeners();
+setupGeneralContactForm();
 setupInventoryControls();
 setupKeyboardShortcuts();
 setupHourlyScripture();
