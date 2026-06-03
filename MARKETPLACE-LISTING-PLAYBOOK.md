@@ -111,31 +111,37 @@ Use one of these endings:
 
 ---
 
+## Website Direct Pricing Strategy
+
+Website prices are intentionally set near the low end of the suggested local range. Marketplace listings can be posted higher to account for platform fees, shipping, negotiation, and broader buyer exposure. This gives direct website visitors a real reason to buy through Cypress Flips first.
+
+---
+
 ## 3. Market Value Summary
 
 > Market values are practical estimated ranges based on active comps, known sold-style ranges, PriceCharting where available, and condition adjustments from your photos/descriptions. Before final eBay pricing, verify current **sold** listings manually in eBay’s sold filter.
 
 | Item | Website Price | Suggested Local Price | Suggested eBay/Mercari Price | Notes |
 |---|---:|---:|---:|---|
-| PS2 Fat Ultimate Bundle 27 Games | $300 | $275–325 | $300–380 + ship | Strong local bundle; verify all discs/console before listing. |
-| Nintendo Switch OEM Bundle | $200 | $190–220 | $210–250 + ship | OEM accessories help; cracked blue Joy-Con disclosed. |
-| Nintendo Switch Bundle | $180 | $170–200 | $190–230 + ship | Good starter bundle; digital games not included. |
-| GBC Teal + Pokémon Yellow | $150 | $140–170 | $160–210 + ship | PriceCharting: GBC Teal ~$75 loose; Pokémon Yellow ~$70 loose. Button issue disclosed. |
-| Trafalgar Law Figure | $40 | $35–45 | $40–55 + ship | One Piece collectors. |
-| Zoro King of Artist | $40 | $35–45 | $40–60 + ship | Strong figure if condition is good. |
-| Grogu Cuddleez 23 in | $35 | $30–40 | $35–55 + ship | Shipping can be bulky. |
-| Katakuri Ichibansho | $35 | $30–40 | $35–55 + ship | Retail comps can be higher new. |
-| Zelda A Link Between Worlds loose | $25 | $22–28 | $25–32 + ship | PriceCharting loose ~$24. |
-| Megumi Fushiguro Figure | $25 | $20–28 | $25–35 + ship | Light wear; fair. |
-| Pikachu Plush Purse | $20 | $18–25 | $22–35 + ship | Accessories/plush bag category. |
-| Figaro Disney Mini Bean Bag | $20 | $15–22 | $18–30 + ship | Tag attached; lint/marks. |
-| Kovu Cub Bean Bag Plush | $20 | $16–25 | $20–35 + ship | Tag attached; tag wear. |
-| Scamp Mini Bean Bag Plush | $20 | $18–30 | $25–45 + ship | Some Scamp comps are much higher; this mini version fairly $20–30. |
-| Yuji Itadori King of Artist | $20 | $18–25 | $25–35 + ship | Good low-price anime item. |
-| Bambi Mini Bean Bag Plush | $15 | $12–18 | $15–25 + ship | Tag attached; common-ish. |
-| Cody Rhodes Knuckle Crunchers | $15 | $12–18 | $15–22 + ship | Clearance sticker/packaging wear. |
-| New Super Mario Bros 2 loose | $15 | $10–15 | $12–18 + ship | PriceCharting loose low teens. |
-| Coby CX-CD109 CIB | $50 | $25–40 | $30–55 + ship | $50 aspirational; untested vintage sealed. |
+| PS2 Fat Ultimate Bundle 27 Games | $275 | $275–325 | $300–380 + ship | Strong local bundle; verify all discs/console before listing. |
+| Nintendo Switch OEM Bundle | $190 | $190–220 | $210–250 + ship | OEM accessories help; cracked blue Joy-Con disclosed. |
+| Nintendo Switch Bundle | $170 | $170–200 | $190–230 + ship | Good starter bundle; digital games not included. |
+| GBC Teal + Pokémon Yellow | $140 | $140–170 | $160–210 + ship | PriceCharting: GBC Teal ~$75 loose; Pokémon Yellow ~$70 loose. Button issue disclosed. |
+| Trafalgar Law Figure | $35 | $35–45 | $40–55 + ship | One Piece collectors. |
+| Zoro King of Artist | $35 | $35–45 | $40–60 + ship | Strong figure if condition is good. |
+| Grogu Cuddleez 23 in | $30 | $30–40 | $35–55 + ship | Shipping can be bulky. |
+| Katakuri Ichibansho | $30 | $30–40 | $35–55 + ship | Retail comps can be higher new. |
+| Zelda A Link Between Worlds loose | $22 | $22–28 | $25–32 + ship | PriceCharting loose ~$24. |
+| Megumi Fushiguro Figure | $20 | $20–28 | $25–35 + ship | Light wear; fair. |
+| Pikachu Plush Purse | $18 | $18–25 | $22–35 + ship | Accessories/plush bag category. |
+| Figaro Disney Mini Bean Bag | $15 | $15–22 | $18–30 + ship | Tag attached; lint/marks. |
+| Kovu Cub Bean Bag Plush | $16 | $16–25 | $20–35 + ship | Tag attached; tag wear. |
+| Scamp Mini Bean Bag Plush | $18 | $18–30 | $25–45 + ship | Some Scamp comps are much higher; this mini version fairly $20–30. |
+| Yuji Itadori King of Artist | $18 | $18–25 | $25–35 + ship | Good low-price anime item. |
+| Bambi Mini Bean Bag Plush | $12 | $12–18 | $15–25 + ship | Tag attached; common-ish. |
+| Cody Rhodes Knuckle Crunchers | $12 | $12–18 | $15–22 + ship | Clearance sticker/packaging wear. |
+| New Super Mario Bros 2 loose | $10 | $10–15 | $12–18 + ship | PriceCharting loose low teens. |
+| Coby CX-CD109 CIB | $25 | $25–40 | $30–55 + ship | $50 aspirational; untested vintage sealed. |
 
 ---
 
