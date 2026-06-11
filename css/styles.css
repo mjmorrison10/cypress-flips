@@ -1770,3 +1770,69 @@ body.dark-mode .status-pending .status-badge {
     color: #1c1917 !important;
     border-color: rgba(250, 204, 21, 0.65) !important;
 }
+
+/* Hivemind conversion pass: FAQ and share action */
+.faq-list details {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+    padding: 1.25rem 1.5rem;
+}
+
+.faq-list details:last-child {
+    border-bottom: 0;
+}
+
+.faq-list summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 900;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.faq-list summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-list summary::after {
+    content: "+";
+    color: var(--brand-orange);
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.faq-list details[open] summary::after {
+    content: "–";
+}
+
+.faq-list p {
+    color: #64748b;
+    margin-top: 0.75rem;
+    line-height: 1.65;
+}
+
+#share-product-button {
+    background: rgba(255, 255, 255, 0.80);
+}
+
+#share-product-button:hover {
+    background: rgba(249, 115, 22, 0.08);
+}
+
+body.dark-mode .faq-list,
+body.dark-mode .faq-list details,
+body.dark-mode #share-product-button {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode .faq-list summary,
+body.dark-mode #share-product-button {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .faq-list p {
+    color: #cbd5e1;
+}

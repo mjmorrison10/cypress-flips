@@ -357,6 +357,11 @@ function setupStaticNavigationListeners() {
     if (productInquiryButton) {
         productInquiryButton.addEventListener('click', () => showProductInquiryForm('question'));
     }
+
+    const shareProductButton = document.getElementById('share-product-button');
+    if (shareProductButton) {
+        shareProductButton.addEventListener('click', shareCurrentProduct);
+    }
 }
 
 // --- INVENTORY RENDERING, SEARCH & SORTING ---
@@ -1306,7 +1311,34 @@ function showProductInquiryForm(intent = 'question') {
     setTimeout(() => message?.focus(), 250);
 }
 
-function openProduct(id) {
+function getProductShareUrl(item = currentProduct) {
+    if (!item) return window.location.href;
+    return `${window.location.origin}${window.location.pathname}#product=${encodeURIComponent(item.id)}`;
+}
+
+async function shareCurrentProduct() {
+    if (!currentProduct) return;
+    const url = getProductShareUrl(currentProduct);
+    const title = currentProduct.title;
+    const text = `${title} - $${currentProduct.price.toFixed(2)} from Cypress Flips`;
+    const button = document.getElementById('share-product-button');
+    const original = button?.innerHTML;
+
+    try {
+        if (navigator.share) {
+            await navigator.share({ title, text, url });
+        } else if (navigator.clipboard) {
+            await navigator.clipboard.writeText(url);
+            if (button) button.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Copied';
+            setTimeout(() => { if (button && original) button.innerHTML = original; }, 1600);
+        }
+        trackEvent('product_shared', { productId: currentProduct.id, productTitle: currentProduct.title });
+    } catch (error) {
+        console.warn('Share cancelled or failed:', error);
+    }
+}
+
+function openProduct(id, options = {}) {
     const item = inventory.find(i => i.id === id);
     if (!item) return;
 
@@ -1359,6 +1391,9 @@ function openProduct(id) {
     });
 
     showView('product');
+    if (options.updateHash !== false) {
+        history.pushState({ view: 'product', productId: item.id }, '', `#product=${encodeURIComponent(item.id)}`);
+    }
     window.dispatchEvent(new CustomEvent('cf:product-open', { detail: item }));
 }
 
@@ -1655,6 +1690,26 @@ function setupGeneralContactForm() {
     });
 }
 
+function handleRouteFromHash() {
+    const hash = window.location.hash || '';
+    if (hash.startsWith('#product=')) {
+        const id = decodeURIComponent(hash.replace('#product=', ''));
+        if (id) openProduct(id, { updateHash: false });
+    } else if (hash === '#about') {
+        showView('about');
+    } else if (hash === '#contact') {
+        showView('contact');
+    } else if (hash === '#policies') {
+        showView('policies');
+    } else if (hash === '#categories') {
+        openCategoriesPage();
+    } else if (hash === '#listings') {
+        openListingsPage({ mode: 'all' });
+    }
+}
+
+window.addEventListener('popstate', handleRouteFromHash);
+
 // Initial Setup
 setupThemeToggle();
 setupHeroMessage();
@@ -1672,3 +1727,4 @@ renderInventory();
 renderRecentlyAdded();
 renderListingsPage();
 renderCategoriesPage();
+handleRouteFromHash();
