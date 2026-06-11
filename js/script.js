@@ -442,6 +442,80 @@ function renderBadgeHTML(item, extraClass = '') {
     return inferProductBadges(item).map(badge => `<span class="product-badge ${extraClass}">${badge}</span>`).join('');
 }
 
+function getProductConditionSummary(item) {
+    const text = `${item.title} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
+    if (text.includes('new old stock')) return 'New old stock / packaged, see notes';
+    if (text.includes('new in package') || text.includes('unopened')) return 'Unopened package, packaging wear disclosed';
+    if (text.includes('cartridge only')) return 'Pre-owned cartridge only';
+    if (text.includes('vintage')) return 'Good vintage pre-owned/display condition';
+    if (text.includes('near-mint') || text.includes('near mint')) return 'Near-mint display condition';
+    if (text.includes('fair to good')) return 'Fair to good pre-owned condition';
+    if (text.includes('good pre-owned')) return 'Good pre-owned condition';
+    if (text.includes('display condition')) return 'Good display condition';
+    return 'Pre-owned; condition disclosed in description';
+}
+
+function getProductTestedSummary(item) {
+    const text = `${item.title} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
+    if (text.includes('untested') || text.includes('not been opened or tested')) return 'Untested / disclosed';
+    if (text.includes('powers on') || text.includes('powered on') || text.includes('working') || text.includes('works') || text.includes('tested')) return 'Tested to the best of my ability';
+    if (item.category === 'Video Games' || item.category === 'Vintage Electronics') return 'Ask for exact test details';
+    return 'Visually inspected';
+}
+
+function getIncludedSummary(item) {
+    const text = `${item.title} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
+    if (text.includes('cartridge only')) return 'Cartridge only';
+    if (text.includes('bundle')) return 'Bundle contents shown/described';
+    if (text.includes('complete in box')) return 'Complete in box as pictured';
+    if (text.includes('complete in package')) return 'Complete in package as pictured';
+    if (text.includes('tag attached')) return 'Tag attached';
+    if (text.includes('figure only') || text.includes('no box')) return 'Figure only; no box unless pictured';
+    return 'Only items shown/described included';
+}
+
+function getKnownFlawsSummary(item) {
+    const text = `${item.title} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
+    const flaws = [];
+    if (text.includes('crack')) flaws.push('crack disclosed');
+    if (text.includes('scuff') || text.includes('scuffs')) flaws.push('scuffs/wear');
+    if (text.includes('label wear') || text.includes('fading')) flaws.push('label wear');
+    if (text.includes('packaging wear') || text.includes('clearance sticker')) flaws.push('packaging wear');
+    if (text.includes('lint')) flaws.push('lint/fiber pickup');
+    if (text.includes('tag') && (text.includes('bending') || text.includes('creasing'))) flaws.push('tag wear');
+    if (text.includes('untested')) flaws.push('untested');
+    return flaws.length ? flaws.join(', ') : 'No major issues visible; see photos';
+}
+
+function renderQuickFacts(item) {
+    const facts = [
+        ['Status', getProductStatus(item).label],
+        ['Condition', getProductConditionSummary(item)],
+        ['Tested', getProductTestedSummary(item)],
+        ['Included', getIncludedSummary(item)],
+        ['Known notes', getKnownFlawsSummary(item)],
+        ['Pickup', 'Cypress, CA local pickup']
+    ];
+
+    return `
+        <div class="quick-facts-header">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>Quick Facts</span>
+        </div>
+        <dl>
+            ${facts.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}
+        </dl>
+    `;
+}
+
+function isRecentlyAdded(item) {
+    return typeof RECENTLY_ADDED_IDS !== 'undefined' && RECENTLY_ADDED_IDS.includes(item.id);
+}
+
+function hasPriceDrop(item) {
+    return Number(item.oldPrice || 0) > Number(item.price || 0);
+}
+
 function trackEvent(name, detail = {}) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: name, ...detail });
@@ -521,6 +595,8 @@ function createProductCard(item, tierLabel = '') {
     const status = getProductStatus(item);
     const valueLine = getBestFor(item);
     const badgeHTML = renderBadgeHTML(item, 'product-badge--small');
+    const recentBadge = isRecentlyAdded(item) ? '<span class="absolute top-3 right-3 bg-emerald-600 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>' : '';
+    const priceDropBadge = hasPriceDrop(item) ? '<span class="absolute top-11 right-3 bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded">PRICE DROP</span>' : '';
     card.className = `product-card reveal bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer status-${status.value}`;
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -536,7 +612,9 @@ function createProductCard(item, tierLabel = '') {
         <div class="aspect-square bg-gray-200 relative flex items-center justify-center overflow-hidden">
             <img src="${item.images[0]}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=Product'">
             ${item.isPremium ? '<span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">PREMIUM</span>' : ''}
-            ${tierBadge}
+            ${tierBadge || recentBadge}
+            ${tierBadge ? recentBadge : ''}
+            ${priceDropBadge}
             <span class="status-badge absolute bottom-3 left-3 bg-white/90 text-slate-900 text-xs font-extrabold px-2 py-1 rounded-full shadow-sm">${status.label}</span>
         </div>
         <div class="p-5">
@@ -1361,6 +1439,23 @@ function openProduct(id, options = {}) {
     if (bestFor) {
         bestFor.innerHTML = `<i class="fa-solid fa-bullseye mr-2"></i>${getBestFor(item)}`;
         bestFor.classList.remove('hidden');
+    }
+    const quickFacts = document.getElementById('product-quick-facts');
+    if (quickFacts) {
+        quickFacts.innerHTML = renderQuickFacts(item);
+        quickFacts.classList.remove('hidden');
+    }
+    const reserveButton = document.getElementById('reserve-product-button');
+    const productStatus = getProductStatus(item).value;
+    if (reserveButton) {
+        reserveButton.disabled = productStatus === 'sold' || productStatus === 'hidden' || productStatus === 'archived';
+        reserveButton.classList.toggle('opacity-60', reserveButton.disabled);
+        reserveButton.classList.toggle('cursor-not-allowed', reserveButton.disabled);
+        reserveButton.textContent = productStatus === 'sold'
+            ? 'Sold'
+            : ['hold', 'pending', 'reserved'].includes(productStatus)
+                ? 'Join Waitlist / Ask'
+                : 'Reserve / Ask to Buy';
     }
 
     setProductInquiryDetails(item);

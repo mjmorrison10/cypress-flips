@@ -370,10 +370,10 @@ function profilePanelHTML() {
 }
 
 function ensureProductCommunityContainers() {
-    const price = document.getElementById('product-price');
-    if (price && !document.getElementById('product-community-actions')) {
-        price.insertAdjacentHTML('afterend', `
-            <div id="product-community-actions" class="my-5 flex flex-wrap items-center gap-3">
+    const communityAnchor = document.getElementById('product-community-anchor');
+    if (communityAnchor && !document.getElementById('product-community-actions')) {
+        communityAnchor.insertAdjacentHTML('beforeend', `
+            <div id="product-community-actions" class="product-community-actions-bottom mb-4 flex flex-wrap items-center gap-3">
                 <button id="favorite-product-button" type="button" class="favorite-button border border-gray-300 hover:border-blue-600 hover:text-blue-600 px-5 py-3 rounded-xl font-bold transition">
                     <i class="fa-regular fa-heart mr-2"></i>Save Favorite
                 </button>
@@ -384,7 +384,6 @@ function ensureProductCommunityContainers() {
         `);
     }
 
-    const communityAnchor = document.getElementById('product-community-anchor');
     if (communityAnchor && !document.getElementById('product-community-section')) {
         communityAnchor.insertAdjacentHTML('beforeend', `
             <div id="product-community-section" class="product-community-bottom bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
