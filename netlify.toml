@@ -5,3 +5,7 @@
 
 [functions]
   node_bundler = "esbuild"
+
+[build.environment]
+# Firebase Web API keys are public client-side identifiers, not server secrets.
+SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyAeGbPEaHxrBuc8yxygq9rZJsV8YIQmgms"
