@@ -366,15 +366,41 @@ function stripHTML(value) {
     return temp.textContent || temp.innerText || '';
 }
 
+function normalizeInventoryStatus(value = 'available') {
+    const normalized = String(value || 'available').trim().toLowerCase().replace(/[\s_-]+/g, '-');
+    const aliases = {
+        visible: 'available',
+        active: 'available',
+        in_stock: 'available',
+        'in-stock': 'available',
+        available: 'available',
+        hold: 'hold',
+        held: 'hold',
+        'on-hold': 'hold',
+        onhold: 'hold',
+        pending: 'pending',
+        'pending-pickup': 'pending',
+        reserved: 'reserved',
+        reserve: 'reserved',
+        sold: 'sold',
+        hidden: 'hidden',
+        hide: 'hidden',
+        archived: 'archived',
+        archive: 'archived'
+    };
+    return aliases[normalized] || normalized || 'available';
+}
+
 function getProductStatus(item) {
-    const status = (item.status || 'available').toLowerCase();
+    const status = normalizeInventoryStatus(item.status || item.Status || item.availability || item.itemStatus || item.inventoryStatus || 'available');
     const labels = {
         available: 'Available',
         hold: 'On Hold',
         pending: 'Pending Pickup',
         reserved: 'Reserved',
         sold: 'Sold',
-        hidden: 'Hidden'
+        hidden: 'Hidden',
+        archived: 'Archived'
     };
     return { value: status, label: labels[status] || 'Available' };
 }

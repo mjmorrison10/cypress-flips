@@ -122,6 +122,31 @@ function productIdSafe(product) {
     return product?.id || 'unknown-product';
 }
 
+function normalizeRemoteInventoryStatus(value = 'available') {
+    const normalized = String(value || 'available').trim().toLowerCase().replace(/[\s_-]+/g, '-');
+    const aliases = {
+        visible: 'available',
+        active: 'available',
+        in_stock: 'available',
+        'in-stock': 'available',
+        available: 'available',
+        hold: 'hold',
+        held: 'hold',
+        'on-hold': 'hold',
+        onhold: 'hold',
+        pending: 'pending',
+        'pending-pickup': 'pending',
+        reserved: 'reserved',
+        reserve: 'reserved',
+        sold: 'sold',
+        hidden: 'hidden',
+        hide: 'hidden',
+        archived: 'archived',
+        archive: 'archived'
+    };
+    return aliases[normalized] || normalized || 'available';
+}
+
 function ensureCommunityUI() {
     const navActions = document.querySelector('nav .flex.items-center.gap-3');
     let accountButton = document.getElementById('account-button');
@@ -1130,14 +1155,14 @@ function normalizeProductDoc(id, data) {
         fullDesc: data.fullDesc || data.shortDesc || '',
         images: Array.isArray(data.images) && data.images.length ? data.images : ['https://via.placeholder.com/600?text=Product'],
         isPremium: Boolean(data.isPremium),
-        status: data.status || 'visible'
+        status: normalizeRemoteInventoryStatus(data.status || data.Status || data.availability || data.itemStatus || data.inventoryStatus || 'available')
     };
 }
 
 function applyRemoteInventory() {
     if (useFirestoreInventory) {
         const visibleProducts = remoteProductDocs
-            .filter(item => item.status !== 'hidden' && item.status !== 'archived')
+            .filter(item => !['hidden', 'archived'].includes(normalizeRemoteInventoryStatus(item.status)))
             .sort((a, b) => (Number(b.isPremium) - Number(a.isPremium)) || a.title.localeCompare(b.title));
         window.CF_SET_INVENTORY?.(visibleProducts);
     } else {
@@ -1378,7 +1403,7 @@ async function syncDefaultInventoryToFirestore() {
             batch.set(doc(db, 'products', id), {
                 ...item,
                 id,
-                status: item.status || 'visible',
+                status: normalizeRemoteInventoryStatus(item.status || 'available'),
                 updatedBy: currentUser.uid,
                 updatedAt: serverTimestamp(),
                 createdAt: serverTimestamp()
