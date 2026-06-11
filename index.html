@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cypress Flips | Cypress, CA Resale, Collectibles & Liquidation</title>
     <meta name="description" content="Cypress Flips is a Cypress, CA resale shop focused on inspected video games, collectibles, plush, figures, TCG cards, motorcycle accessories, and fair local inventory liquidation.">
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/site-settings.js"></script>
+    <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Analytics / Firebase measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPYCT2XX88"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZPYCT2XX88');
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-900">
 
@@ -807,10 +815,15 @@
                             <button id="share-product-button" class="w-full sm:w-auto border border-gray-300 hover:border-blue-600 text-slate-900 px-6 py-4 rounded-xl font-bold text-lg transition transform active:scale-95">
                                 <i class="fa-solid fa-share-nodes mr-2"></i>Share
                             </button>
+                            <button id="checkout-deposit-button" class="w-full sm:w-auto border border-orange-300 hover:border-blue-600 text-slate-900 px-6 py-4 rounded-xl font-bold text-lg transition transform active:scale-95">
+                                <i class="fa-solid fa-credit-card mr-2"></i>$10 Deposit
+                            </button>
                         </div>
                         <p class="text-gray-500 text-sm mt-4 flex items-center justify-center sm:justify-start">
                             <i class="fa-solid fa-truck-fast mr-2"></i> Local pickup available in Cypress, CA
                         </p>
+
+                        <div id="checkout-deposit-status" class="hidden mt-4 rounded-xl p-4 text-sm font-medium"></div>
 
                         <div id="product-inquiry-panel" class="hidden mt-6 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
                             <h3 id="product-inquiry-heading" class="text-xl font-bold text-slate-900 mb-2">Ask about this item</h3>
