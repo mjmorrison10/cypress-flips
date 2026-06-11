@@ -1754,3 +1754,19 @@ body.dark-mode .status-badge {
         opacity: 0.16 !important;
     }
 }
+
+.status-hold .status-badge,
+.status-reserved .status-badge,
+.status-pending .status-badge {
+    background: #fef3c7 !important;
+    color: #78350f !important;
+    border-color: rgba(217, 119, 6, 0.45) !important;
+}
+
+body.dark-mode .status-hold .status-badge,
+body.dark-mode .status-reserved .status-badge,
+body.dark-mode .status-pending .status-badge {
+    background: #facc15 !important;
+    color: #1c1917 !important;
+    border-color: rgba(250, 204, 21, 0.65) !important;
+}

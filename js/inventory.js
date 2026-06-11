@@ -7,6 +7,7 @@ window.CF_STATIC_INVENTORY = [
         title: 'Roronoa Zoro - King of Artist (Wano Kuni)',
         category: 'Action Figure',
         price: 35.00,
+        status: 'hold',
         shortDesc: "Collector's grade Banpresto piece. Dynamic pose, high-fidelity sculpt, and near-mint condition.",
         fullDesc: "The Banpresto 'King of Artist' series is renowned for its superior sculpting and paint accuracy, and this Roronoa Zoro piece is no exception. Capturing Zoro in his iconic Wano Kuni attire, this figure features a dynamic, powerful crouch that brings the intensity of the arc to life. <br><br>From the intricate patterns on his kimono to the sharp detail on his three katanas, every element is rendered with precision. This specific unit has been meticulously inspected and is in near-mint condition, making it an essential acquisition for any serious One Piece collector or anime enthusiast. A true statement piece that commands attention on any shelf.",
         images: [

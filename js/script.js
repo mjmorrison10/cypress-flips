@@ -370,6 +370,7 @@ function getProductStatus(item) {
     const status = (item.status || 'available').toLowerCase();
     const labels = {
         available: 'Available',
+        hold: 'On Hold',
         pending: 'Pending Pickup',
         reserved: 'Reserved',
         sold: 'Sold',

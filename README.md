@@ -180,3 +180,23 @@ Until Firebase inventory management is enabled, add/edit products in `js/invento
 ## Performance note
 
 See `IMAGE-OPTIMIZATION.md` for the recommended next step for faster mobile loading: WebP image conversion and thumbnails.
+
+## Inventory status options
+
+Product listings support these `status` values in `js/inventory.js` or Firebase Firestore:
+
+```text
+available  - visible and for sale
+hold       - temporarily held while a buyer is expected soon
+pending    - pickup/payment is expected soon
+reserved   - reserved for a buyer
+sold       - sold; can be displayed with a sold badge if not hidden
+hidden     - hidden from storefront when using Firebase inventory filtering
+archived   - archived/removed from active storefront when using Firebase inventory filtering
+```
+
+For a quick local hold, use:
+
+```js
+status: "hold"
+```

@@ -98,6 +98,7 @@ Use these values:
 
 ```text
 available
+hold
 pending
 reserved
 sold
@@ -108,8 +109,9 @@ archived
 Recommended usage:
 
 - `available` — visible and for sale
+- `hold` — temporarily held while a buyer is expected soon
 - `pending` — someone is supposed to meet/pay soon
-- `reserved` — held for a buyer
+- `reserved` — held/reserved for a buyer
 - `sold` — sold; can still be displayed later if we add a Sold section
 - `hidden` — do not show on website
 - `archived` — old/removed listing
@@ -121,7 +123,7 @@ hidden
 archived
 ```
 
-It can still display `sold`, `pending`, and `reserved` with badges if you keep them visible.
+It can still display `hold`, `sold`, `pending`, and `reserved` with badges if you keep them visible.
 
 ---
 
@@ -302,6 +304,8 @@ fullDesc
 Example status changes:
 
 ```text
+available → hold
+hold → sold
 available → reserved
 reserved → sold
 available → hidden
