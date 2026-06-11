@@ -6,9 +6,16 @@
   "scripts": {
     "import:products:dry": "node scripts/import-products-to-firestore.mjs --dry-run",
     "import:products": "node scripts/import-products-to-firestore.mjs",
-    "import:products:no-enable": "node scripts/import-products-to-firestore.mjs --no-enable"
+    "import:products:no-enable": "node scripts/import-products-to-firestore.mjs --no-enable",
+    "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
+    "build": "npm run build:css && npm run generate:products",
+    "generate:products": "node scripts/generate-product-pages.mjs"
   },
   "dependencies": {
-    "firebase-admin": "^12.7.0"
+    "firebase-admin": "^12.7.0",
+    "stripe": "^16.12.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
   }
 }

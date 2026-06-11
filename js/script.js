@@ -362,6 +362,11 @@ function setupStaticNavigationListeners() {
     if (shareProductButton) {
         shareProductButton.addEventListener('click', shareCurrentProduct);
     }
+
+    const checkoutDepositButton = document.getElementById('checkout-deposit-button');
+    if (checkoutDepositButton) {
+        checkoutDepositButton.addEventListener('click', startDepositCheckout);
+    }
 }
 
 // --- INVENTORY RENDERING, SEARCH & SORTING ---
@@ -519,6 +524,9 @@ function hasPriceDrop(item) {
 function trackEvent(name, detail = {}) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: name, ...detail });
+    if (typeof window.gtag === 'function') {
+        window.gtag('event', name, detail);
+    }
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.info('[Cypress Flips event]', name, detail);
     }
@@ -1391,7 +1399,7 @@ function showProductInquiryForm(intent = 'question') {
 
 function getProductShareUrl(item = currentProduct) {
     if (!item) return window.location.href;
-    return `${window.location.origin}${window.location.pathname}#product=${encodeURIComponent(item.id)}`;
+    return `${window.location.origin}/products/${encodeURIComponent(item.id)}.html`;
 }
 
 async function shareCurrentProduct() {
@@ -1413,6 +1421,56 @@ async function shareCurrentProduct() {
         trackEvent('product_shared', { productId: currentProduct.id, productTitle: currentProduct.title });
     } catch (error) {
         console.warn('Share cancelled or failed:', error);
+    }
+}
+
+function showDepositStatus(type, messageHTML) {
+    const status = document.getElementById('checkout-deposit-status');
+    if (!status) return;
+    const styles = {
+        loading: 'bg-blue-50 text-blue-700 border border-blue-200',
+        success: 'bg-green-50 text-green-700 border border-green-200',
+        error: 'bg-orange-50 text-orange-800 border border-orange-200'
+    };
+    status.className = `mt-4 rounded-xl p-4 text-sm font-medium ${styles[type] || styles.loading}`;
+    status.innerHTML = messageHTML;
+    status.classList.remove('hidden');
+}
+
+async function startDepositCheckout() {
+    if (!currentProduct) return;
+    const button = document.getElementById('checkout-deposit-button');
+    const original = button?.innerHTML;
+
+    try {
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Starting...';
+        }
+        showDepositStatus('loading', '<i class="fa-solid fa-credit-card mr-2"></i>Starting secure deposit checkout...');
+        trackEvent('deposit_checkout_started', { productId: currentProduct.id, productTitle: currentProduct.title, price: currentProduct.price });
+
+        const response = await fetch('/.netlify/functions/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                productId: currentProduct.id,
+                productTitle: currentProduct.title,
+                productPrice: currentProduct.price
+            })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.url) {
+            throw new Error(result.error || 'Unable to start checkout.');
+        }
+        window.location.href = result.url;
+    } catch (error) {
+        showDepositStatus('error', `<i class="fa-solid fa-triangle-exclamation mr-2"></i>Deposit checkout is not available yet. ${error.message || ''} You can still use Reserve / Ask to Buy.`);
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = original || '<i class="fa-solid fa-credit-card mr-2"></i>$10 Deposit';
+        }
     }
 }
 

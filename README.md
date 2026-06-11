@@ -200,3 +200,40 @@ For a quick local hold, use:
 ```js
 status: "hold"
 ```
+
+## Production build
+
+This project no longer uses the Tailwind CDN. Netlify should run:
+
+```bash
+npm run build
+```
+
+This builds:
+
+```text
+css/tailwind.css
+products/*.html
+```
+
+## Stripe deposit checkout
+
+A Netlify Function is included at:
+
+```text
+netlify/functions/create-checkout-session.mjs
+```
+
+To enable real $10 deposit checkout, add this environment variable in Netlify:
+
+```text
+STRIPE_SECRET_KEY=sk_live_or_test_...
+```
+
+Optional:
+
+```text
+DEPOSIT_AMOUNT_CENTS=1000
+```
+
+Without `STRIPE_SECRET_KEY`, the deposit button will fail gracefully and customers can still use Reserve / Ask to Buy.
