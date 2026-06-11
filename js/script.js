@@ -1424,6 +1424,19 @@ async function shareCurrentProduct() {
     }
 }
 
+function calculateDisplayDeposit(price) {
+    const productPrice = Number(price || 0);
+    const rate = productPrice >= 500 ? 0.05 : productPrice > 250 ? 0.075 : 0.10;
+    return Math.max(10, Math.ceil(productPrice * rate));
+}
+
+function updateDepositButton(item) {
+    const button = document.getElementById('checkout-deposit-button');
+    if (!button || !item) return;
+    const deposit = calculateDisplayDeposit(item.price);
+    button.innerHTML = `<i class="fa-solid fa-credit-card mr-2"></i>$${deposit} Deposit`;
+}
+
 function showDepositStatus(type, messageHTML) {
     const status = document.getElementById('checkout-deposit-status');
     if (!status) return;
@@ -1469,7 +1482,7 @@ async function startDepositCheckout() {
     } finally {
         if (button) {
             button.disabled = false;
-            button.innerHTML = original || '<i class="fa-solid fa-credit-card mr-2"></i>$10 Deposit';
+            button.innerHTML = original || `<i class="fa-solid fa-credit-card mr-2"></i>$${calculateDisplayDeposit(currentProduct?.price)} Deposit`;
         }
     }
 }
@@ -1515,6 +1528,7 @@ function openProduct(id, options = {}) {
                 ? 'Join Waitlist / Ask'
                 : 'Reserve / Ask to Buy';
     }
+    updateDepositButton(item);
 
     setProductInquiryDetails(item);
     updateProductStructuredData(item);

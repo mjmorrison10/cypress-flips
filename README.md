@@ -230,10 +230,20 @@ To enable real $10 deposit checkout, add this environment variable in Netlify:
 STRIPE_SECRET_KEY=sk_live_or_test_...
 ```
 
-Optional:
+Optional minimum deposit override:
 
 ```text
-DEPOSIT_AMOUNT_CENTS=1000
+MIN_DEPOSIT_AMOUNT_CENTS=1000
 ```
+
+Deposit calculation defaults to the higher of $10 or:
+
+```text
+10% of product price up to $250
+7.5% of product price over $250
+5% of product price at $500+
+```
+
+The deposit is rounded up to the nearest whole dollar.
 
 Without `STRIPE_SECRET_KEY`, the deposit button will fail gracefully and customers can still use Reserve / Ask to Buy.

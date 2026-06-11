@@ -1914,3 +1914,12 @@ body.dark-mode .quick-facts-header,
 body.dark-mode .product-quick-facts dd {
     color: #f8fafc;
 }
+
+.deposit-policy-note {
+    max-width: 38rem;
+    line-height: 1.5;
+}
+
+body.dark-mode .deposit-policy-note {
+    color: #94a3b8 !important;
+}
