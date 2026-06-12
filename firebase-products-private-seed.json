@@ -1,0 +1,19 @@
+{
+  "instructions": "Private/admin-only product metadata. Create each document in Firestore collection productPrivate using docId as document ID. Do not store this data in public products docs if it should only be visible to admins/moderators.",
+  "collection": "productPrivate",
+  "products": [
+    {
+      "docId": "zoro-king-of-artist",
+      "data": {
+        "productId": "zoro-king-of-artist",
+        "soldDate": "2026-06-11",
+        "soldTime": "15:45",
+        "soldDateDisplay": "6/11/2026",
+        "soldTimeDisplay": "3:45 PM",
+        "soldTimeZone": "America/Los_Angeles",
+        "visibility": "admin-moderator-only",
+        "note": "Sold locally. This private metadata should only be visible to admins/moderators."
+      }
+    }
+  ]
+}

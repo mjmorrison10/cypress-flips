@@ -247,3 +247,28 @@ Deposit calculation defaults to the higher of $10 or:
 The deposit is rounded up to the nearest whole dollar.
 
 Without `STRIPE_SECRET_KEY`, the deposit button will fail gracefully and customers can still use Reserve / Ask to Buy.
+
+## Private product metadata
+
+Admin/moderator-only inventory notes, such as exact sold date/time, should not be stored in the public `products` document if you do not want customers to see it.
+
+Use:
+
+```text
+productPrivate/{productId}
+```
+
+Example for Zoro:
+
+```json
+{
+  "productId": "zoro-king-of-artist",
+  "soldDate": "2026-06-11",
+  "soldTime": "15:45",
+  "soldDateDisplay": "6/11/2026",
+  "soldTimeDisplay": "3:45 PM",
+  "soldTimeZone": "America/Los_Angeles"
+}
+```
+
+These private details are intended for admins/moderators only.

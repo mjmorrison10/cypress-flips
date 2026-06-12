@@ -25,6 +25,7 @@ const args = new Set(process.argv.slice(2));
 const dryRun = args.has('--dry-run');
 const noEnable = args.has('--no-enable');
 const seedPath = process.env.SEED_FILE || path.resolve('firebase-products-seed.json');
+const privateSeedPath = process.env.PRIVATE_SEED_FILE || path.resolve('firebase-products-private-seed.json');
 const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || path.resolve('service-account.json');
 
 function readJSON(filePath) {
@@ -83,6 +84,13 @@ async function main() {
     products.forEach(({ docId, data }, index) => {
       console.log(`${String(index + 1).padStart(2, '0')}. products/${docId} → ${data.title} ($${data.price}) [${data.status || 'available'}]`);
     });
+    if (fs.existsSync(privateSeedPath)) {
+      const privateSeed = readJSON(privateSeedPath);
+      const privateProducts = privateSeed.products || [];
+      privateProducts.forEach(({ docId, data }, index) => {
+        console.log(`PRIVATE ${String(index + 1).padStart(2, '0')}. productPrivate/${docId} → ${data.soldDateDisplay || ''} ${data.soldTimeDisplay || ''}`.trim());
+      });
+    }
     if (!noEnable) console.log('Would also set settings/inventory.useFirestoreInventory = true');
     return;
   }
@@ -117,6 +125,21 @@ async function main() {
     }, { merge: true });
     writes += 1;
     await commitBatchIfNeeded();
+  }
+
+  if (fs.existsSync(privateSeedPath)) {
+    const privateSeed = readJSON(privateSeedPath);
+    const privateProducts = privateSeed.products || [];
+    for (const { docId, data } of privateProducts) {
+      if (!docId) throw new Error(`Missing private docId for productPrivate: ${JSON.stringify(data)}`);
+      batch.set(db.collection('productPrivate').doc(docId), {
+        ...data,
+        importedAt: timestamp,
+        updatedAt: timestamp,
+      }, { merge: true });
+      writes += 1;
+      await commitBatchIfNeeded();
+    }
   }
 
   if (!noEnable) {

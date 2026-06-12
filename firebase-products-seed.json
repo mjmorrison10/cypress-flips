@@ -24,7 +24,7 @@
           "images/optimized/action figure/zoro_action_figure_back.webp"
         ],
         "isPremium": true,
-        "status": "hold",
+        "status": "sold",
         "sortOrder": 1,
         "source": "static-seed",
         "updatedAtNote": "When entering manually in Firebase Console, use Firestore Timestamp for updatedAt if desired."

@@ -87,8 +87,10 @@ let unsubscribeTestimonials = null;
 let unsubscribeFavorite = null;
 let unsubscribeProducts = null;
 let unsubscribeInventorySettings = null;
+let unsubscribeProductPrivate = null;
 let unsubscribeSiteSettings = null;
 let remoteProductDocs = [];
+let privateProductMeta = new Map();
 let useFirestoreInventory = false;
 let isCurrentProductFavorite = false;
 
@@ -1237,6 +1239,38 @@ function getAdminManageItems() {
     return useFirestoreInventory ? remoteProductDocs : (window.CF_INVENTORY || []);
 }
 
+function listenToProductPrivateMetadata() {
+    if (unsubscribeProductPrivate) unsubscribeProductPrivate();
+    privateProductMeta = new Map();
+
+    if (!canManageListings()) {
+        renderAdminProductsList();
+        return;
+    }
+
+    unsubscribeProductPrivate = onSnapshot(collection(db, 'productPrivate'), snap => {
+        privateProductMeta = new Map();
+        snap.forEach(docSnap => privateProductMeta.set(docSnap.id, docSnap.data()));
+        renderAdminProductsList();
+    }, error => {
+        console.warn('Unable to load private product metadata:', error);
+        renderAdminProductsList();
+    });
+}
+
+function renderPrivateProductMeta(item) {
+    const meta = privateProductMeta.get(item.id);
+    if (!meta) return '';
+
+    const soldDate = meta.soldDateDisplay || meta.soldDate;
+    const soldTime = meta.soldTimeDisplay || meta.soldTime;
+    if (soldDate || soldTime) {
+        return `<div class="text-xs text-orange-700 font-bold mt-1"><i class="fa-solid fa-lock mr-1"></i>Admin only: Sold ${escapeHTML([soldDate, soldTime].filter(Boolean).join(' at '))}</div>`;
+    }
+
+    return meta.note ? `<div class="text-xs text-orange-700 font-bold mt-1"><i class="fa-solid fa-lock mr-1"></i>Admin only: ${escapeHTML(meta.note)}</div>` : '';
+}
+
 function renderAdminProductsList() {
     const list = document.getElementById('admin-products-list');
     if (!list) return;
@@ -1273,6 +1307,7 @@ function renderAdminProductsList() {
                 <div class="flex-1 min-w-0">
                     <div class="font-bold text-slate-900 truncate">${escapeHTML(item.title)}</div>
                     <div class="text-sm text-gray-500">${escapeHTML(item.category)} • ${money(item.price)} • ${item.isPremium ? 'Premium' : 'Standard'} • ${escapeHTML(item.status || 'visible')}</div>
+                    ${renderPrivateProductMeta(item)}
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
                     <button type="button" data-edit-listing="${escapeHTML(item.id)}" class="px-3 py-2 rounded-lg border border-gray-300 hover:border-blue-600 text-sm font-bold transition">Edit</button>
@@ -1478,6 +1513,12 @@ async function initializeFirebaseCommunity() {
         }
 
         updateAccountButton();
+        if (canManageListings()) {
+            listenToProductPrivateMetadata();
+        } else if (unsubscribeProductPrivate) {
+            unsubscribeProductPrivate();
+            privateProductMeta = new Map();
+        }
         if (currentProduct) updateProductCommunity(currentProduct);
         listenToTestimonials();
     });
