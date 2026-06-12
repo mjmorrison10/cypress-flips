@@ -165,10 +165,11 @@ function setupHeroMessage() {
     }
 
     if (stats) {
-        const categories = new Set(inventory.map(item => item.category)).size;
-        const premiumCount = inventory.filter(item => item.isPremium).length;
+        const availableItems = getAvailableInventoryItems();
+        const categories = new Set(availableItems.map(item => item.category)).size;
+        const premiumCount = availableItems.filter(item => item.isPremium).length;
         stats.innerHTML = `
-            <button type="button" class="hero-stat-card" data-stat-action="listings"><span>${inventory.length}</span><small>Current Listings</small></button>
+            <button type="button" class="hero-stat-card" data-stat-action="listings"><span>${availableItems.length}</span><small>Current Listings</small></button>
             <button type="button" class="hero-stat-card" data-stat-action="premium"><span>${premiumCount}</span><small>Premium Picks</small></button>
             <button type="button" class="hero-stat-card" data-stat-action="categories"><span>${categories}</span><small>Categories</small></button>
         `;
@@ -415,6 +416,14 @@ function getProductStatus(item) {
     return { value: status, label: labels[status] || 'Available' };
 }
 
+function isAvailableForInventory(item) {
+    return getProductStatus(item).value === 'available';
+}
+
+function getAvailableInventoryItems() {
+    return inventory.filter(isAvailableForInventory);
+}
+
 function inferProductBadges(item) {
     const text = `${item.title} ${item.category} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
     const badges = [];
@@ -587,7 +596,7 @@ function populateCategoryFilter() {
     const categoryFilter = document.getElementById('category-filter');
     if (!categoryFilter) return;
 
-    const categories = [...new Set(inventory.map(item => item.category))].sort();
+    const categories = [...new Set(getAvailableInventoryItems().map(item => item.category))].sort();
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
     categories.forEach(category => {
         const option = document.createElement('option');
@@ -658,7 +667,7 @@ function getFeaturedPremiumPicks() {
     if (selectedPremiumPicks) return selectedPremiumPicks;
 
     const premiumItems = inventory
-        .filter(item => item.isPremium)
+        .filter(item => item.isPremium && isAvailableForInventory(item))
         .map(item => ({ ...item }))
         .sort((a, b) => a.price - b.price);
 
@@ -797,6 +806,7 @@ function getFilteredInventory() {
 
     let items = inventory
         .map((item, index) => ({ ...item, originalIndex: index }))
+        .filter(isAvailableForInventory)
         .filter(item => {
             const searchableText = [
                 item.title,
@@ -889,7 +899,7 @@ function populateListingsCategoryFilter() {
     if (!categoryFilter) return;
 
     const currentValue = categoryFilter.value || 'all';
-    const categories = [...new Set(inventory.map(item => item.category))].sort();
+    const categories = [...new Set(getAvailableInventoryItems().map(item => item.category))].sort();
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
     categories.forEach(category => {
         const option = document.createElement('option');
@@ -913,6 +923,7 @@ function getListingsItems() {
     const state = getListingsFilterState();
     let items = inventory
         .map((item, index) => ({ ...item, originalIndex: index }))
+        .filter(isAvailableForInventory)
         .filter(item => listingsMode !== 'premium' || item.isPremium)
         .filter(item => itemMatchesQuery(item, state.query))
         .filter(item => state.category === 'all' || item.category === state.category)
@@ -1090,10 +1101,11 @@ function renderListingsPage() {
 }
 
 function getCategoryStats() {
-    return [...new Set(inventory.map(item => item.category))]
+    const availableItems = getAvailableInventoryItems();
+    return [...new Set(availableItems.map(item => item.category))]
         .sort()
         .map(category => {
-            const items = inventory.filter(item => item.category === category);
+            const items = availableItems.filter(item => item.category === category);
             return {
                 category,
                 count: items.length,
@@ -1129,9 +1141,10 @@ const RECENTLY_ADDED_IDS = [
 ];
 
 function getRecentlyAddedItems(limitCount = 4) {
-    const byId = new Map(inventory.map(item => [item.id, item]));
+    const availableItems = getAvailableInventoryItems();
+    const byId = new Map(availableItems.map(item => [item.id, item]));
     const recent = RECENTLY_ADDED_IDS.map(id => byId.get(id)).filter(Boolean);
-    const fallback = inventory.filter(item => !RECENTLY_ADDED_IDS.includes(item.id));
+    const fallback = availableItems.filter(item => !RECENTLY_ADDED_IDS.includes(item.id));
     return [...recent, ...fallback].slice(0, limitCount);
 }
 
@@ -1183,6 +1196,7 @@ function renderCategoryProducts() {
     const items = sortInventoryItems(
         inventory
             .map((item, index) => ({ ...item, originalIndex: index }))
+            .filter(isAvailableForInventory)
             .filter(item => item.category === selectedCategoryPageCategory),
         sort
     );
