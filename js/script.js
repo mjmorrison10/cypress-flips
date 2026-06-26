@@ -1,8 +1,23 @@
 // --- INVENTORY DATABASE ---
 let inventory = window.CF_STATIC_INVENTORY || [];
-const defaultInventory = inventory.map(item => ({ ...item, images: [...item.images] }));
+const defaultInventory = inventory.map(item => ({ ...item, images: [...(item.images || [])] }));
 window.CF_DEFAULT_INVENTORY = defaultInventory;
 window.CF_INVENTORY = inventory;
+
+async function loadGitHubManagedInventory() {
+    try {
+        const response = await fetch(`data/inventory.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Inventory JSON returned ${response.status}`);
+        const items = await response.json();
+        if (!Array.isArray(items)) throw new Error('Inventory JSON must be an array');
+        setInventoryItems(items, { preservePremiumPicks: true });
+    } catch (error) {
+        console.warn('Using bundled static inventory fallback:', error);
+        refreshInventoryViews({ preservePremiumPicks: true });
+    } finally {
+        handleRouteFromHash();
+    }
+}
 
 function refreshInventoryViews(options = {}) {
     const { preservePremiumPicks = false } = options;
@@ -1903,9 +1918,4 @@ setupInventoryControls();
 setupKeyboardShortcuts();
 setupHourlyScripture();
 setupScrollReveal();
-renderPremiumInventory();
-renderInventory();
-renderRecentlyAdded();
-renderListingsPage();
-renderCategoriesPage();
-handleRouteFromHash();
+loadGitHubManagedInventory();

@@ -2,9 +2,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-global.window = {};
-await import('../js/inventory.js');
-const products = global.window.CF_STATIC_INVENTORY || [];
+let products = [];
+const inventoryJsonPath = path.resolve('data/inventory.json');
+if (fs.existsSync(inventoryJsonPath)) {
+  products = JSON.parse(fs.readFileSync(inventoryJsonPath, 'utf8'));
+} else {
+  global.window = {};
+  await import('../js/inventory.js');
+  products = global.window.CF_STATIC_INVENTORY || [];
+}
 const outDir = path.resolve('products');
 fs.mkdirSync(outDir, { recursive: true });
 

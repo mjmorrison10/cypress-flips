@@ -1161,13 +1161,14 @@ function normalizeProductDoc(id, data) {
 }
 
 function applyRemoteInventory() {
-    if (useFirestoreInventory) {
+    // Inventory is now managed for free through data/inventory.json + admin.html.
+    // Keep the old Firebase inventory path dormant unless it is explicitly re-enabled
+    // from custom code by setting window.CF_ALLOW_FIREBASE_INVENTORY = true before this module loads.
+    if (window.CF_ALLOW_FIREBASE_INVENTORY === true && useFirestoreInventory) {
         const visibleProducts = remoteProductDocs
             .filter(item => !['hidden', 'archived'].includes(normalizeRemoteInventoryStatus(item.status)))
             .sort((a, b) => (Number(b.isPremium) - Number(a.isPremium)) || a.title.localeCompare(b.title));
         window.CF_SET_INVENTORY?.(visibleProducts);
-    } else {
-        window.CF_SET_INVENTORY?.(window.CF_DEFAULT_INVENTORY || []);
     }
 
     renderAdminProductsList();
