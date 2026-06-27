@@ -25,9 +25,42 @@ function esc(value = '') {
 function stripHTML(value = '') {
   return String(value).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
+function normalizeStatus(value = 'available') {
+  const normalized = String(value || 'available').trim().toLowerCase().replace(/[\s_]+/g, '-');
+  const aliases = {
+    visible: 'available', active: 'available', 'in-stock': 'available', instock: 'available',
+    held: 'hold', 'on-hold': 'hold', onhold: 'hold',
+    'pending-pickup': 'pending', reserve: 'reserved',
+    upcoming: 'coming-soon', soon: 'coming-soon',
+    review: 'needs-review'
+  };
+  return aliases[normalized] || normalized || 'available';
+}
 function statusLabel(item) {
-  const s = String(item.status || 'available').toLowerCase();
-  return ({available:'Available',hold:'On Hold',pending:'Pending Pickup',reserved:'Reserved',sold:'Sold'}[s] || 'Available');
+  const s = normalizeStatus(item.status);
+  return ({
+    available:'Available',
+    hold:'On Hold',
+    pending:'Pending Pickup',
+    reserved:'Reserved',
+    'coming-soon':'Coming Soon',
+    sold:'Sold',
+    draft:'Draft / Not Ready',
+    'needs-review':'Needs Review',
+    hidden:'Hidden',
+    archived:'Archived'
+  }[s] || 'Available');
+}
+function offerAvailability(item) {
+  const s = normalizeStatus(item.status);
+  if (s === 'sold') return 'https://schema.org/SoldOut';
+  if (['hold', 'pending', 'reserved'].includes(s)) return 'https://schema.org/LimitedAvailability';
+  if (s === 'coming-soon') return 'https://schema.org/PreOrder';
+  if (['hidden', 'archived', 'draft', 'needs-review'].includes(s)) return 'https://schema.org/Discontinued';
+  return 'https://schema.org/InStock';
+}
+function shouldIndexProduct(item) {
+  return !['hidden', 'archived', 'draft', 'needs-review'].includes(normalizeStatus(item.status));
 }
 for (const item of products) {
   const url = `https://cypressflips.netlify.app/products/${item.id}.html`;
@@ -45,7 +78,7 @@ for (const item of products) {
       '@type': 'Offer',
       price: item.price,
       priceCurrency: 'USD',
-      availability: statusLabel(item) === 'Sold' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+      availability: offerAvailability(item),
       itemCondition: 'https://schema.org/UsedCondition'
     }
   };
@@ -57,6 +90,7 @@ for (const item of products) {
   <title>${esc(item.title)} | Cypress Flips</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${url}">
+  ${shouldIndexProduct(item) ? '<meta name="robots" content="index,follow">' : '<meta name="robots" content="noindex,follow">'}
   <meta property="og:title" content="${esc(item.title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:image" content="https://cypressflips.netlify.app/${esc(image)}">

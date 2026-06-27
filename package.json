@@ -8,8 +8,9 @@
     "import:products": "node scripts/import-products-to-firestore.mjs",
     "import:products:no-enable": "node scripts/import-products-to-firestore.mjs --no-enable",
     "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
-    "build": "npm run build:css && npm run generate:products",
-    "generate:products": "node scripts/generate-product-pages.mjs"
+    "build": "npm run build:css && npm run generate:products && npm run generate:sitemap",
+    "generate:products": "node scripts/generate-product-pages.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
     "firebase-admin": "^12.7.0",

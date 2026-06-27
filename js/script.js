@@ -408,6 +408,12 @@ function normalizeInventoryStatus(value = 'available') {
         'pending-pickup': 'pending',
         reserved: 'reserved',
         reserve: 'reserved',
+        upcoming: 'coming-soon',
+        soon: 'coming-soon',
+        'coming-soon': 'coming-soon',
+        draft: 'draft',
+        review: 'needs-review',
+        'needs-review': 'needs-review',
         sold: 'sold',
         hidden: 'hidden',
         hide: 'hidden',
@@ -424,7 +430,10 @@ function getProductStatus(item) {
         hold: 'On Hold',
         pending: 'Pending Pickup',
         reserved: 'Reserved',
+        'coming-soon': 'Coming Soon',
         sold: 'Sold',
+        draft: 'Draft / Not Ready',
+        'needs-review': 'Needs Review',
         hidden: 'Hidden',
         archived: 'Archived'
     };
