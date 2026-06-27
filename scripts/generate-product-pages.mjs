@@ -86,11 +86,18 @@ for (const item of products) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>${esc(item.title)} | Cypress Flips</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${url}">
   ${shouldIndexProduct(item) ? '<meta name="robots" content="index,follow">' : '<meta name="robots" content="noindex,follow">'}
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cypress Flips">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/cypress-flips-180.png">
   <meta property="og:title" content="${esc(item.title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:image" content="https://cypressflips.netlify.app/${esc(image)}">
@@ -98,6 +105,7 @@ for (const item of products) {
   <link rel="stylesheet" href="../css/tailwind.css">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="icon" type="image/png" href="../favicon.png">
+  <script>if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) document.documentElement.classList.add('pwa-standalone');</script>
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body class="bg-gray-50 text-gray-900">

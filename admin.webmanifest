@@ -1,0 +1,27 @@
+{
+  "id": "/admin",
+  "name": "Cypress Flips Admin",
+  "short_name": "CF Admin",
+  "description": "Private Cypress Flips inventory admin for GitHub-powered listing updates.",
+  "start_url": "/admin.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#7e22ce",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "/icons/cypress-flips-admin-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/cypress-flips-admin-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

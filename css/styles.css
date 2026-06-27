@@ -333,6 +333,20 @@ body {
         radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 28rem),
         radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 30rem),
         var(--brand-page);
+    min-height: 100dvh;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+/* iPhone Add-to-Home-Screen / standalone app safe areas */
+nav {
+    padding-top: env(safe-area-inset-top);
+}
+
+@supports (padding: max(0px)) {
+    nav {
+        padding-top: max(env(safe-area-inset-top), 0px);
+    }
 }
 
 .gradient-bg {
@@ -552,7 +566,7 @@ body.dark-mode .bg-orange-50 {
 .back-to-top {
     position: fixed;
     right: 1rem;
-    bottom: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
     z-index: 60;
     width: 3rem;
     height: 3rem;
@@ -698,7 +712,7 @@ body.dark-mode .about-card {
     position: fixed;
     left: 0.75rem;
     right: 0.75rem;
-    bottom: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
     z-index: 70;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -730,11 +744,11 @@ body.dark-mode .about-card {
 
 @media (max-width: 767px) {
     body {
-        padding-bottom: 5rem;
+        padding-bottom: calc(5rem + env(safe-area-inset-bottom));
     }
 
     .back-to-top {
-        bottom: 5.4rem;
+        bottom: calc(5.4rem + env(safe-area-inset-bottom));
     }
 
     .hero-section {
@@ -1922,4 +1936,19 @@ body.dark-mode .product-quick-facts dd {
 
 body.dark-mode .deposit-policy-note {
     color: #94a3b8 !important;
+}
+
+
+@media (display-mode: standalone) {
+    body {
+        overscroll-behavior-y: contain;
+    }
+
+    .mobile-sticky-cta {
+        bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    }
+
+    .back-to-top {
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
 }
