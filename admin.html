@@ -194,6 +194,12 @@
     }
     .help { color: var(--muted); font-size: .82rem; margin-top: .4rem; }
     .danger-note { color: #fed7aa; background: rgba(249,115,22,.12); border: 1px solid rgba(249,115,22,.25); padding: .75rem; border-radius: 14px; font-size: .85rem; }
+    .upload-box { margin-top: .75rem; padding: .85rem; border: 1px dashed #475569; border-radius: 16px; background: rgba(2,6,23,.32); }
+    .upload-row { display: flex; gap: .55rem; flex-wrap: wrap; align-items: center; }
+    .upload-row input[type="file"] { flex: 1 1 240px; padding: .6rem; }
+    .upload-status { margin-top: .55rem; color: var(--muted); font-size: .82rem; }
+    .upload-progress { margin-top: .55rem; height: 8px; overflow: hidden; border-radius: 999px; background: #020617; border: 1px solid var(--border); display: none; }
+    .upload-progress span { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, #2563eb, #16a34a); transition: width .2s ease; }
     .preview-img { width: 100%; max-height: 260px; object-fit: contain; background: #020617; border: 1px solid var(--border); border-radius: 16px; margin-top: .75rem; }
     .hidden { display: none !important; }
     @media (max-width: 980px) {
@@ -290,7 +296,17 @@
 
         <label for="imagesInput">Image Paths — one per line</label>
         <textarea id="imagesInput" placeholder="images/optimized/video games/example.webp"></textarea>
-        <div class="help">Use existing repo image paths. Add new photos to the repo separately, then paste their paths here.</div>
+        <div class="help">Existing image paths are listed here. You can also upload photos directly from your phone below.</div>
+        <div class="upload-box">
+          <label for="photoUploadInput" style="margin-top:0;">Upload Photos to GitHub</label>
+          <div class="upload-row">
+            <input id="photoUploadInput" type="file" accept="image/jpeg,image/png,image/webp,image/*" multiple>
+            <button id="uploadPhotosBtn" type="button" class="btn btn-blue" onclick="uploadSelectedPhotos()">📸 Upload Selected Photos</button>
+          </div>
+          <div class="help">Choose photos from your camera roll or take new ones. The admin compresses them to web-friendly JPGs, commits them into <code>images/uploads/</code>, and adds the paths above.</div>
+          <div id="uploadProgress" class="upload-progress"><span></span></div>
+          <div id="uploadStatus" class="upload-status"></div>
+        </div>
         <img id="imagePreview" class="preview-img hidden" alt="First image preview">
 
         <div class="toolbar" style="margin-top:1rem; margin-bottom:0;">
@@ -629,6 +645,126 @@
       let binary = '';
       bytes.forEach(byte => binary += String.fromCharCode(byte));
       return btoa(binary);
+    }
+
+    function encodeArrayBufferBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      const chunkSize = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+      }
+      return btoa(binary);
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('Could not read image file.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function loadImageElement(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('This image format could not be loaded by your browser. If it is HEIC, change your camera/photo setting to JPG or export as JPG/PNG.'));
+        img.src = src;
+      });
+    }
+
+    async function compressImageForUpload(file, maxWidth = 1600, quality = 0.84) {
+      if (!file.type.startsWith('image/')) throw new Error(`${file.name} is not an image.`);
+      const dataUrl = await readFileAsDataUrl(file);
+      const img = await loadImageElement(dataUrl);
+      const scale = Math.min(1, maxWidth / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
+      const width = Math.max(1, Math.round((img.naturalWidth || img.width) * scale));
+      const height = Math.max(1, Math.round((img.naturalHeight || img.height) * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+      if (!blob) throw new Error(`Could not compress ${file.name}.`);
+      return blob;
+    }
+
+    function getUploadBaseSlug() {
+      return slugify(document.getElementById('idInput').value || document.getElementById('titleInput').value || `listing-${Date.now()}`);
+    }
+
+    function buildUploadPath(index) {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const stamp = `${y}${m}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+      const random = Math.random().toString(36).slice(2, 7);
+      return `images/uploads/${y}-${m}/${getUploadBaseSlug()}-${stamp}-${index + 1}-${random}.jpg`;
+    }
+
+    function githubContentsUrl(path) {
+      return `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+    }
+
+    function appendImagePaths(paths) {
+      const input = document.getElementById('imagesInput');
+      const existing = input.value.split('\n').map(s => s.trim()).filter(Boolean);
+      input.value = [...existing, ...paths].join('\n');
+      updateImagePreview();
+      setDirty(true);
+    }
+
+    async function uploadSelectedPhotos() {
+      const pat = getPat();
+      if (!pat) return alert('Paste and save your GitHub token first.');
+      const fileInput = document.getElementById('photoUploadInput');
+      const files = [...(fileInput.files || [])];
+      if (!files.length) return alert('Choose one or more photos first.');
+      const uploadBtn = document.getElementById('uploadPhotosBtn');
+      const status = document.getElementById('uploadStatus');
+      const progress = document.getElementById('uploadProgress');
+      const progressBar = progress.querySelector('span');
+      const original = uploadBtn.textContent;
+      const uploadedPaths = [];
+      uploadBtn.disabled = true;
+      progress.style.display = 'block';
+      progressBar.style.width = '0%';
+      try {
+        for (let i = 0; i < files.length; i += 1) {
+          const file = files[i];
+          status.textContent = `Compressing ${i + 1} of ${files.length}: ${file.name}`;
+          const blob = await compressImageForUpload(file);
+          const path = buildUploadPath(i);
+          status.textContent = `Uploading ${i + 1} of ${files.length}: ${path}`;
+          const content = encodeArrayBufferBase64(await blob.arrayBuffer());
+          const res = await fetch(githubContentsUrl(path), {
+            method: 'PUT',
+            headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: `feat(images): upload Cypress Flips product photo ${path}`,
+              content
+            })
+          });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.message || `GitHub returned ${res.status} while uploading ${file.name}`);
+          uploadedPaths.push(path);
+          progressBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
+        }
+        appendImagePaths(uploadedPaths);
+        fileInput.value = '';
+        status.textContent = `Uploaded ${uploadedPaths.length} photo${uploadedPaths.length === 1 ? '' : 's'} and added paths to this listing. Remember to Save Listing, then Publish Inventory Updates.`;
+        showToast('Photos uploaded to GitHub and added to the listing.');
+      } catch (error) {
+        status.textContent = `Upload failed: ${error.message}`;
+        showToast(`Photo upload failed: ${error.message}`, 'error');
+        alert(`Photo upload failed: ${error.message}`);
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = original;
+      }
     }
 
     async function publishChanges() {
