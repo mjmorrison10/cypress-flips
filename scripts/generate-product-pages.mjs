@@ -67,6 +67,35 @@ for (const item of products) {
   const description = stripHTML(item.shortDesc || item.fullDesc).slice(0, 160);
   const image = item.images?.[0] || '../favicon.png';
   const gallery = (item.images || []).map(img => `<img src="../${esc(img)}" alt="${esc(item.title)}" loading="lazy" class="w-full rounded-2xl border border-gray-200 bg-white object-cover">`).join('\n');
+
+  // Sold items: show a banner + up to 3 similar available items so the page
+  // keeps working as a funnel instead of being a dead end.
+  const isSold = normalizeStatus(item.status) === 'sold';
+  const similar = isSold
+    ? products
+        .filter(p => p.id !== item.id && normalizeStatus(p.status) === 'available')
+        .sort((a, b) => (b.category === item.category) - (a.category === item.category))
+        .slice(0, 3)
+    : [];
+  const soldBanner = isSold ? `
+      <div class="bg-orange-50 border border-orange-200 rounded-2xl p-6 mb-8">
+        <p class="font-bold text-slate-900 mb-1"><span class="mr-2">✅</span>This one sold — that's kind of the point.</p>
+        <p class="text-gray-600 text-sm">Inspected finds move fast at Cypress Flips. Here's what's still available:</p>
+      </div>` : '';
+  const similarSection = similar.length ? `
+      <section class="mt-12">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Still available right now</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          ${similar.map(p => `<a href="${esc(p.id)}.html" class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition block">
+            <img src="../${esc(p.images?.[0] || 'favicon.png')}" alt="${esc(p.title)}" loading="lazy" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <div class="text-blue-600 text-xs font-bold uppercase tracking-wider mb-1">${esc(p.category)}</div>
+              <div class="font-bold text-slate-900 text-sm mb-2">${esc(p.title)}</div>
+              <div class="text-blue-600 font-extrabold">$${Number(p.price).toFixed(2)}</div>
+            </div>
+          </a>`).join('\n          ')}
+        </div>
+      </section>` : '';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -112,6 +141,7 @@ for (const item of products) {
   <main class="py-10 md:py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <a href="../index.html#inventory" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold mb-8">← Back to Cypress Flips</a>
+      ${soldBanner}
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">${gallery}</section>
         <section class="bg-white border border-gray-200 rounded-3xl shadow-sm p-6 md:p-8">
@@ -128,6 +158,7 @@ for (const item of products) {
           <p class="text-sm text-gray-500 mt-4">Local pickup available in Cypress, CA.</p>
         </section>
       </div>
+      ${similarSection}
     </div>
   </main>
 </body>

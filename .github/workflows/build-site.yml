@@ -1,0 +1,64 @@
+name: Build product pages & sitemap
+
+# Runs whenever inventory data or product photos change (e.g., published from
+# the admin panel). Regenerates static product pages + sitemap, compresses any
+# oversized upload images, and commits the results back to main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/inventory.json'
+      - 'data/categories.json'
+      - 'images/uploads/**'
+      - 'scripts/generate-product-pages.mjs'
+      - 'scripts/generate-sitemap.mjs'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compress oversized upload images (max 1200px, q78)
+        run: |
+          pip install --quiet pillow
+          python3 - << 'EOF'
+          from PIL import Image
+          import os, glob
+          for f in glob.glob('images/uploads/**/*.jpg', recursive=True) + glob.glob('images/uploads/**/*.jpeg', recursive=True):
+              if os.path.getsize(f) <= 350 * 1024:
+                  continue
+              im = Image.open(f).convert('RGB')
+              im.thumbnail((1200, 1200))
+              im.save(f, 'JPEG', quality=78, optimize=True, progressive=True)
+              print('compressed', f, '->', os.path.getsize(f) // 1024, 'KB')
+          EOF
+
+      - name: Generate product pages & sitemap
+        run: |
+          node scripts/generate-product-pages.mjs
+          node scripts/generate-sitemap.mjs
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "cypress-flips-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "chore(bot): regenerate product pages & sitemap [skip ci]"
+            git push
+          fi

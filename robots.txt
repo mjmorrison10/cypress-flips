@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
-Disallow: /firebase-products-private-seed.json
 
 Sitemap: https://cypressflips.com/sitemap.xml

@@ -558,7 +558,7 @@ function getProductTestedSummary(item) {
     const text = `${item.title} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
     if (text.includes('untested') || text.includes('not been opened or tested')) return 'Untested / disclosed';
     if (text.includes('powers on') || text.includes('powered on') || text.includes('working') || text.includes('works') || text.includes('tested')) return 'Tested to the best of my ability';
-    if (item.category === 'Video Games' || item.category === 'Vintage Electronics') return 'Ask for exact test details';
+    if (item.category === 'Video Games' || item.category === 'Vintage Electronics' || item.category === 'More Finds') return 'Ask for exact test details';
     return 'Visually inspected';
 }
 
