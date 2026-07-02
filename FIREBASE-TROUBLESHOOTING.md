@@ -126,7 +126,7 @@ Firebase Console → Authentication → Settings → Authorized domains
 Make sure this is listed:
 
 ```text
-cypressflips.netlify.app
+cypressflips.com
 ```
 
 ## 5. Quick test order

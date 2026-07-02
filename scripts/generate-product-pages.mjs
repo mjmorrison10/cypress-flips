@@ -63,7 +63,7 @@ function shouldIndexProduct(item) {
   return !['hidden', 'archived', 'draft', 'needs-review'].includes(normalizeStatus(item.status));
 }
 for (const item of products) {
-  const url = `https://cypressflips.netlify.app/products/${item.id}.html`;
+  const url = `https://cypressflips.com/products/${item.id}.html`;
   const description = stripHTML(item.shortDesc || item.fullDesc).slice(0, 160);
   const image = item.images?.[0] || '../favicon.png';
   const gallery = (item.images || []).map(img => `<img src="../${esc(img)}" alt="${esc(item.title)}" loading="lazy" class="w-full rounded-2xl border border-gray-200 bg-white object-cover">`).join('\n');
@@ -71,7 +71,7 @@ for (const item of products) {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: item.title,
-    image: (item.images || []).map(img => `https://cypressflips.netlify.app/${img}`),
+    image: (item.images || []).map(img => `https://cypressflips.com/${img}`),
     description: stripHTML(item.fullDesc || item.shortDesc),
     category: item.category,
     offers: {
@@ -100,7 +100,7 @@ for (const item of products) {
   <link rel="apple-touch-icon" href="/icons/cypress-flips-180.png">
   <meta property="og:title" content="${esc(item.title)}">
   <meta property="og:description" content="${esc(description)}">
-  <meta property="og:image" content="https://cypressflips.netlify.app/${esc(image)}">
+  <meta property="og:image" content="https://cypressflips.com/${esc(image)}">
   <meta property="og:url" content="${url}">
   <link rel="stylesheet" href="../css/tailwind.css">
   <link rel="stylesheet" href="../css/styles.css">

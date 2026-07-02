@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 
-const SITE_URL = 'https://cypressflips.netlify.app';
+const SITE_URL = 'https://cypressflips.com';
 const today = new Date().toISOString().slice(0, 10);
 
 function normalizeStatus(value = 'available') {

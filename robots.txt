@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /firebase-products-private-seed.json
 
-Sitemap: https://cypressflips.netlify.app/sitemap.xml
+Sitemap: https://cypressflips.com/sitemap.xml

@@ -668,7 +668,7 @@ function updateLocalBusinessStructuredData() {
         name: 'Cypress Flips',
         description: 'Cypress, CA resale shop focused on inspected video games, collectibles, plush, figures, TCG cards, motorcycle accessories, and local inventory liquidation.',
         areaServed: ['Cypress, CA', 'Orange County, CA', 'Los Angeles, CA'],
-        url: window.location.origin || 'https://cypressflips.netlify.app',
+        url: window.location.origin || 'https://cypressflips.com',
         sameAs: [
             'https://www.facebook.com/mjmorrisonusa',
             'https://www.instagram.com/mjmorrisonusa/',

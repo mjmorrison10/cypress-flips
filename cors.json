@@ -2,12 +2,21 @@
   {
     "origin": [
       "https://cypressflips.netlify.app",
+      "https://www.cypressflips.com",
+      "https://cypressflips.com",
       "http://localhost:8000",
       "http://localhost:5000",
       "http://127.0.0.1:8000",
       "http://127.0.0.1:5000"
     ],
-    "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    "method": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "HEAD",
+      "OPTIONS"
+    ],
     "responseHeader": [
       "Content-Type",
       "Authorization",

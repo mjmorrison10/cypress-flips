@@ -25,7 +25,7 @@ export async function handler(event) {
     const percentageDepositCents = Math.ceil((productPrice * depositRate * 100) / 100) * 100;
     const depositCents = Math.max(minDepositCents, percentageDepositCents);
     const depositAmount = depositCents / 100;
-    const origin = event.headers.origin || process.env.URL || 'https://cypressflips.netlify.app';
+    const origin = event.headers.origin || process.env.URL || 'https://cypressflips.com';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
