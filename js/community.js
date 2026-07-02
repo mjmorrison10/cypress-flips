@@ -153,6 +153,10 @@ function ensureCommunityUI() {
     const navActions = document.querySelector('nav .flex.items-center.gap-3');
     let accountButton = document.getElementById('account-button');
 
+    // The account button is hidden in static HTML while community features are
+    // disabled via CF_SITE_SETTINGS.enableCommunity; un-hide it when this runs.
+    accountButton?.classList.remove('hidden');
+
     if (navActions && !accountButton) {
         accountButton = document.createElement('button');
         accountButton.id = 'account-button';

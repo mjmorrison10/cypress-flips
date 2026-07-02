@@ -3,6 +3,9 @@ module.exports = {
   content: [
     './index.html',
     './sell.html',
+    './about.html',
+    './contact.html',
+    './policies.html',
     './js/**/*.js'
   ],
   safelist: [

@@ -37,6 +37,9 @@ const urls = [
   { loc: `${SITE_URL}/`, priority: '1.0', changefreq: 'daily' },
   { loc: `${SITE_URL}/index.html`, priority: '0.9', changefreq: 'daily' },
   { loc: `${SITE_URL}/sell.html`, priority: '0.9', changefreq: 'weekly' },
+  { loc: `${SITE_URL}/about.html`, priority: '0.7', changefreq: 'monthly' },
+  { loc: `${SITE_URL}/contact.html`, priority: '0.6', changefreq: 'monthly' },
+  { loc: `${SITE_URL}/policies.html`, priority: '0.5', changefreq: 'monthly' },
   ...products
     .filter(shouldIndexProduct)
     .map(item => ({

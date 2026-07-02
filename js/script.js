@@ -448,6 +448,67 @@ function getAvailableInventoryItems() {
     return inventory.filter(isAvailableForInventory);
 }
 
+// --- SIMPLE MODE (auto-switch based on available inventory count) ---
+// Under CF_SITE_SETTINGS.simpleModeThreshold available items: hide the heavy
+// search/filter/sort panel and show a simple grid + category chips instead.
+// At or above the threshold, the full filter UI comes back automatically.
+let simpleModeCategory = 'all';
+
+function getSimpleModeThreshold() {
+    const value = Number(window.CF_SITE_SETTINGS?.simpleModeThreshold);
+    return Number.isFinite(value) && value > 0 ? value : 50;
+}
+
+function isSimpleMode() {
+    return getAvailableInventoryItems().length < getSimpleModeThreshold();
+}
+
+function updateInventoryModeUI() {
+    const filterPanel = document.getElementById('inventory-filter-panel');
+    const chips = document.getElementById('inventory-category-chips');
+    const premiumSection = document.getElementById('premium-picks-section');
+    if (!filterPanel || !chips) return;
+
+    if (!isSimpleMode()) {
+        filterPanel.classList.remove('hidden');
+        chips.classList.add('hidden');
+        premiumSection?.classList.remove('hidden');
+        return;
+    }
+
+    // Simple mode: every item is in the single grid, so the separate
+    // Premium Picks block would just duplicate cards. Hide it.
+    filterPanel.classList.add('hidden');
+    chips.classList.remove('hidden');
+    premiumSection?.classList.add('hidden');
+
+    const availableItems = getAvailableInventoryItems();
+    const categories = [...new Set(availableItems.map(item => item.category))].sort();
+    if (!categories.includes(simpleModeCategory)) simpleModeCategory = 'all';
+
+    const chipClass = active => `px-4 py-2 rounded-full text-sm font-semibold transition border ${active
+        ? 'bg-blue-600 text-white border-blue-600'
+        : 'bg-white text-gray-600 border-gray-200 hover:text-blue-600 hover:border-blue-300'}`;
+
+    chips.innerHTML = '';
+    const allChip = document.createElement('button');
+    allChip.type = 'button';
+    allChip.className = chipClass(simpleModeCategory === 'all');
+    allChip.textContent = `All (${availableItems.length})`;
+    allChip.addEventListener('click', () => { simpleModeCategory = 'all'; renderInventory(); });
+    chips.appendChild(allChip);
+
+    categories.forEach(category => {
+        const count = availableItems.filter(item => item.category === category).length;
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = chipClass(simpleModeCategory === category);
+        chip.textContent = `${category} (${count})`;
+        chip.addEventListener('click', () => { simpleModeCategory = category; renderInventory(); });
+        chips.appendChild(chip);
+    });
+}
+
 function inferProductBadges(item) {
     const text = `${item.title} ${item.category} ${item.shortDesc} ${stripHTML(item.fullDesc)}`.toLowerCase();
     const badges = [];
@@ -1253,6 +1314,36 @@ function renderInventory() {
     const resultsLabel = document.getElementById('inventory-results');
     if (!grid) return;
 
+    updateInventoryModeUI();
+
+    // SIMPLE MODE: small inventory — one browsable grid, category chips, no hidden items.
+    if (isSimpleMode()) {
+        const availableItems = getAvailableInventoryItems();
+        const items = simpleModeCategory === 'all'
+            ? availableItems
+            : availableItems.filter(item => item.category === simpleModeCategory);
+
+        grid.innerHTML = '';
+        if (resultsLabel) {
+            resultsLabel.textContent = `${items.length} item${items.length === 1 ? '' : 's'}${simpleModeCategory === 'all' ? '' : ` in ${simpleModeCategory}`}`;
+        }
+
+        if (items.length === 0) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center col-span-full';
+            emptyState.innerHTML = `
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Nothing in this category right now</h3>
+                <p class="text-gray-500">New finds are added often — check back soon.</p>
+            `;
+            grid.appendChild(emptyState);
+            return;
+        }
+
+        items.forEach(item => grid.appendChild(createProductCard(item)));
+        observeRevealElements(grid);
+        return;
+    }
+
     const { items, state } = getFilteredInventory();
     const premiumIdsAlreadyDisplayed = new Set(
         getFeaturedPremiumPicks().map(pick => pick.item.id)
@@ -1901,11 +1992,14 @@ function handleRouteFromHash() {
         const id = decodeURIComponent(hash.replace('#product=', ''));
         if (id) openProduct(id, { updateHash: false });
     } else if (hash === '#about') {
-        showView('about');
+        // Legacy SPA route — About is now a real static page.
+        window.location.replace('about.html');
     } else if (hash === '#contact') {
-        showView('contact');
+        window.location.replace('contact.html');
     } else if (hash === '#policies') {
-        showView('policies');
+        window.location.replace('policies.html');
+    } else if (hash === '#suppliers') {
+        window.location.replace('sell.html');
     } else if (hash === '#categories') {
         openCategoriesPage();
     } else if (hash === '#listings') {

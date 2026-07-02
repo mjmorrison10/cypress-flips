@@ -45,12 +45,12 @@
                 </div>
                 <div class="hidden md:flex space-x-8 font-medium">
                     <a href="#inventory" data-nav-section="inventory" class="text-gray-600 hover:text-blue-600 transition">Inventory</a>
-                    <a href="#about" data-nav-view="about" class="text-gray-600 hover:text-blue-600 transition">About</a>
+                    <a href="about.html" class="text-gray-600 hover:text-blue-600 transition">About</a>
                     <a href="sell.html" class="text-gray-600 hover:text-blue-600 transition">Sell Your Stuff</a>
-                    <a href="#contact" data-nav-view="contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="account-button" type="button" class="account-button border border-gray-200 bg-white text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
+                    <button id="account-button" type="button" class="account-button hidden border border-gray-200 bg-white text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
                         <i class="fa-solid fa-user"></i><span class="hidden sm:inline">Sign In</span>
                     </button>
                     <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="border border-gray-200 bg-white text-gray-600 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2">
@@ -66,9 +66,9 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 py-4 space-y-4">
             <a href="#inventory" data-nav-section="inventory" class="block text-gray-600 hover:text-blue-600">Inventory</a>
-            <a href="#about" data-nav-view="about" class="block text-gray-600 hover:text-blue-600">About</a>
+            <a href="about.html" class="block text-gray-600 hover:text-blue-600">About</a>
             <a href="sell.html" class="block text-gray-600 hover:text-blue-600">Sell Your Stuff</a>
-            <a href="#contact" data-nav-view="contact" class="block text-gray-600 hover:text-blue-600">Contact</a>
+            <a href="contact.html" class="block text-gray-600 hover:text-blue-600">Contact</a>
         </div>
     </nav>
 
@@ -170,7 +170,7 @@
                     <div>
                         <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Fresh drops</div>
                         <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Recently Added</h2>
-                        <p class="text-gray-600 mt-2 max-w-2xl">New finds are added often. Follow or create an account to keep an eye on what changes.</p>
+                        <p class="text-gray-600 mt-2 max-w-2xl">New finds are added often. Follow Cypress Flips on Instagram, Facebook, or eBay to keep an eye on what changes.</p>
                     </div>
                     <button type="button" id="recent-view-all" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl font-bold transition">View All Listings</button>
                 </div>
@@ -187,7 +187,7 @@
                     <p class="text-gray-600 max-w-2xl mx-auto">Inspected finds move quickly. Website prices are my best local pickup prices before marketplace fees, shipping, and platform markups.</p>
                 </div>
 
-                <div class="reveal mb-12">
+                <div id="premium-picks-section" class="reveal mb-12">
                     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
                         <div>
                             <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Featured first</div>
@@ -203,7 +203,9 @@
                     </p>
                 </div>
 
-                <div class="reveal bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-8">
+                <div id="inventory-category-chips" class="reveal hidden flex flex-wrap gap-2 mb-8"></div>
+
+                <div id="inventory-filter-panel" class="reveal bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-8">
                     <div class="mb-5">
                         <h3 class="text-xl font-bold text-slate-900">Search Inventory</h3>
                         <p class="text-gray-500 text-sm mt-1">Search by product, category, price, or gift idea — then ask questions directly from any product page.</p>
@@ -381,137 +383,7 @@
 
 
     <!-- ABOUT VIEW -->
-    <div id="view-about" class="hidden-view pt-24 pb-20">
-        <section id="about" class="about-hero py-16 gradient-bg text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <button id="about-back-home" type="button" class="mb-10 inline-flex items-center text-orange-100 hover:text-white font-semibold transition">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
-                </button>
-                <div class="max-w-4xl">
-                    <div class="text-orange-300 font-bold uppercase text-sm tracking-wider mb-4">About Cypress Flips</div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                        Honest local sourcing for collectors, parents, riders, vendors, and anyone tired of guessing what they are really buying.
-                    </h1>
-                    <p class="text-xl text-gray-200 leading-relaxed">
-                        My name is Michael Morrison. I grew up in Cypress, graduated from Cypress High School, and built Cypress Flips around a simple idea: inspect the product, tell the truth, price it fairly, and make the deal easy for buyers, parents, collectors, and vendors.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-16 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm lg:col-span-2">
-                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">Why I started this</div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-4">Cypress is where I am from. Flipping is what I do.</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            The name Cypress Flips was not complicated because it did not need to be. Cypress is my home base, and flipping is the work: finding products, inspecting them, restoring what I can, writing honest listings, and matching the right item with the right buyer.
-                        </p>
-                        <p class="text-gray-600 leading-relaxed">
-                            The orange and blue are intentional too — a nod to Cypress High School and the city that shaped me. This is a local business, and I want people in Cypress, Orange County, and Los Angeles to know exactly who they are dealing with.
-                        </p>
-                    </div>
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">Core promise</div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4">My word matters.</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            My Catholic faith is not a marketing gimmick. It is a quiet reminder that honesty, fairness, and keeping my word matter before God and before my neighbor. I am not here to preach at you. I am here to do business cleanly.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
-                        <i class="fa-solid fa-magnifying-glass-check text-3xl text-blue-600 mb-4"></i>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Inspected before listed</h3>
-                        <p class="text-gray-600">I do not just post items and hope. I inspect, test when possible, compare to complete/mint examples, and disclose what I find.</p>
-                    </div>
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
-                        <i class="fa-solid fa-handshake text-3xl text-blue-600 mb-4"></i>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">No-pressure deals</h3>
-                        <p class="text-gray-600">If an item is not right for you, I would rather say that before you waste gas, time, or money. We can talk through the pros and cons honestly.</p>
-                    </div>
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
-                        <i class="fa-solid fa-scale-balanced text-3xl text-blue-600 mb-4"></i>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Fair, flexible pricing</h3>
-                        <p class="text-gray-600">I believe in old-school negotiations. Static price matching is not the whole story. If the situation is fair, I am willing to work with people.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">For buyers</div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-4">Buy with confidence before you spend gas money.</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            Buying used goods can feel like gambling. People say “it has everything” without checking. They miss cracks, missing accessories, hidden games inside consoles, weak buttons, worn labels, or untested electronics. Sometimes they are not trying to deceive anyone — but the buyer still pays for the mistake.
-                        </p>
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            My job is to remove as much guessing as possible. If I say an item is good, I want that to mean something. If something has a flaw, I disclose it in the listing. If something is untested, I say it is untested. If something is not a good fit for your situation, I am willing to tell you that too.
-                        </p>
-                        <ul class="space-y-3 text-gray-600">
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Handheld consoles and games are a major focus.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Motorcycle accessories are a growing category.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Pokémon cards, collectibles, plush, figures, and hard-to-source items are welcome territory.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Refunds are handled case by case because I am building a real business, not a quick scam.</li>
-                        </ul>
-                    </div>
-
-                    <div class="about-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">For vendors</div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-4">Turn slow-moving inventory into cash and space.</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            If you have inventory that can sell online but you do not want to deal with listings, messages, photos, customer service, shipping, returns, or waiting weeks for the right buyer, I may be interested in buying it directly.
-                        </p>
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            I am comfortable being patient, handling the resale work, and waiting for the right buyer. You may need space or cash now. That is where a clean liquidation deal can help both sides. If the numbers make sense, I can buy individual items, bulk lots, or larger inventory batches with clear expectations and fast communication.
-                        </p>
-                        <ul class="space-y-3 text-gray-600">
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Send photos or a list of what you have.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>I review the resale potential and make an offer.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>We arrange pickup, meetup, delivery, or transport depending on the deal.</li>
-                            <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Orange County and Los Angeles are the core service areas; roughly 30 miles from Cypress is very reasonable.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="about-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm mb-16">
-                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">How I do business</div>
-                    <h2 class="text-3xl font-bold text-slate-900 mb-6">Brutally honest listings. Practical meetups. Real negotiation.</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="font-bold text-slate-900 mb-2">Product descriptions should do the work.</h3>
-                            <p class="text-gray-600 leading-relaxed">My goal is for the listing to answer most questions before you message me. Condition, missing pieces, tested status, flaws, accessories, and value should be clear.</p>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 mb-2">If it was not tested, I say so.</h3>
-                            <p class="text-gray-600 leading-relaxed">Assume items are tested and working unless the listing says otherwise. If something is untested, it belongs in the title and description.</p>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 mb-2">Meetups should be safe and local.</h3>
-                            <p class="text-gray-600 leading-relaxed">Cypress, CA is home base. Local meetups can happen in public places like parks or police stations. Delivery may be possible with a fair delivery fee.</p>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 mb-2">I source what people need.</h3>
-                            <p class="text-gray-600 leading-relaxed">Need a Switch for a kid’s birthday, a hard-to-find collectible, a motorcycle bag, or a specific pair of shoes? I may not always have it, but I usually know how to start looking.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="about-cta rounded-3xl p-8 md:p-12 text-white text-center">
-                    <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Need something sourced, sold, inspected, or liquidated?</h2>
-                    <p class="text-orange-50 max-w-3xl mx-auto mb-8 text-lg">
-                        Browse what is available now, save your favorite items, follow Cypress Flips, or contact me with questions. If I can help, I will. If I cannot, I will be honest about that too.
-                    </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <a href="#inventory" data-nav-section="inventory" class="bg-white text-slate-900 hover:bg-orange-50 px-8 py-3 rounded-full font-bold transition">Browse Inventory</a>
-                        <a href="#suppliers" data-nav-section="suppliers" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full font-bold transition">Sell Inventory</a>
-                        <a href="https://www.ebay.com/usr/mjmorrisonusa" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full font-bold transition">Visit eBay</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <!-- view-about moved to its own static page -->
 
 
     <!-- LISTINGS VIEW -->
@@ -657,137 +529,11 @@
 
 
     <!-- POLICIES VIEW -->
-    <div id="view-policies" class="hidden-view pt-24 pb-20">
-        <section class="py-12 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <button id="policies-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
-                </button>
-                <div class="reveal text-center mb-12">
-                    <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-2">Policies</div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Refunds, pickup, privacy, and trust</h1>
-                    <p class="text-gray-600 max-w-3xl mx-auto text-lg">Plain-English policies for buying used goods from Cypress Flips.</p>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Refund / return policy</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">Refunds are handled case by case. If I missed a material condition issue that should have been disclosed, I will work with you to make it right.</p>
-                        <p class="text-gray-600 leading-relaxed">Used items may have normal wear. Please inspect locally before purchase when possible, and ask questions before meeting if something is important to you.</p>
-                    </div>
-                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Pickup / delivery policy</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">Cypress, CA is home base. Public meetups around Cypress, Orange County, and the LA area are preferred for safety.</p>
-                        <p class="text-gray-600 leading-relaxed">Delivery may be available when the deal supports it. Delivery fees are negotiated before travel.</p>
-                    </div>
-                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Deposit / hold policy</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">Deposits are optional and are used to hold an item for an agreed pickup window. The deposit is applied toward the final purchase price, and the remaining balance is due at pickup unless we agree otherwise.</p>
-                        <p class="text-gray-600 leading-relaxed mb-4">The deposit is calculated as the higher of $10 or a percentage of the item price: 10% up to $250, 7.5% over $250, and 5% at $500 or higher. Deposits are rounded up to the nearest whole dollar.</p>
-                        <p class="text-gray-600 leading-relaxed">If Cypress Flips cancels or the item materially differs from the listing, I will work with you to make it right. If a buyer no-shows or cancels after an agreed hold window, deposits may be non-refundable case by case.</p>
-                    </div>
-                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Privacy policy</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">Contact forms collect the information you submit so I can reply. Account features may use Firebase for login, favorites, reviews, and profile details.</p>
-                        <p class="text-gray-600 leading-relaxed">I do not sell your personal information. Avoid sending sensitive financial information through forms.</p>
-                    </div>
-                    <div class="policy-card bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-4">Used goods disclosure</h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">I inspect and describe products as accurately as possible, including flaws, missing accessories, tested status, and untested conditions when applicable.</p>
-                        <p class="text-gray-600 leading-relaxed">If an item is untested, the listing should say so. If it is listed as working, it has been tested to the best of my ability.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <!-- view-policies moved to its own static page -->
 
 
     <!-- CONTACT VIEW -->
-    <div id="view-contact" class="hidden-view pt-24 pb-20">
-        <section class="py-12 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <button id="contact-back-home" type="button" class="mb-8 inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Store
-                </button>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-                    <div class="reveal">
-                        <div class="text-blue-600 font-bold uppercase text-sm tracking-wider mb-3">Contact Cypress Flips</div>
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-5">Questions, sourcing requests, pickup details, or product help.</h1>
-                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
-                            Use this page if you are a customer with a question, need help choosing the right item, want more photos, or want me to source something specific. If you are trying to sell inventory to me, use the Sell to Us section instead.
-                        </p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                                <i class="fa-solid fa-location-dot text-blue-600 text-2xl mb-3"></i>
-                                <h3 class="font-bold text-slate-900 mb-1">Cypress, CA based</h3>
-                                <p class="text-sm text-gray-600">Serving Cypress, Orange County, and the LA area with safe local meetup options.</p>
-                            </div>
-                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                                <i class="fa-solid fa-magnifying-glass text-blue-600 text-2xl mb-3"></i>
-                                <h3 class="font-bold text-slate-900 mb-1">Looking for something?</h3>
-                                <p class="text-sm text-gray-600">Ask about video games, collectibles, TCG cards, plush, motorcycle gear, or hard-to-find items.</p>
-                            </div>
-                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                                <i class="fa-solid fa-circle-question text-blue-600 text-2xl mb-3"></i>
-                                <h3 class="font-bold text-slate-900 mb-1">Need clarity?</h3>
-                                <p class="text-sm text-gray-600">Ask about condition, missing pieces, tested status, included accessories, or pickup logistics.</p>
-                            </div>
-                            <div class="about-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                                <i class="fa-solid fa-handshake text-blue-600 text-2xl mb-3"></i>
-                                <h3 class="font-bold text-slate-900 mb-1">No pressure</h3>
-                                <p class="text-sm text-gray-600">If something is not the right fit, I would rather tell you before you waste time or gas.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                            <h3 class="font-bold text-slate-900 mb-2">Trying to sell inventory?</h3>
-                            <p class="text-gray-600 text-sm mb-4">Vendor and liquidation messages should go through the Sell to Us section so I get the right details.</p>
-                            <button type="button" id="contact-sell-to-us" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl font-bold transition">Go to Sell to Us</button>
-                        </div>
-                    </div>
-
-                    <div class="reveal bg-white border border-gray-200 rounded-3xl shadow-sm p-6 md:p-8">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Send a customer message</h2>
-                        <p class="text-gray-500 text-sm mb-6">This form is for customer questions, sourcing requests, pickup questions, and product help.</p>
-
-                        <form id="general-contact-form" action="https://formsubmit.co/ajax/mjmorrisonusa@gmail.com" method="POST" class="space-y-4">
-                            <input type="hidden" name="_subject" value="New Cypress Flips customer contact message">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_captcha" value="false">
-                            <div>
-                                <label for="general-contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                <input id="general-contact-name" name="name" type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
-                            </div>
-                            <div>
-                                <label for="general-contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                <input id="general-contact-email" name="email" type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
-                            </div>
-                            <div>
-                                <label for="general-contact-topic" class="block text-sm font-medium text-gray-700 mb-1">What is this about?</label>
-                                <select id="general-contact-topic" name="topic" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
-                                    <option value="Product question">Product question</option>
-                                    <option value="Sourcing request">Sourcing request</option>
-                                    <option value="Pickup or delivery">Pickup or delivery</option>
-                                    <option value="Condition / more photos">Condition / more photos</option>
-                                    <option value="Website account help">Website account help</option>
-                                    <option value="Other customer question">Other customer question</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="general-contact-message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                                <textarea id="general-contact-message" name="message" rows="6" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Tell me what you need help with. If it is about a product, include the product name if possible."></textarea>
-                            </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition transform active:scale-95">
-                                Send Message
-                            </button>
-                        </form>
-                        <div id="general-contact-status" class="hidden mt-4 rounded-xl p-4 text-sm font-medium"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <!-- view-contact moved to its own static page -->
 
 
     <!-- PRODUCT DETAIL VIEW -->
@@ -905,17 +651,17 @@
                 </div>
                 <p id="hourly-scripture" class="hourly-scripture" aria-live="polite"></p>
                 <div class="footer-policy-links mt-4">
-                    <a href="#policies" data-nav-view="policies">Refunds & Pickup</a>
-                    <a href="#policies" data-nav-view="policies">Privacy</a>
-                    <a href="#contact" data-nav-view="contact">Customer Contact</a>
+                    <a href="policies.html">Refunds & Pickup</a>
+                    <a href="policies.html">Privacy</a>
+                    <a href="contact.html">Customer Contact</a>
                 </div>
             </div>
     </footer>
 
     <div class="mobile-sticky-cta md:hidden">
         <a href="#inventory" data-nav-section="inventory"><i class="fa-solid fa-bag-shopping mr-1"></i>Shop</a>
-        <a href="#contact" data-nav-view="contact"><i class="fa-solid fa-message mr-1"></i>Ask</a>
-        <a href="#about" data-nav-view="about"><i class="fa-solid fa-circle-info mr-1"></i>About</a>
+        <a href="contact.html"><i class="fa-solid fa-message mr-1"></i>Ask</a>
+        <a href="about.html"><i class="fa-solid fa-circle-info mr-1"></i>About</a>
     </div>
 
     <button id="back-to-top" type="button" aria-label="Back to top" class="back-to-top hidden">
@@ -924,6 +670,15 @@
 
     <script src="js/inventory.js"></script>
     <script src="js/script.js"></script>
-    <script type="module" src="js/community.js"></script>
+    <script>
+        // Community features (accounts, reviews, favorites, testimonials) are gated by
+        // CF_SITE_SETTINGS.enableCommunity in js/site-settings.js. Flip it to true to re-enable.
+        if (window.CF_SITE_SETTINGS && window.CF_SITE_SETTINGS.enableCommunity) {
+            const communityScript = document.createElement('script');
+            communityScript.type = 'module';
+            communityScript.src = 'js/community.js';
+            document.body.appendChild(communityScript);
+        }
+    </script>
 </body>
 </html>

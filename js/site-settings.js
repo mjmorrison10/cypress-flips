@@ -28,7 +28,18 @@
 // colorScheme: "auto"
 
 window.CF_SITE_SETTINGS = {
-    colorScheme: "auto"
+    colorScheme: "auto",
+
+    // COMMUNITY FEATURES (Firebase accounts, reviews, favorites, testimonials)
+    // Disabled until there is real community content. Set to true to re-enable —
+    // no other changes needed; index.html loads js/community.js based on this flag.
+    enableCommunity: false,
+
+    // SIMPLE MODE THRESHOLD
+    // Below this many AVAILABLE items, the store shows a simple browsable grid
+    // with category chips instead of the full search/filter/sort panel.
+    // At or above it, the full filter UI switches on automatically.
+    simpleModeThreshold: 50
 };
 
 (function initializeCypressFlipsColorScheme() {
