@@ -156,6 +156,7 @@ for (const item of products) {
             <a href="../index.html#contact" class="border border-gray-300 hover:border-blue-600 px-6 py-4 rounded-xl font-bold text-center">Contact</a>
           </div>
           <p class="text-sm text-gray-500 mt-4">Local pickup available in Cypress, CA.</p>
+          <p class="text-sm text-gray-500 mt-2">Have stuff like this to sell? <a href="../sell.html" class="text-blue-600 hover:text-blue-800 font-semibold">I pay cash for games, figures, and collections</a>.</p>
         </section>
       </div>
       ${similarSection}
