@@ -1559,9 +1559,26 @@ function calculateDisplayDeposit(price) {
     return Math.max(10, Math.ceil(productPrice * rate));
 }
 
+function depositsEnabled() {
+    return Boolean(window.CF_SITE_SETTINGS?.enableDeposits);
+}
+
 function updateDepositButton(item) {
     const button = document.getElementById('checkout-deposit-button');
-    if (!button || !item) return;
+    const note = document.querySelector('.deposit-policy-note');
+    if (!button) return;
+
+    // Deposits are gated by CF_SITE_SETTINGS.enableDeposits (Stripe checkout
+    // needs the Netlify function, which GitHub Pages doesn't run).
+    if (!depositsEnabled()) {
+        button.classList.add('hidden');
+        note?.classList.add('hidden');
+        return;
+    }
+
+    button.classList.remove('hidden');
+    note?.classList.remove('hidden');
+    if (!item) return;
     const deposit = calculateDisplayDeposit(item.price);
     button.innerHTML = `<i class="fa-solid fa-credit-card mr-2"></i>$${deposit} Deposit`;
 }
@@ -1580,7 +1597,7 @@ function showDepositStatus(type, messageHTML) {
 }
 
 async function startDepositCheckout() {
-    if (!currentProduct) return;
+    if (!depositsEnabled() || !currentProduct) return;
     const button = document.getElementById('checkout-deposit-button');
     const original = button?.innerHTML;
 

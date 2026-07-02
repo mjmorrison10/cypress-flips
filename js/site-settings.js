@@ -35,6 +35,13 @@ window.CF_SITE_SETTINGS = {
     // no other changes needed; index.html loads js/community.js based on this flag.
     enableCommunity: false,
 
+    // STRIPE DEPOSIT CHECKOUT
+    // Disabled: requires the Netlify serverless function (/.netlify/functions/
+    // create-checkout-session), which does not run on GitHub Pages. Buyers can
+    // still arrange holds/deposits by messaging directly. Set to true only if
+    // hosting moves back to Netlify with the Stripe function deployed.
+    enableDeposits: false,
+
     // SIMPLE MODE THRESHOLD
     // Below this many AVAILABLE items, the store shows a simple browsable grid
     // with category chips instead of the full search/filter/sort panel.
