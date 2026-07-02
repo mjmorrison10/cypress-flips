@@ -36,6 +36,7 @@ const products = fs.existsSync('data/inventory.json')
 const urls = [
   { loc: `${SITE_URL}/`, priority: '1.0', changefreq: 'daily' },
   { loc: `${SITE_URL}/index.html`, priority: '0.9', changefreq: 'daily' },
+  { loc: `${SITE_URL}/sell.html`, priority: '0.9', changefreq: 'weekly' },
   ...products
     .filter(shouldIndexProduct)
     .map(item => ({

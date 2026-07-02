@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     './index.html',
+    './sell.html',
     './js/**/*.js'
   ],
   safelist: [
