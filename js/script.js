@@ -608,7 +608,7 @@ function renderQuickFacts(item) {
 }
 
 function isRecentlyAdded(item) {
-    return typeof RECENTLY_ADDED_IDS !== 'undefined' && RECENTLY_ADDED_IDS.includes(item.id);
+    return getRecentlyAddedIds().includes(item.id);
 }
 
 function hasPriceDrop(item) {
@@ -1215,22 +1215,16 @@ function showCategoryProducts(category) {
     document.getElementById('category-products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-const RECENTLY_ADDED_IDS = [
-    'disney-store-bambi-mini-bean-bag-plush',
-    'disney-store-scamp-mini-bean-bag-plush',
-    'lion-king-ii-kovu-cub-bean-bag-plush',
-    'disney-store-figaro-mini-bean-bag-plush',
-    'pikachu-plush-purse-bag',
-    'coby-cx-cd109-personal-cd-player',
-    'wwe-knuckle-crunchers-cody-rhodes'
-];
+// Recently added = newest items by inventory order (admin inserts new
+// listings at the top of data/inventory.json), no hardcoded list to maintain.
+const RECENTLY_ADDED_COUNT = 4;
 
-function getRecentlyAddedItems(limitCount = 4) {
-    const availableItems = getAvailableInventoryItems();
-    const byId = new Map(availableItems.map(item => [item.id, item]));
-    const recent = RECENTLY_ADDED_IDS.map(id => byId.get(id)).filter(Boolean);
-    const fallback = availableItems.filter(item => !RECENTLY_ADDED_IDS.includes(item.id));
-    return [...recent, ...fallback].slice(0, limitCount);
+function getRecentlyAddedIds() {
+    return getAvailableInventoryItems().slice(0, RECENTLY_ADDED_COUNT).map(item => item.id);
+}
+
+function getRecentlyAddedItems(limitCount = RECENTLY_ADDED_COUNT) {
+    return getAvailableInventoryItems().slice(0, limitCount);
 }
 
 function renderRecentlyAdded() {
