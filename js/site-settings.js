@@ -46,7 +46,23 @@ window.CF_SITE_SETTINGS = {
     // Below this many AVAILABLE items, the store shows a simple browsable grid
     // with category chips instead of the full search/filter/sort panel.
     // At or above it, the full filter UI switches on automatically.
-    simpleModeThreshold: 50
+    simpleModeThreshold: 50,
+
+    // HOLIDAY SALE (10% off badges + adjusted displayed prices)
+    // Driven by the holiday CALENDAR, not by the applied theme — manually
+    // overriding colorScheme never turns the sale on or off.
+    //   mode: "auto"  = sale runs automatically during the holidays listed below
+    //         true    = force the sale on right now (any day)
+    //         false   = never run the sale, even on holidays
+    //   holidays: which calendar windows trigger it (names match theme schemes:
+    //             patriot = Memorial Day / July 4th week / Labor Day / Veterans Day,
+    //             thanksgiving = Thanksgiving+Black Friday weekend,
+    //             christmas = Dec 1-25, newyear = Dec 31-Jan 1, etc.)
+    holidaySale: {
+        mode: "auto",
+        percentOff: 10,
+        holidays: ["patriot", "thanksgiving", "christmas", "newyear"]
+    }
 };
 
 (function initializeCypressFlipsColorScheme() {
@@ -191,4 +207,46 @@ window.CF_SITE_SETTINGS = {
     window.CF_APPLY_COLOR_SCHEME = applyColorScheme;
 
     applyColorScheme(initialScheme);
+
+    // --- HOLIDAY SALE (independent of the applied theme) ---
+    // Uses the holiday CALENDAR directly, so a manual colorScheme override
+    // (e.g. forcing "lakers" in July) never affects whether the sale runs.
+    function resolveHolidaySale(date = new Date()) {
+        const config = window.CF_SITE_SETTINGS?.holidaySale || {};
+        const percentOff = Number(config.percentOff) || 10;
+
+        if (config.mode === false) return { active: false };
+        if (config.mode === true) {
+            return { active: true, percentOff, holiday: "manual", label: "SALE" };
+        }
+
+        // mode: "auto" — consult the calendar, not the theme.
+        const parts = getCaliforniaDateParts(date);
+        // Never run a sale on September 11 (patriot theme is remembrance, not promotion).
+        if (parts.month === 9 && parts.day === 11) return { active: false };
+
+        const calendarHoliday = resolveAutoColorScheme(date);
+        const saleHolidays = Array.isArray(config.holidays) ? config.holidays : [];
+        if (!saleHolidays.includes(calendarHoliday)) return { active: false };
+
+        const labels = {
+            patriot: parts.month === 7 ? "4TH OF JULY SALE" : "HOLIDAY SALE",
+            thanksgiving: "BLACK FRIDAY SALE",
+            christmas: "CHRISTMAS SALE",
+            newyear: "NEW YEAR SALE",
+            valentines: "VALENTINE'S SALE",
+            stpatricks: "ST. PADDY'S SALE",
+            easter: "EASTER SALE",
+            halloween: "HALLOWEEN SALE"
+        };
+        return {
+            active: true,
+            percentOff,
+            holiday: calendarHoliday,
+            label: labels[calendarHoliday] || "HOLIDAY SALE"
+        };
+    }
+
+    window.CF_HOLIDAY_SALE = resolveHolidaySale();
+    window.CF_RESOLVE_HOLIDAY_SALE = resolveHolidaySale;
 })();

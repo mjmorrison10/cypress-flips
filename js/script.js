@@ -615,6 +615,45 @@ function hasPriceDrop(item) {
     return Number(item.oldPrice || 0) > Number(item.price || 0);
 }
 
+// --- HOLIDAY SALE HELPERS (resolved in site-settings.js, theme-independent) ---
+function getHolidaySale() {
+    return window.CF_HOLIDAY_SALE || { active: false };
+}
+
+function getSalePrice(price) {
+    const sale = getHolidaySale();
+    if (!sale.active) return Number(price);
+    // Round DOWN to the nearest .50 so sale prices look intentional, never up.
+    const discounted = Number(price) * (1 - sale.percentOff / 100);
+    return Math.floor(discounted * 2) / 2;
+}
+
+function renderPriceHTML(item, sizeClass = 'text-xl') {
+    const sale = getHolidaySale();
+    if (!sale.active) {
+        return `<span class="${sizeClass} font-bold text-blue-600">$${item.price.toFixed(2)}</span>`;
+    }
+    return `<span class="flex items-baseline gap-2 flex-wrap">
+        <span class="${sizeClass} font-bold text-red-600">$${getSalePrice(item.price).toFixed(2)}</span>
+        <span class="text-sm text-gray-400 line-through">$${item.price.toFixed(2)}</span>
+    </span>`;
+}
+
+function renderSaleBanner() {
+    const sale = getHolidaySale();
+    const existing = document.getElementById('holiday-sale-banner');
+    if (!sale.active) { existing?.remove(); return; }
+    if (existing) return;
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    const banner = document.createElement('div');
+    banner.id = 'holiday-sale-banner';
+    banner.className = 'bg-red-600 text-white text-center text-sm font-bold py-2 px-4';
+    banner.innerHTML = `🎉 ${sale.label} — ${sale.percentOff}% off everything, applied at meetup. Prices shown already reflect the discount.`;
+    nav.insertAdjacentElement('afterend', banner);
+    banner.style.marginTop = '4rem';
+}
+
 function trackEvent(name, detail = {}) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: name, ...detail });
@@ -699,6 +738,8 @@ function createProductCard(item, tierLabel = '') {
     const badgeHTML = renderBadgeHTML(item, 'product-badge--small');
     const recentBadge = isRecentlyAdded(item) ? '<span class="absolute top-3 right-3 bg-emerald-600 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>' : '';
     const priceDropBadge = hasPriceDrop(item) ? '<span class="absolute top-11 right-3 bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded">PRICE DROP</span>' : '';
+    const saleBadge = getHolidaySale().active && status.value === 'available'
+        ? `<span class="absolute bottom-3 right-3 bg-red-600 text-white text-xs font-extrabold px-2 py-1 rounded shadow-sm">${getHolidaySale().percentOff}% OFF</span>` : '';
     card.className = `product-card reveal bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer status-${status.value}`;
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -717,6 +758,7 @@ function createProductCard(item, tierLabel = '') {
             ${tierBadge || recentBadge}
             ${tierBadge ? recentBadge : ''}
             ${priceDropBadge}
+            ${saleBadge}
             <span class="status-badge absolute bottom-3 left-3 bg-white/90 text-slate-900 text-xs font-extrabold px-2 py-1 rounded-full shadow-sm">${status.label}</span>
         </div>
         <div class="p-5">
@@ -726,7 +768,7 @@ function createProductCard(item, tierLabel = '') {
             <p class="text-gray-500 text-sm mb-3">${item.shortDesc}</p>
             <div class="product-card-badges mb-4">${badgeHTML}</div>
             <div class="flex justify-between items-center gap-3">
-                <span class="text-xl font-bold text-blue-600">$${item.price.toFixed(2)}</span>
+                ${renderPriceHTML(item, 'text-xl')}
                 <button type="button" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium group-hover:bg-slate-700 transition">View Details</button>
             </div>
         </div>
@@ -1489,11 +1531,12 @@ function setProductInquiryDetails(item, options = {}) {
     if (hidePanel) document.querySelector('.product-cta-block')?.classList.remove('inquiry-open');
     if (hidePanel && status) status.classList.add('hidden');
 
-    if (subject) subject.value = `Product Inquiry: ${item.title} - $${item.price.toFixed(2)}`;
+    const inquiryPrice = getHolidaySale().active ? getSalePrice(item.price) : item.price;
+    if (subject) subject.value = `Product Inquiry: ${item.title} - $${inquiryPrice.toFixed(2)}${getHolidaySale().active ? ` (${getHolidaySale().label})` : ''}`;
     if (titleField) titleField.value = item.title;
     if (idField) idField.value = item.id;
     if (categoryField) categoryField.value = item.category;
-    if (priceField) priceField.value = `$${item.price.toFixed(2)}`;
+    if (priceField) priceField.value = `$${inquiryPrice.toFixed(2)}`;
     if (intentField) intentField.value = 'Question';
 }
 
@@ -1641,7 +1684,14 @@ function openProduct(id, options = {}) {
 
     document.getElementById('product-title').innerText = item.title;
     document.getElementById('product-category').innerText = item.category;
-    document.getElementById('product-price').innerText = `$${item.price.toFixed(2)}`;
+    const priceEl = document.getElementById('product-price');
+    if (getHolidaySale().active && getProductStatus(item).value === 'available') {
+        priceEl.innerHTML = `<span class="text-red-600">$${getSalePrice(item.price).toFixed(2)}</span>
+            <span class="text-lg text-gray-400 line-through font-normal align-middle">$${item.price.toFixed(2)}</span>
+            <span class="align-middle ml-1 bg-red-600 text-white text-xs font-extrabold px-2 py-1 rounded">${getHolidaySale().label} — ${getHolidaySale().percentOff}% OFF</span>`;
+    } else {
+        priceEl.innerText = `$${item.price.toFixed(2)}`;
+    }
     document.getElementById('product-description').innerHTML = item.fullDesc;
 
     const metaBadges = document.getElementById('product-meta-badges');
@@ -2032,4 +2082,5 @@ setupInventoryControls();
 setupKeyboardShortcuts();
 setupHourlyScripture();
 setupScrollReveal();
+renderSaleBanner();
 loadGitHubManagedInventory();
