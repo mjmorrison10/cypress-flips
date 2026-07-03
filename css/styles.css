@@ -1679,51 +1679,27 @@ body.dark-mode .status-badge {
 
 /* Patriot theme upgrade: subtle American flag-inspired hero */
 :root[data-color-scheme="patriot"] .hero-section {
+    /* Real flag photo behind a dark gradient scrim so white hero text stays
+       readable (WCAG-friendly). Image: images/themes/patriot-hero.jpg */
     background:
-        linear-gradient(135deg, rgba(15, 23, 42, 0.90), rgba(30, 58, 138, 0.88)),
+        linear-gradient(135deg, rgba(10, 15, 30, 0.82), rgba(15, 23, 42, 0.68) 45%, rgba(30, 58, 138, 0.62)),
+        url("../images/themes/patriot-hero.jpg") center 30% / cover no-repeat,
         var(--scheme-hero-bg) !important;
 }
 
 :root[data-color-scheme="patriot"] .hero-section::before {
-    inset: -18% -10% auto -10% !important;
-    width: 120% !important;
-    height: 78% !important;
-    border-radius: 0 !important;
-    filter: none !important;
-    opacity: 0.22 !important;
-    background:
-        repeating-linear-gradient(
-            180deg,
-            rgba(185, 28, 28, 0.95) 0 18px,
-            rgba(255, 255, 255, 0.95) 18px 36px
-        ) !important;
-    transform: rotate(-5deg) translateY(-1rem) !important;
-    animation: patriotFlagDrift 11s ease-in-out infinite alternate !important;
+    /* Flag photo replaces the old CSS-drawn stripes */
+    display: none !important;
 }
 
 :root[data-color-scheme="patriot"] .hero-section::after {
-    content: "★  ★  ★  ★  ★\A★  ★  ★  ★  ★\A★  ★  ★  ★  ★\A★  ★  ★  ★  ★";
-    white-space: pre;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 0.55rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.32);
-    font-size: clamp(0.8rem, 1.7vw, 1.25rem);
-    top: 1.5rem !important;
-    left: 1.5rem !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: min(30rem, 42vw) !important;
-    height: min(16rem, 32vw) !important;
-    border-radius: 1.25rem !important;
-    filter: none !important;
-    opacity: 0.52 !important;
-    background:
-        linear-gradient(135deg, rgba(30, 58, 138, 0.94), rgba(29, 78, 216, 0.74)) !important;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-    animation: patriotCantonFloat 9s ease-in-out infinite alternate !important;
+    /* Flag photo replaces the old CSS-drawn star canton */
+    display: none !important;
+}
+
+:root[data-color-scheme="patriot"] .hero-content h1,
+:root[data-color-scheme="patriot"] .hero-content p {
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 :root[data-color-scheme="patriot"] .hero-content::after {

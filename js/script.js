@@ -654,6 +654,10 @@ function renderSaleBanner() {
     // The nav is position:fixed, so the banner must be fixed too — pinned
     // directly beneath it (nav is h-16 = 4rem) — and the page content shifted
     // down by the banner's real height so nothing hides behind it.
+    // The nav is position:fixed but has no explicit top — body padding (added
+    // below) would push it down over the banner. Pin it to the viewport top.
+    nav.style.top = '0';
+
     const banner = document.createElement('div');
     banner.id = 'holiday-sale-banner';
     banner.className = 'fixed w-full z-40 bg-red-600 text-white text-center text-xs sm:text-sm font-bold py-2 px-4 shadow-md';
