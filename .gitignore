@@ -34,7 +34,7 @@ firebase-adminsdk*.json
 service-account*.json
 
 # Temporary upload staging folder
-uploads/
+/uploads/
 
 # Misc temporary files
 *.tmp
