@@ -642,16 +642,30 @@ function renderPriceHTML(item, sizeClass = 'text-xl') {
 function renderSaleBanner() {
     const sale = getHolidaySale();
     const existing = document.getElementById('holiday-sale-banner');
-    if (!sale.active) { existing?.remove(); return; }
+    if (!sale.active) {
+        existing?.remove();
+        document.body.style.removeProperty('padding-top');
+        return;
+    }
     if (existing) return;
     const nav = document.querySelector('nav');
     if (!nav) return;
+
+    // The nav is position:fixed, so the banner must be fixed too — pinned
+    // directly beneath it (nav is h-16 = 4rem) — and the page content shifted
+    // down by the banner's real height so nothing hides behind it.
     const banner = document.createElement('div');
     banner.id = 'holiday-sale-banner';
-    banner.className = 'bg-red-600 text-white text-center text-sm font-bold py-2 px-4';
-    banner.innerHTML = `🎉 ${sale.label} — ${sale.percentOff}% off everything, applied at meetup. Prices shown already reflect the discount.`;
-    nav.insertAdjacentElement('afterend', banner);
-    banner.style.marginTop = '4rem';
+    banner.className = 'fixed w-full z-40 bg-red-600 text-white text-center text-xs sm:text-sm font-bold py-2 px-4 shadow-md';
+    banner.style.top = '4rem';
+    banner.innerHTML = `🎉 ${sale.label}: ${sale.percentOff}% off everything — prices shown already include it.`;
+    document.body.appendChild(banner);
+
+    const syncOffset = () => {
+        document.body.style.paddingTop = `${banner.offsetHeight}px`;
+    };
+    syncOffset();
+    window.addEventListener('resize', syncOffset);
 }
 
 function trackEvent(name, detail = {}) {
