@@ -771,7 +771,7 @@ function createProductCard(item, tierLabel = '') {
     });
     card.innerHTML = `
         <div class="aspect-square bg-gray-200 relative flex items-center justify-center overflow-hidden">
-            <img src="${item.images[0]}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='https://via.placeholder.com/400?text=Product'">
+            <img src="${item.images[0]}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" onerror="this.src='images/placeholder-product.jpg'">
             ${item.isPremium ? '<span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">PREMIUM</span>' : ''}
             ${tierBadge || recentBadge}
             ${tierBadge ? recentBadge : ''}

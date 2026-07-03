@@ -1158,7 +1158,7 @@ function normalizeProductDoc(id, data) {
         price: Number(data.price || 0),
         shortDesc: data.shortDesc || '',
         fullDesc: data.fullDesc || data.shortDesc || '',
-        images: Array.isArray(data.images) && data.images.length ? data.images : ['https://via.placeholder.com/600?text=Product'],
+        images: Array.isArray(data.images) && data.images.length ? data.images : ['images/placeholder-product.jpg'],
         isPremium: Boolean(data.isPremium),
         status: normalizeRemoteInventoryStatus(data.status || data.Status || data.availability || data.itemStatus || data.inventoryStatus || 'available')
     };
