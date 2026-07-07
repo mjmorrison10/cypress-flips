@@ -3,6 +3,19 @@
 
 window.CF_STATIC_INVENTORY = [
     {
+        id: 'saint-benedict-rosary-bracelet',
+        title: 'Handmade Saint Benedict Rosary Bracelet - 95 Paracord',
+        category: 'More Finds',
+        price: 10.00,
+        status: 'available',
+        shortDesc: "Handmade braided rosary bracelet in 95 paracord with a Saint Benedict medallion. Durable, comfortable, and customizable.",
+        fullDesc: "A handmade rosary bracelet built around a Saint Benedict medallion and braided from genuine 95 paracord — the same tough, abrasion-resistant cord used for military-spec survival gear. Stronger and more durable than the thin twisted-nylon rosary bracelets you usually find, this one is meant to be worn daily without fraying, stretching, or losing shape.\n\n<strong>What's included:</strong>\n• Braided 95 paracord bracelet in your choice of color (blue is shown in the photo)\n• Saint Benedict medal (one of the most popular Catholic sacramentals — the medal itself is a long-standing sign of devotion, protection, and a reminder to pray)\n• Sturdy split-ring connector so the medal hangs cleanly and moves freely without pulling on the weave\n\n<strong>Why this one holds up better than the usual swap-meet rosary:</strong>\nThe swap-meet version is twisted nylon that frays fast and pills after a few weeks of wear. 95 paracord is a real upgrade: it has a 550 lb tensile rating, resists sweat and water, and keeps its color and shape much longer. The Saint Benedict medal hangs on a solid split ring instead of a thin jump ring, so it doesn't bend or pull off during normal use.\n\n<strong>Custom orders welcome (slight upcharge for custom work):</strong>\n• Different paracord color — black, white, red, OD green, coyote, pink, purple, two-tone, etc.\n• Different length (standard men's, standard women's, kid's, oversized — just tell me your wrist measurement)\n• Different medal — Miraculous Medal, Saint Michael, Saint Christopher, scapular medal, crucifix, or no medal at all\n• Clasp style — barrel knot pull, side-release buckle, or no clasp (slip-on)\n• A matching paracord rosary (five-decade neck rosary) can also be made to match\n\n<strong>Condition:</strong> New, handmade to order. The piece shown in the photo is the prototype in cobalt blue. Your bracelet will look essentially identical in construction, with the color and medal swapped to your spec.\n\n<strong>Market context:</strong> Comparable rosary bracelets at the local swap meet run around $10 with thinner twisted-nylon cord and often a smaller, lower-quality medal. This one uses a noticeably more durable cord, a solid split-ring connection, and a heavier Saint Benedict medal — and you can pick your color, length, and medal. At $10 it's priced to match the swap-meet benchmark while still being a meaningful step up in build quality.",
+        images: [
+            'images/uploads/2026-07/saint-benedict-rosary-bracelet-1.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'zoro-king-of-artist',
         title: 'Roronoa Zoro - King of Artist (Wano Kuni)',
         category: 'Action Figure',
