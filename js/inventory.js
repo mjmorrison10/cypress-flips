@@ -2,14 +2,24 @@
 // This is the free/static source of truth until Firebase inventory management is enabled.
 
 window.CF_STATIC_INVENTORY = [
-    {
+        {
         id: 'ipad-9th-gen-cracked',
-        title: 'Apple iPad 9th Gen - Working Perfectly (Cracked Screen)',
+        title: 'Apple iPad 9th Gen - LOCKED / For Parts Only (Cracked Screen)',
         category: 'More Finds',
         price: 50.00,
         status: 'available',
-        shortDesc: "Fully functional iPad 9th Gen. Heavily cracked screen but works 100%. Budget-friendly tech for teenagers or as a backup device.",
-        fullDesc: "An Apple iPad 9th Generation (Model A2602) that is fully functional but heavily worn.\n\n<strong>The Good:</strong> Everything works perfectly. It powers on, the touch screen is responsive, and it runs all apps without issue. No iCloud lock—ready for a new user.\n\n<strong>The Bad:</strong> The screen is severely cracked/shattered, particularly on the left side where some glass is missing. There is also a small dent on the back corner and general scuffs from use.\n\n<strong>Who is this for?</strong> This is an ideal budget-friendly tablet for a teenager who needs a device for school or entertainment but doesn't need a mint-condition unit. With a heavy-duty case and a tempered glass screen protector, this becomes a very capable and affordable tablet.\n\n<strong>Condition:</strong> Sold as-is. Perfect for someone looking for a \"beater\" iPad or a cheap project.",
+        shortDesc: "iPad 9th Gen for parts or repair. iCloud locked and heavily cracked screen.",
+        fullDesc: "An Apple iPad 9th Generation (Model A2602) being sold strictly for parts or repair.
+
+<strong>CRITICAL NOTE:</strong> This device is **iCloud Locked**. It cannot be activated or used as a tablet in its current state. It is being sold as a source for internal components or for professional repair.
+
+<strong>Condition:</strong>
+• **Screen:** Severely cracked/shattered with missing glass on the left side.
+• **Body:** Small dent on the back corner and general cosmetic wear.
+
+<strong>Ideal for:</strong> Repair technicians needing internal parts (camera, speakers, motherboard components) or those who specialize in iCloud bypass/repair services.
+
+<strong>Condition:</strong> Sold as-is for parts. No returns.",
         images: [
             'images/uploads/2026-07/ipad-9th-gen-1.jpg',
             'images/uploads/2026-07/ipad-9th-gen-2.jpg',
