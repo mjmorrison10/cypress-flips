@@ -3,6 +3,28 @@
 
 window.CF_STATIC_INVENTORY = [
     {
+        id: 'ipad-9th-gen-cracked',
+        title: 'Apple iPad 9th Gen - Working Perfectly (Cracked Screen)',
+        category: 'More Finds',
+        price: 50.00,
+        status: 'available',
+        shortDesc: "Fully functional iPad 9th Gen. Heavily cracked screen but works 100%. Budget-friendly tech for teenagers or as a backup device.",
+        fullDesc: "An Apple iPad 9th Generation (Model A2602) that is fully functional but heavily worn.\n\n<strong>The Good:</strong> Everything works perfectly. It powers on, the touch screen is responsive, and it runs all apps without issue. No iCloud lock—ready for a new user.\n\n<strong>The Bad:</strong> The screen is severely cracked/shattered, particularly on the left side where some glass is missing. There is also a small dent on the back corner and general scuffs from use.\n\n<strong>Who is this for?</strong> This is an ideal budget-friendly tablet for a teenager who needs a device for school or entertainment but doesn't need a mint-condition unit. With a heavy-duty case and a tempered glass screen protector, this becomes a very capable and affordable tablet.\n\n<strong>Condition:</strong> Sold as-is. Perfect for someone looking for a \"beater\" iPad or a cheap project.",
+        images: [
+            'images/uploads/2026-07/ipad-9th-gen-1.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-2.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-3.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-4.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-5.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-6.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-7.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-8.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-9.jpg',
+            'images/uploads/2026-07/ipad-9th-gen-10.jpg'
+        ],
+        isPremium: false
+    },
+    {
         id: 'saint-benedict-rosary-bracelet',
         title: 'Handmade Saint Benedict Rosary Bracelet - 95 Paracord',
         category: 'More Finds',
